@@ -294,6 +294,7 @@
     <div class="filter-bar">
       <button class="filter-btn active" id="filter-all">전체</button>
       <button class="filter-btn" id="filter-statement">성명서</button>
+      <button class="filter-btn" id="filter-mom">회의록</button>
     </div>
 
     <!-- Document List -->
@@ -313,6 +314,22 @@
           </svg>
         </div>
       </a>
+
+      <!-- 회의록 Card -->
+      <a href="MoM/index.html" class="doc-card" data-category="mom">
+        <div class="card-meta">
+          <span class="badge-category">회의록</span>
+          <span class="doc-date">2026년 7월 3일</span>
+        </div>
+        <h2 class="doc-title">우체국물류지원단 물류노동조합 운영위원회 회의록 아카이브</h2>
+        <p class="doc-excerpt">2026년 1월부터 7월까지 진행된 운영위원회 정기 및 임시 회의록 일람입니다. 소송 대응안, 근로조건 개선 방안 및 노사 협의 결과가 수록되어 있습니다.</p>
+        <div class="card-footer">
+          월별 회의록 목록 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
     </div>
 
     <!-- Security Info Banner -->
@@ -323,7 +340,7 @@
         <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
       <div class="info-text">
-        운영위원회 회의록 및 조합원 통상임금 소송 대응책 등 조합 내부 의결 자료는 조합원 전용 밴드 및 지부 회의를 통해 대면 배포되며, 본 외부 아카이브에는 게재되지 않습니다.
+        조합원 통상임금 소송 세부 대응책 및 미공개 예산 명세서 등 조합 내부 민감 의결 자료는 지부 회의를 통해 대면 배포되며, 본 외부 아카이브에는 운영위원회 공식 결정 회의록 요약본만 게재됩니다.
       </div>
     </div>
 
@@ -337,6 +354,7 @@
     // Filtering logic
     const filterAll = document.getElementById('filter-all');
     const filterStatement = document.getElementById('filter-statement');
+    const filterMom = document.getElementById('filter-mom');
     const cards = document.querySelectorAll('.doc-card');
 
     filterAll.addEventListener('click', () => {
@@ -348,6 +366,17 @@
       setActiveFilter(filterStatement);
       cards.forEach(card => {
         if (card.dataset.category === 'statement') {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+    });
+
+    filterMom.addEventListener('click', () => {
+      setActiveFilter(filterMom);
+      cards.forEach(card => {
+        if (card.dataset.category === 'mom') {
           card.style.display = 'block';
         } else {
           card.style.display = 'none';

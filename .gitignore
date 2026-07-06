@@ -1,7 +1,4 @@
-# Ignore internal meeting minutes, transcripts and raw data folder
-MoM/
+# Ignore raw voice transcripts and local tool folders
 *.txt
-
-# Ignore local tool directories
 .agents/
 .gemini/
