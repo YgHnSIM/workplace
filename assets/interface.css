@@ -149,7 +149,7 @@ button:focus-visible {
 
 .doc-card {
   display: grid !important;
-  grid-template-columns: minmax(132px, 180px) minmax(0, 1fr);
+  grid-template-columns: minmax(168px, 220px) minmax(0, 1fr);
   column-gap: 34px;
   background: #FFFFFF !important;
   border: 0 !important;
@@ -178,10 +178,11 @@ button:focus-visible {
 }
 
 .card-meta {
+  display: flex !important;
   grid-column: 1;
   grid-row: 1 / span 3;
   align-items: flex-start !important;
-  flex-direction: column;
+  flex-direction: column !important;
   gap: 10px !important;
   margin: 0 !important;
   padding-right: 18px;
@@ -191,6 +192,7 @@ button:focus-visible {
 }
 
 .badge-category {
+  display: block;
   order: 2;
   background: transparent !important;
   color: #002FA7 !important;
@@ -205,6 +207,7 @@ button:focus-visible {
 }
 
 .doc-date {
+  display: block;
   order: 1;
   flex: 0 0 auto;
   max-width: none;
@@ -688,7 +691,7 @@ button:focus-visible {
     grid-row: auto;
     border-right: 0;
     border-bottom: 1px solid #D9D9D9;
-    flex-direction: row;
+    flex-direction: row !important;
     flex-wrap: nowrap;
     gap: 12px !important;
     justify-content: space-between;
