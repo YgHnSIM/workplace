@@ -1,0 +1,8 @@
+# Ignore internal meeting minutes and transcripts
+*회의록*.md
+*.txt
+회의록 프레임.md
+
+# Ignore local tool directories
+.agents/
+.gemini/
