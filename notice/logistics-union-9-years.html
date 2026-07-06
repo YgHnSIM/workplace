@@ -1,0 +1,982 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>우체국물류지원단 물류노동조합 9년의 투쟁과 역사 - 우체국물류지원단 물류노동조합</title>
+  <meta name="description" content="서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 우체국물류지원단 물류노동조합의 9년 투쟁과 성과 기록입니다.">
+  <link rel="icon" href="../logo_정사각형.png" type="image/png">
+  <link rel="stylesheet" href="../assets/interface.css">
+  <style>
+    :root {
+      --font-scale: 1.0;
+      --history-base: calc(16px * var(--font-scale));
+      --history-small: calc(14px * var(--font-scale));
+      --history-title: calc(48px * var(--font-scale));
+      --history-section: calc(26px * var(--font-scale));
+      --history-subtitle: calc(19px * var(--font-scale));
+    }
+
+    .history-container {
+      width: min(1120px, calc(100vw - 48px));
+      background: #FFFFFF;
+      border: 1px solid #111111;
+    }
+
+    .history-header {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      column-gap: 36px;
+      border-bottom: 1px solid #111111;
+      padding: 26px 28px 34px;
+    }
+
+    .history-header-aside {
+      grid-column: 1;
+      grid-row: 1 / span 3;
+      border-right: 1px solid #D9D9D9;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      padding-right: 20px;
+    }
+
+    .history-logo {
+      height: 48px;
+      max-width: 154px;
+      object-fit: contain;
+      object-position: left center;
+    }
+
+    .history-category {
+      background: #002FA7;
+      color: #FFFFFF;
+      display: inline-block;
+      font-size: var(--history-small);
+      font-weight: 700;
+      line-height: 1.2;
+      padding: 5px 8px;
+      width: max-content;
+    }
+
+    .history-title {
+      color: #111111;
+      font-size: clamp(34px, 6vw, var(--history-title));
+      font-weight: 700;
+      line-height: 1.08;
+      margin: 0;
+      max-width: 860px;
+      word-break: keep-all;
+    }
+
+    .history-subtitle {
+      color: #333333;
+      font-size: var(--history-subtitle);
+      font-weight: 700;
+      line-height: 1.55;
+      margin: 18px 0 0;
+      max-width: 760px;
+      word-break: keep-all;
+    }
+
+    .history-meta {
+      color: #333333;
+      display: flex;
+      flex-wrap: wrap;
+      font-size: var(--history-small);
+      font-weight: 700;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .history-body {
+      padding: 0 28px 64px;
+    }
+
+    .history-lead {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(260px, .8fr);
+      gap: 0;
+      border-bottom: 1px solid #111111;
+      margin: 0 -28px 38px;
+    }
+
+    .history-lead-copy,
+    .history-number-panel {
+      padding: 30px 28px;
+    }
+
+    .history-lead-copy {
+      border-right: 1px solid #111111;
+    }
+
+    .history-kicker {
+      color: #002FA7;
+      font-size: var(--history-small);
+      font-weight: 700;
+      margin: 0 0 14px;
+    }
+
+    .history-lead-text {
+      color: #222222;
+      font-size: calc(18px * var(--font-scale));
+      line-height: 1.78;
+      margin: 0;
+      word-break: keep-all;
+    }
+
+    .history-number-panel {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+
+    .history-stat {
+      border-bottom: 1px solid #D9D9D9;
+      padding: 18px 16px;
+    }
+
+    .history-stat:nth-child(odd) {
+      border-right: 1px solid #D9D9D9;
+    }
+
+    .history-stat:nth-last-child(-n + 2) {
+      border-bottom: 0;
+    }
+
+    .history-stat strong {
+      color: #111111;
+      display: block;
+      font-size: clamp(26px, 3vw, 36px);
+      font-weight: 700;
+      line-height: 1.08;
+      margin-bottom: 10px;
+      white-space: nowrap;
+    }
+
+    .history-stat span {
+      color: #333333;
+      display: block;
+      font-size: var(--history-small);
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+
+    .history-infographic {
+      border: 1px solid #111111;
+      margin: 0 0 42px;
+      background: #FFFFFF;
+    }
+
+    .infographic-header {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) max-content;
+      gap: 20px;
+      align-items: end;
+      border-bottom: 1px solid #111111;
+      padding: 22px 24px;
+    }
+
+    .infographic-title {
+      color: #111111;
+      font-size: clamp(22px, 3vw, 34px);
+      font-weight: 700;
+      line-height: 1.15;
+      margin: 0;
+      word-break: keep-all;
+    }
+
+    .infographic-range {
+      color: #002FA7;
+      font-size: clamp(28px, 5vw, 54px);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: .95;
+      white-space: nowrap;
+    }
+
+    .infographic-flow {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+
+    .infographic-step {
+      min-height: 210px;
+      padding: 22px 18px 20px;
+      position: relative;
+    }
+
+    .infographic-step + .infographic-step {
+      border-left: 1px solid #111111;
+    }
+
+    .infographic-step::before {
+      background: #002FA7;
+      content: "";
+      height: 3px;
+      left: 18px;
+      position: absolute;
+      right: 18px;
+      top: -2px;
+    }
+
+    .infographic-year {
+      color: #002FA7;
+      display: block;
+      font-size: 15px;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin-bottom: 18px;
+    }
+
+    .infographic-step h3 {
+      color: #111111;
+      font-size: calc(20px * var(--font-scale));
+      font-weight: 700;
+      line-height: 1.24;
+      margin: 0 0 12px;
+      word-break: keep-all;
+    }
+
+    .infographic-step p {
+      color: #333333;
+      font-size: calc(14px * var(--font-scale));
+      font-weight: 700;
+      line-height: 1.55;
+      margin: 0;
+      word-break: keep-all;
+    }
+
+    .infographic-outcome {
+      display: grid;
+      grid-template-columns: minmax(150px, .4fr) minmax(0, 1fr);
+      border-top: 1px solid #111111;
+    }
+
+    .infographic-outcome strong,
+    .infographic-outcome span {
+      display: block;
+      padding: 18px 24px;
+    }
+
+    .infographic-outcome strong {
+      background: #002FA7;
+      color: #FFFFFF;
+      font-size: calc(18px * var(--font-scale));
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+
+    .infographic-outcome span {
+      color: #111111;
+      font-size: calc(17px * var(--font-scale));
+      font-weight: 700;
+      line-height: 1.65;
+      word-break: keep-all;
+    }
+
+    .history-nav {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border: 1px solid #111111;
+      margin-bottom: 42px;
+    }
+
+    .history-nav a {
+      color: #111111;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 44px;
+      padding: 8px 10px;
+      text-align: center;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 1.35;
+      word-break: keep-all;
+    }
+
+    .history-nav a + a {
+      border-left: 1px solid #111111;
+    }
+
+    .history-nav a:hover {
+      background: #002FA7;
+      color: #FFFFFF;
+    }
+
+    .history-section {
+      margin-bottom: 54px;
+    }
+
+    .history-section-title {
+      border-top: 1px solid #111111;
+      color: #111111;
+      font-size: var(--history-section);
+      font-weight: 700;
+      line-height: 1.3;
+      margin: 0 0 22px;
+      padding-top: 16px;
+      position: relative;
+      word-break: keep-all;
+    }
+
+    .history-section-title::before {
+      background: #002FA7;
+      content: "";
+      height: 3px;
+      left: 0;
+      position: absolute;
+      top: -1px;
+      width: 64px;
+    }
+
+    .history-copy {
+      color: #222222;
+      font-size: var(--history-base);
+      line-height: 1.82;
+      margin: 0 0 18px;
+      word-break: keep-all;
+    }
+
+    .timeline {
+      border-top: 1px solid #111111;
+    }
+
+    .timeline-item {
+      display: grid;
+      grid-template-columns: 190px minmax(0, 1fr);
+      column-gap: 26px;
+      border-bottom: 1px solid #D9D9D9;
+      padding: 18px 0;
+    }
+
+    .timeline-date {
+      color: #002FA7;
+      font-size: calc(18px * var(--font-scale));
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      line-height: 1.25;
+    }
+
+    .timeline-text {
+      color: #222222;
+      font-size: var(--history-base);
+      line-height: 1.7;
+      margin: 0;
+      word-break: keep-all;
+    }
+
+    .case-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .case-card,
+    .achievement-card,
+    .rights-card {
+      border: 1px solid #111111;
+      background: #FFFFFF;
+    }
+
+    .case-card h3,
+    .achievement-card h3,
+    .rights-card h3 {
+      border-bottom: 1px solid #111111;
+      color: #111111;
+      font-size: var(--history-subtitle);
+      font-weight: 700;
+      line-height: 1.35;
+      margin: 0;
+      padding: 16px 18px;
+      word-break: keep-all;
+    }
+
+    .case-card dl,
+    .achievement-card dl,
+    .rights-card dl {
+      margin: 0;
+      padding: 18px;
+    }
+
+    .case-card dt,
+    .achievement-card dt,
+    .rights-card dt {
+      color: #002FA7;
+      font-size: 13px;
+      font-weight: 700;
+      margin-top: 18px;
+    }
+
+    .case-card dt:first-child,
+    .achievement-card dt:first-child,
+    .rights-card dt:first-child {
+      margin-top: 0;
+    }
+
+    .case-card dd,
+    .achievement-card dd,
+    .rights-card dd {
+      color: #222222;
+      font-size: calc(15px * var(--font-scale));
+      line-height: 1.68;
+      margin: 6px 0 0;
+      word-break: keep-all;
+    }
+
+    .achievement-grid,
+    .rights-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .highlight-list {
+      border: 1px solid #111111;
+      border-left: 6px solid #002FA7;
+      list-style: none;
+      margin: 22px 0 0;
+      padding: 0;
+    }
+
+    .highlight-list li {
+      color: #222222;
+      font-size: var(--history-base);
+      line-height: 1.75;
+      padding: 16px 20px;
+      word-break: keep-all;
+    }
+
+    .highlight-list li + li {
+      border-top: 1px solid #D9D9D9;
+    }
+
+    .conclusion-block {
+      background: #F7F7F8;
+      border: 1px solid #111111;
+      border-left: 6px solid #002FA7;
+      padding: 26px 28px;
+    }
+
+    .conclusion-block p {
+      color: #111111;
+      font-size: calc(18px * var(--font-scale));
+      font-weight: 700;
+      line-height: 1.76;
+      margin: 0 0 16px;
+      word-break: keep-all;
+    }
+
+    .conclusion-block p:last-child {
+      margin-bottom: 0;
+    }
+
+    body.history-page .utility-bar {
+      bottom: 24px !important;
+      display: flex !important;
+      flex-direction: column !important;
+      left: auto !important;
+      margin: 0 !important;
+      position: fixed !important;
+      right: 24px !important;
+      width: auto !important;
+      z-index: 1000 !important;
+    }
+
+    body.history-page .utility-button-container {
+      position: relative;
+    }
+
+    body.history-page .utility-tooltip {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      position: absolute !important;
+      white-space: nowrap !important;
+    }
+
+    body.history-page .utility-button-container:hover .utility-tooltip {
+      opacity: 1 !important;
+    }
+
+    @media print {
+      .history-container {
+        border: 0;
+        width: 100%;
+      }
+
+      .history-nav,
+      .utility-bar,
+      .back-link {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .case-grid,
+      .achievement-grid,
+      .rights-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .history-nav {
+        grid-template-columns: 1fr;
+      }
+
+      .history-nav a + a {
+        border-left: 0;
+        border-top: 1px solid #111111;
+      }
+
+      .infographic-flow {
+        grid-template-columns: 1fr;
+      }
+
+      .infographic-step {
+        min-height: 0;
+      }
+
+      .infographic-step + .infographic-step {
+        border-left: 0;
+        border-top: 1px solid #111111;
+      }
+
+      .infographic-outcome {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .history-container {
+        border-left: 0;
+        border-right: 0;
+        width: 100%;
+      }
+
+      .history-header {
+        grid-template-columns: 1fr;
+        padding: 20px 16px 26px;
+      }
+
+      .history-header-aside {
+        grid-column: 1;
+        grid-row: auto;
+        align-items: center;
+        border-right: 0;
+        border-bottom: 1px solid #D9D9D9;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        padding: 0 0 16px;
+      }
+
+      .history-logo {
+        height: 38px;
+      }
+
+      .history-body {
+        padding: 0 16px 52px;
+      }
+
+      .history-lead {
+        grid-template-columns: 1fr;
+        margin: 0 -16px 30px;
+      }
+
+      .history-lead-copy {
+        border-right: 0;
+        border-bottom: 1px solid #111111;
+      }
+
+      .history-lead-copy,
+      .history-number-panel {
+        padding: 24px 16px;
+      }
+
+      .history-number-panel {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .infographic-header {
+        grid-template-columns: 1fr;
+        padding: 20px 16px;
+      }
+
+      .infographic-step {
+        padding: 20px 16px 18px;
+      }
+
+      .infographic-step::before {
+        left: 16px;
+        right: 16px;
+      }
+
+      .infographic-outcome strong,
+      .infographic-outcome span {
+        padding: 16px;
+      }
+
+      .history-stat {
+        padding: 16px 12px;
+      }
+
+      .history-stat strong {
+        font-size: clamp(28px, 7vw, 32px);
+      }
+
+      .timeline-item {
+        grid-template-columns: 1fr;
+        row-gap: 8px;
+      }
+
+      body.history-page {
+        padding-bottom: 112px !important;
+      }
+
+      body.history-page .utility-bar {
+        bottom: 16px !important;
+        flex-direction: row !important;
+        justify-content: space-between !important;
+        left: 16px !important;
+        position: fixed !important;
+        right: 16px !important;
+        width: min(calc(100% - 32px), 360px) !important;
+      }
+
+      body.history-page .utility-tooltip {
+        display: none !important;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .history-number-panel {
+        grid-template-columns: 1fr;
+      }
+
+      .history-stat,
+      .history-stat:nth-child(odd) {
+        border-right: 0;
+      }
+
+      .history-stat:nth-last-child(2) {
+        border-bottom: 1px solid #D9D9D9;
+      }
+    }
+  </style>
+</head>
+
+<body class="history-page">
+  <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>
+
+  <article class="history-container document-article" id="history-article" data-document-category="알림">
+    <header class="history-header">
+      <div class="history-header-aside">
+        <img src="../logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="history-logo">
+        <span class="history-category">알림</span>
+      </div>
+      <h1 class="history-title">우체국물류지원단 물류노동조합 9년의 투쟁과 역사</h1>
+      <p class="history-subtitle">왜 물류노동조합인가: 서서울, 부평, 안양 물류노동자의 권익 향상 기록</p>
+      <div class="history-meta">
+        <span>게시일: 2026년 7월 6일</span>
+        <span>범위: 2017년부터 2026년 현재까지</span>
+      </div>
+    </header>
+
+    <main class="history-body" data-copy-body>
+      <section class="history-lead" aria-label="핵심 요약">
+        <div class="history-lead-copy">
+          <p class="history-kicker">핵심 요약</p>
+          <p class="history-lead-text">물류노동조합의 역사는 당연하게 여겨졌던 부당한 차별과 관행을 현장 투쟁으로 뒤집어 온 기록입니다. 수당과 복지포인트의 작은 차별부터 집단 해고, 센터 폐국, 고용승계와 통상임금 요구까지, 물류사업소 노동자의 곁에서 실질적인 성과를 만들어 왔습니다.</p>
+        </div>
+        <div class="history-number-panel">
+          <div class="history-stat">
+            <strong>3개 사업소</strong>
+            <span>서서울, 부평, 안양 지회 설립</span>
+          </div>
+          <div class="history-stat">
+            <strong>115명</strong>
+            <span>2021년 계약 연장 성공 인원</span>
+          </div>
+          <div class="history-stat">
+            <strong>100여명</strong>
+            <span>공무직 전환 성과 인원</span>
+          </div>
+          <div class="history-stat">
+            <strong>전원</strong>
+            <span>서서울 폐국에 따른 고용승계</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="history-infographic" aria-labelledby="history-infographic-title">
+        <div class="infographic-header">
+          <h2 class="infographic-title" id="history-infographic-title">한눈에 보는 9년의 변화</h2>
+          <div class="infographic-range">2017-2026</div>
+        </div>
+        <div class="infographic-flow">
+          <article class="infographic-step">
+            <span class="infographic-year">2017</span>
+            <h3>고용 불안 저지</h3>
+            <p>서서울 기간제 6명 계약만료 통보에 맞서 고용 연장과 8시간 일자리 보장을 이끌어냈습니다.</p>
+          </article>
+          <article class="infographic-step">
+            <span class="infographic-year">2021</span>
+            <h3>대규모 계약해지 차단</h3>
+            <p>기간제 115명 전원 계약 연장과 9개월 이상 근무자 공무직 전환 기준을 관철했습니다.</p>
+          </article>
+          <article class="infographic-step">
+            <span class="infographic-year">2022-2024</span>
+            <h3>차별 시정</h3>
+            <p>수당, 복지포인트, 병가, 성과급에서 정규직·공무직·기간제 간 격차를 줄였습니다.</p>
+          </article>
+          <article class="infographic-step">
+            <span class="infographic-year">2023-2024</span>
+            <h3>고용승계 쟁취</h3>
+            <p>서서울 폐국 과정에서 선 전환, 후 이동 원칙으로 조합원 전원 고용승계를 확보했습니다.</p>
+          </article>
+          <article class="infographic-step">
+            <span class="infographic-year">2025-2026</span>
+            <h3>구조 개혁 요구</h3>
+            <p>통상임금 현실화, 직무수당 인상, 우정사업본부 직접 고용과 직접 교섭을 요구하고 있습니다.</p>
+          </article>
+        </div>
+        <div class="infographic-outcome">
+          <strong>결론</strong>
+          <span>물류노동조합은 조직화, 고용안정, 차별 철폐, 임금 정상화, 안전 개선을 현장 투쟁의 성과로 연결해 왔습니다.</span>
+        </div>
+      </section>
+
+      <nav class="history-nav" aria-label="문서 목차">
+        <a href="#birth">조직의 탄생</a>
+        <a href="#employment">생존권 사수</a>
+        <a href="#equality">차별 철폐</a>
+        <a href="#wage">임금과 통상임금</a>
+        <a href="#safety">작업 환경과 안전</a>
+      </nav>
+
+      <section class="history-section" id="birth">
+        <h2 class="history-section-title">1. 조직의 탄생과 독자 노선 구축</h2>
+        <p class="history-copy">물류노동조합은 우체국물류지원단 내에서 상대적으로 소외되었던 물류사업소 노동자들의 생존권과 처우 개선을 위해 출범했습니다. 운송과 물류 직종 간 이해관계 차이를 넘어, 물류 현장의 권익을 전문적으로 지키는 독자 조직으로 자리 잡았습니다.</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-date">2017.09.20</div>
+            <p class="timeline-text">민주노총 공공운수노조 연합노조 산하 서서울물류 지회 설립. 초대 지회장은 오상현입니다.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2019.01.12</div>
+            <p class="timeline-text">인천 지역을 거점으로 한 부평물류 지회 설립.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2019.06.06</div>
+            <p class="timeline-text">경기 지역의 안양물류 지회 설립.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2021.01.25</div>
+            <p class="timeline-text">운송과 물류 직종 간 이해관계 차이를 극복하고 물류 부문에 집중하기 위해 운송-물류 운영위원회 분리 운영에 합의.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2021.10.07</div>
+            <p class="timeline-text">물류사업소 노동자만의 권익을 전문적이고 단호하게 지키기 위해 독립된 독자 노선을 선포하고 비상대책위원회 구성.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2021.11.08</div>
+            <p class="timeline-text">기업별 노동조합인 우체국물류지원단 물류노동조합 공식 출범. 제1대 오상현 위원장 당선.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2024.09.09</div>
+            <p class="timeline-text">조직의 내실을 다지기 위한 제2대 홍석민 위원장 당선 및 취임.</p>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-date">2025.12.17</div>
+            <p class="timeline-text">변화하는 노동 환경에 대응하기 위한 제3대 김영문 위원장 당선.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="history-section" id="employment">
+        <h2 class="history-section-title">2. 생존권 사수 투쟁: 고용 불안과의 전쟁</h2>
+        <div class="case-grid">
+          <article class="case-card">
+            <h3>2017년 서서울물류센터 계약만료 저지</h3>
+            <dl>
+              <dt>사건</dt>
+              <dd>2017년 7월 28일 오전, 사측은 기간제 노동자 6명에게 7월 31일 자 계약 종료를 기습 통보했습니다. 1개월 단위 쪼개기 계약을 악용한 고용 불안 조장이었습니다.</dd>
+              <dt>대응</dt>
+              <dd>우편지부 임원진은 국회 송옥주 의원실을 방문해 부당성을 고발했고, 같은 날 국회의원 비서관이 배석한 사측 긴급 면담을 진행했습니다.</dd>
+              <dt>성과</dt>
+              <dd>6명 전원의 고용 연장, 일일 8시간 풀타임 일자리 보장, 향후 무기계약직 전환 계획을 이끌어냈습니다. 개별 회유를 차단하고 전원 동시 서명 원칙도 지켰습니다.</dd>
+            </dl>
+          </article>
+          <article class="case-card">
+            <h3>2021년 대규모 계약해지 저지와 무기직 전환</h3>
+            <dl>
+              <dt>사건</dt>
+              <dd>상시 지속 업무를 수행하던 기간제 노동자들이 근속 2년을 앞두고 계약 만료 통보를 받을 정황이 포착되었습니다.</dd>
+              <dt>대응</dt>
+              <dd>2021년 3월 9일, 노조는 본사 앞 긴급 기자회견과 항의 투쟁을 전개했습니다.</dd>
+              <dt>성과</dt>
+              <dd>계약 만료 위기의 기간제 노동자 115명 전원 계약 연장에 성공했습니다. 외부 연구용역을 관철하고 9개월 이상 근무자 무기계약직 전환 기준을 세워 약 100여 명을 공무직으로 전환시켰습니다.</dd>
+            </dl>
+          </article>
+          <article class="case-card">
+            <h3>2022~2023년 서서울물류센터 폐국 대응</h3>
+            <dl>
+              <dt>상황</dt>
+              <dd>서서울물류센터 폐국이 결정되자 사측은 구체적 고용 대책 없이 정리 절차를 밟으려 했습니다.</dd>
+              <dt>대응</dt>
+              <dd>노조는 집단 연차 투쟁 등 실력 행사를 동반해 사측을 압박했습니다.</dd>
+              <dt>성과와 후속 투쟁</dt>
+              <dd>선 전환, 후 이동 원칙을 합의했고 희망퇴직자를 제외한 전원을 부천우편집중국 및 부평물류사업소 등으로 고용승계했습니다. 부천 이동 조합원의 근속 인정 거부에 대해서는 2024년 근속인정 청구 소송을 제기해 법정 투쟁을 이어가고 있습니다.</dd>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="history-section" id="equality">
+        <h2 class="history-section-title">3. 차별 철폐와 처우 정상화 성과</h2>
+        <div class="achievement-grid">
+          <article class="achievement-card">
+            <h3>직무수당 및 가족수당 차별 시정</h3>
+            <dl>
+              <dt>2017~2019년</dt>
+              <dd>기간제 노동자가 직무수당에서 제외되자 2018년 말 서울지방노동위원회에 직무수당 및 가족수당 차별시정을 신청했습니다. 2019년 노사 합의로 차별을 인정받고 2018년도 미지급 수당 전액을 소급 지급받았습니다.</dd>
+              <dt>2022년</dt>
+              <dd>둘째 자녀 가족수당을 인상하고 정규직과 동일한 기준을 공무직·기간제에 적용하도록 확정했습니다.</dd>
+              <dt>2025~2026년 요구</dt>
+              <dd>발착직 직무수당을 10만 원에서 15만 원으로 인상하고, 혹서기·고중량 수당 신설과 부양가족 범위 확대를 요구하고 있습니다.</dd>
+            </dl>
+          </article>
+          <article class="achievement-card">
+            <h3>복지포인트 차별 철폐</h3>
+            <dl>
+              <dt>단시간 노동자 구제</dt>
+              <dd>2017년 삭감된 단시간 노동자의 복지포인트에 대해 지노위 제소와 노동청 신고를 진행했고, 2020년 1월 미지급 포인트 전액 소급 지급을 받아냈습니다.</dd>
+              <dt>기준 일원화</dt>
+              <dd>2022년 기본 복지포인트를 40만에서 50만 포인트로 인상하고, 정규직·공무직·기간제 모두에게 근속 기준을 동일하게 적용하도록 했습니다.</dd>
+              <dt>격차 해소</dt>
+              <dd>2024년 임금협약으로 물류사업소 노동자의 복지포인트를 20만 포인트 추가 상향해 정규직과의 형평성을 맞췄습니다.</dd>
+            </dl>
+          </article>
+          <article class="achievement-card">
+            <h3>유급병가 제도 확대와 수당 보전</h3>
+            <dl>
+              <dt>2019년 2월</dt>
+              <dd>운송직에게만 국한되던 유급병가 제도를 물류사업소 노동자에게도 동일하게 확대 적용했습니다.</dd>
+              <dt>2022년 2월</dt>
+              <dd>유급병가 사용 시 제수당을 일할 계산해 삭감하던 독소 조항을 폐지하고, 유급병가 중 제수당 100% 보전을 이뤄냈습니다. 적용 기준일은 2022년 1월 1일입니다.</dd>
+            </dl>
+          </article>
+          <article class="achievement-card">
+            <h3>경영평가 성과급 차별 철폐</h3>
+            <dl>
+              <dt>투쟁 과정</dt>
+              <dd>사측이 기간제 노동자를 경영평가 성과급 지급 대상에서 제외하거나 차등 지급하려 하자, 노조는 차별시정 신청인을 모집하고 고의·반복적 차별에 대한 징벌적 손해배상 청구로 압박했습니다.</dd>
+              <dt>2023년 9월 19일</dt>
+              <dd>기간제 노동자에게도 공무직과 동일한 지급률로 성과급을 지급한다는 합의를 받아냈고, 6개월 이상 근무 후 퇴사한 노동자에게까지 소급 적용했습니다.</dd>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="history-section" id="wage">
+        <h2 class="history-section-title">4. 임금 지연 관행 타파 및 통상임금 쟁취</h2>
+        <ul class="highlight-list">
+          <li><strong>임금 지연 시정:</strong> 2017년과 2019년, 무기계약직 전환 후 임금 인상분 반영을 미루던 관행을 규탄해 정상화했습니다.</li>
+          <li><strong>최저임금법 위반 시도 차단:</strong> 2019년 직무수당을 최저임금에 억지로 산입하려던 사측의 시도를 규탄해 정상 지급하게 했습니다.</li>
+          <li><strong>명절보로금 통상임금 산입 요구:</strong> 대법원 전원합의체 판결 정신에 따라 2025년 명절보로금을 통상임금에 즉각 산입하고 연차수당 및 각종 수당 산정 기준을 현실화할 것을 요구하며 투쟁하고 있습니다.</li>
+        </ul>
+      </section>
+
+      <section class="history-section" id="safety">
+        <h2 class="history-section-title">5. 인간답게 일할 권리: 작업 환경 및 안전 개선</h2>
+        <div class="rights-grid">
+          <article class="rights-card">
+            <h3>기계 멈춤을 통한 온전한 휴게시간 확보</h3>
+            <dl>
+              <dt>개선 내용</dt>
+              <dd>식사시간 등 휴게시간에도 물량 처리를 위해 기계를 가동하던 관행을 철폐했습니다. 휴게시간에는 기계를 완전히 멈춘다는 원칙을 세워 온전한 휴식을 보장받았습니다.</dd>
+            </dl>
+          </article>
+          <article class="rights-card">
+            <h3>서서울 현장 환경 개선</h3>
+            <dl>
+              <dt>개선 내용</dt>
+              <dd>지하 주차장 시멘트 분진 문제에 대해 마스크 지급이라는 임시방편을 거부하고, 주차장 바닥 전체 코팅 공사를 예산에 반영시켜 근본적인 노동환경 개선을 이뤄냈습니다.</dd>
+            </dl>
+          </article>
+          <article class="rights-card">
+            <h3>혹서기 건강권 쟁취</h3>
+            <dl>
+              <dt>2025년 7월 7일</dt>
+              <dd>폭염은 생존권의 문제라는 성명서를 발표하며 사측을 압박했습니다. 단체교섭을 통해 2025년 7월 말부터 한 달간 현장 노동자 전원에게 이온음료를 지급하도록 조치했습니다.</dd>
+            </dl>
+          </article>
+          <article class="rights-card">
+            <h3>혹한기 안전 대책 강화</h3>
+            <dl>
+              <dt>지속 요구</dt>
+              <dd>겨울철 혹한기에 대비해 물류사업소 내 난방기구 추가 배치와 안전 대책을 매년 강화하고 있습니다.</dd>
+            </dl>
+          </article>
+        </div>
+      </section>
+
+      <section class="history-section" id="conclusion">
+        <h2 class="history-section-title">핵심 요약 및 결론</h2>
+        <div class="conclusion-block">
+          <p>우체국물류지원단 물류노동조합이 걸어온 길은 단순히 사측에 요구사항을 애걸한 역사가 아닙니다. 당연하게 여겨지던 부당한 차별과 관행을 투쟁으로 직접 뒤집어엎은 역사입니다.</p>
+          <p>현장의 작은 차별부터 거대한 위기까지, 물류사업소 노동자의 곁에서 실질적인 법적·물리적 성과를 완성해 온 유일한 조직은 물류노동조합입니다.</p>
+          <p>이제 노조는 제도적 차별 철폐를 넘어 우정사업본부 직접 고용 및 직접 교섭이라는 근본적인 구조 개혁을 향해 나아가고 있습니다. 노동자의 권리를 지키는 가장 확실한 방법은 물류노동조합과 함께하는 것입니다.</p>
+        </div>
+      </section>
+
+    </main>
+  </article>
+
+  <div class="utility-bar" id="utility-bar">
+    <div class="utility-button-container">
+      <button id="zoom-in-btn" aria-label="글자 크기 크게">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+      </button>
+      <span class="utility-tooltip">글자 크게</span>
+    </div>
+    <div class="utility-button-container">
+      <button id="zoom-out-btn" aria-label="글자 크기 작게">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
+      </button>
+      <span class="utility-tooltip">글자 작게</span>
+    </div>
+    <div class="utility-button-container">
+      <button id="zoom-reset-btn" aria-label="글자 크기 초기화">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
+      </button>
+      <span class="utility-tooltip">기본 크기</span>
+    </div>
+    <div class="utility-button-container">
+      <button id="copy-btn" aria-label="텍스트 복사">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+      </button>
+      <span class="utility-tooltip">텍스트 복사</span>
+    </div>
+    <div class="utility-button-container">
+      <button id="print-btn" aria-label="인쇄 또는 PDF 저장">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      </button>
+      <span class="utility-tooltip">인쇄 / PDF</span>
+    </div>
+    <div class="utility-button-container">
+      <button id="to-top-btn" aria-label="맨 위로 이동">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>
+      </button>
+      <span class="utility-tooltip">맨 위로</span>
+    </div>
+  </div>
+  <script src="../assets/document-tools.js"></script>
+</body>
+
+</html>
