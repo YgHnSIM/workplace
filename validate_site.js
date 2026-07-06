@@ -77,7 +77,7 @@ function validateMomIndex() {
     });
 }
 
-function validatePublicPrivacy() {
+function validatePublicMomAttendees() {
   const publicDir = path.join(rootDir, 'MoM');
   if (!fs.existsSync(publicDir)) return;
 
@@ -88,8 +88,8 @@ function validatePublicPrivacy() {
       const rowPattern = /<tr>\s*<td>(?:<strong>)?(참석자?|참관)(?:<\/strong>)?<\/td>\s*<td>(.*?)<\/td>\s*<\/tr>/gs;
       let match;
       while ((match = rowPattern.exec(html)) !== null) {
-        if (!match[2].includes('세부 명단 비공개')) {
-          errors.push(`${path.join('MoM', file)} exposes ${match[1]} list`);
+        if (match[2].includes('세부 명단 비공개')) {
+          errors.push(`${path.join('MoM', file)} hides ${match[1]} list`);
         }
       }
     });
@@ -106,7 +106,7 @@ function main() {
 
   validatePublicMomSources();
   validateMomIndex();
-  validatePublicPrivacy();
+  validatePublicMomAttendees();
 
   if (errors.length > 0) {
     console.error(errors.join('\n'));

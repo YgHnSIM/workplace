@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>우체국물류지원단 물류노동조합 공개 자료실</title>
-  <meta name="description" content="우체국물류지원단 물류노동조합의 성명서와 공개 문서를 투명하게 관리하고 배포하는 공식 아카이브 사이트입니다.">
+  <meta name="description" content="우체국물류지원단 물류노동조합의 활동 자료 보관소입니다.">
   <link rel="icon" href="logo_정사각형.png" type="image/png">
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
@@ -278,6 +278,7 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="assets/interface.css">
 </head>
 
 <body>
@@ -286,21 +287,23 @@
     <!-- Header -->
     <header class="archive-header">
       <img src="logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <h1 class="archive-title">공개 아카이브</h1>
-      <p class="archive-desc">우체국물류지원단 물류노동조합의 성명서 및 공개 공식 자료실입니다.</p>
+      <h1 class="archive-title">아카이브</h1>
+      <p class="archive-desc">우체국물류지원단 물류노동조합의 활동 자료 보관소입니다.</p>
     </header>
 
     <!-- Filter Buttons -->
     <div class="filter-bar">
-      <button class="filter-btn active" id="filter-all">전체</button>
-      <button class="filter-btn" id="filter-statement">성명서</button>
-      <button class="filter-btn" id="filter-mom">회의록</button>
+      <button class="filter-btn active" id="filter-all" type="button" data-filter="all" aria-pressed="true">전체</button>
+      <button class="filter-btn" id="filter-statement" type="button" data-filter="statement" aria-pressed="false">성명서</button>
+      <button class="filter-btn" id="filter-mom" type="button" data-filter="mom" aria-pressed="false">회의록</button>
+      <button class="filter-btn" id="filter-knowledge" type="button" data-filter="knowledge" aria-pressed="false">지식</button>
+      <button class="filter-btn" id="filter-notice" type="button" data-filter="notice" aria-pressed="false">알림</button>
     </div>
 
     <!-- Document List -->
     <div class="doc-list">
       <!-- 성명서 Card -->
-      <a href="statement/index.html" class="doc-card" data-category="statement">
+      <a href="statement/성명서_202607.html" class="doc-card" data-category="statement">
         <div class="card-meta">
           <span class="badge-category">성명서</span>
           <span class="doc-date">2026년 7월 6일</span>
@@ -316,15 +319,120 @@
       </a>
 
       <!-- 회의록 Card -->
-      <a href="MoM/index.html" class="doc-card" data-category="mom">
+      <a href="MoM/202607.html" class="doc-card" data-category="mom">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년 7월 3일</span>
         </div>
-        <h2 class="doc-title">우체국물류지원단 물류노동조합 운영위원회 회의록 공개 요약 아카이브</h2>
-        <p class="doc-excerpt">2026년 1월부터 7월까지 진행된 운영위원회 회의록 중 공개 가능한 회의 개요, 주요 결정사항, 차기 회의 안내를 정리한 요약본입니다.</p>
+        <h2 class="doc-title">2026년 7월 운영위원회 회의록</h2>
+        <p class="doc-excerpt">통상임금 소송 쟁점과 미참여 배경 안내, 각 지부 현장 안내, 판결·조정 결과 후 재논의 계획을 정리한 운영위원회 회의록입니다.</p>
         <div class="card-footer">
-          공개 요약 목록 보기
+          회의록 전문 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="MoM/202605.html" class="doc-card" data-category="mom">
+        <div class="card-meta">
+          <span class="badge-category">회의록</span>
+          <span class="doc-date">2026년 5월 8일</span>
+        </div>
+        <h2 class="doc-title">2026년 5월 운영위원회 회의록</h2>
+        <p class="doc-excerpt">현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보해 연장 근로 부담을 완화하고 현장 운영의 안정성을 기하는 방안을 정리한 회의록입니다.</p>
+        <div class="card-footer">
+          회의록 전문 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="MoM/202604.html" class="doc-card" data-category="mom">
+        <div class="card-meta">
+          <span class="badge-category">회의록</span>
+          <span class="doc-date">2026년 4월 3일</span>
+        </div>
+        <h2 class="doc-title">2026년 4월 운영위원회 회의록</h2>
+        <p class="doc-excerpt">근로자의 날 표창과 지부별 안건 등 운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer">
+          회의록 전문 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="MoM/202603.html" class="doc-card" data-category="mom">
+        <div class="card-meta">
+          <span class="badge-category">회의록</span>
+          <span class="doc-date">2026년 3월 6일</span>
+        </div>
+        <h2 class="doc-title">2026년 3월 운영위원회 회의록</h2>
+        <p class="doc-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer">
+          회의록 전문 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="MoM/202602.html" class="doc-card" data-category="mom">
+        <div class="card-meta">
+          <span class="badge-category">회의록</span>
+          <span class="doc-date">2026년 1월 30일</span>
+        </div>
+        <h2 class="doc-title">2026년 2월 운영위원회 회의록</h2>
+        <p class="doc-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer">
+          회의록 전문 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="MoM/202601.html" class="doc-card" data-category="mom">
+        <div class="card-meta">
+          <span class="badge-category">회의록</span>
+          <span class="doc-date">2026년 1월 9일</span>
+        </div>
+        <h2 class="doc-title">2026년 1월 운영위원회 회의록</h2>
+        <p class="doc-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer">
+          회의록 전문 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="knowledge/test.html" class="doc-card" data-category="knowledge">
+        <div class="card-meta">
+          <span class="badge-category">지식</span>
+          <span class="doc-date">임시 페이지</span>
+        </div>
+        <h2 class="doc-title">지식 임시 페이지</h2>
+        <p class="doc-excerpt">지식 분류 연결 확인을 위해 만든 임시 페이지입니다. 실제 자료가 준비되면 이 항목은 교체됩니다.</p>
+        <div class="card-footer">
+          지식 페이지 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </div>
+      </a>
+
+      <a href="notice/2025-performance-pay.html" class="doc-card" data-category="notice">
+        <div class="card-meta">
+          <span class="badge-category">알림</span>
+          <span class="doc-date">2026년 7월 6일</span>
+        </div>
+        <h2 class="doc-title">2025년 성과급 계산 방식</h2>
+        <p class="doc-excerpt">직무수당 10,000원, 내부평가 B등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내 이미지입니다.</p>
+        <div class="card-footer">
+          알림 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>
@@ -340,7 +448,7 @@
         <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
       <div class="info-text">
-        조합원 통상임금 소송 세부 대응책 및 미공개 예산 명세서 등 조합 내부 민감 의결 자료는 지부 회의를 통해 대면 배포되며, 본 외부 아카이브에는 운영위원회 공식 결정 회의록 요약본만 게재됩니다.
+        조합 내부 민감 의결 자료는 지부 회의를 통해 대면 배포되며, 본 외부 아카이브에는 운영위원회 공식 결정 회의록 요약본만 게재됩니다.
       </div>
     </div>
 
@@ -352,41 +460,26 @@
 
   <script>
     // Filtering logic
-    const filterAll = document.getElementById('filter-all');
-    const filterStatement = document.getElementById('filter-statement');
-    const filterMom = document.getElementById('filter-mom');
+    const filterButtons = document.querySelectorAll('.filter-btn');
     const cards = document.querySelectorAll('.doc-card');
 
-    filterAll.addEventListener('click', () => {
-      setActiveFilter(filterAll);
-      cards.forEach(card => card.style.display = 'block');
-    });
-
-    filterStatement.addEventListener('click', () => {
-      setActiveFilter(filterStatement);
-      cards.forEach(card => {
-        if (card.dataset.category === 'statement') {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
-      });
-    });
-
-    filterMom.addEventListener('click', () => {
-      setActiveFilter(filterMom);
-      cards.forEach(card => {
-        if (card.dataset.category === 'mom') {
-          card.style.display = 'block';
-        } else {
-          card.style.display = 'none';
-        }
+    filterButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const filter = button.dataset.filter || 'all';
+        setActiveFilter(button);
+        cards.forEach(card => {
+          card.hidden = filter !== 'all' && card.dataset.category !== filter;
+        });
       });
     });
 
     function setActiveFilter(activeBtn) {
-      document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+        btn.setAttribute('aria-pressed', 'false');
+      });
       activeBtn.classList.add('active');
+      activeBtn.setAttribute('aria-pressed', 'true');
     }
   </script>
 </body>

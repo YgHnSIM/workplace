@@ -53,6 +53,7 @@ function renderInline(value) {
   };
 
   let text = String(value || '');
+  text = text.replace(/<br\s*\/?>/gi, () => save('<br>'));
   text = text.replace(/`([^`]+)`/g, (_, code) => save(`<code>${escapeHtml(code)}</code>`));
   text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_, label, url) => {
     return save(`<a href="${escapeAttr(sanitizeUrl(url))}" class="content-link">${renderInline(label)}</a>`);
@@ -245,43 +246,8 @@ function extractTitle(markdown, fileName) {
   return path.basename(fileName, path.extname(fileName));
 }
 
-function collectAttendeeNames(markdown) {
-  const names = new Set();
-  markdown.split(/\r?\n/).forEach((line) => {
-    if (!/^\s*\|/.test(line)) return;
-    const cells = splitTableRow(line).map(stripMarkdown);
-    if (cells.length < 2 || !/(참석|참관)/.test(cells[0])) return;
-
-    cells[1]
-      .replace(/<br\s*\/?>/gi, ',')
-      .split(',')
-      .map((part) => part.replace(/\([^)]*\)/g, '').trim())
-      .forEach((part) => {
-        const match = part.match(/^[가-힣]{2,4}/);
-        if (match) names.add(match[0]);
-      });
-  });
-  return Array.from(names).sort((a, b) => b.length - a.length);
-}
-
-function redactLine(line, names) {
-  if (/^\s*\|/.test(line)) {
-    const cells = splitTableRow(line);
-    const firstCell = stripMarkdown(cells[0] || '');
-    if (/(참석|참관)/.test(firstCell)) {
-      return `| ${firstCell} | 세부 명단 비공개 |`;
-    }
-  }
-
-  return line;
-}
-
-function makePublicMarkdown(markdown, title) {
-  const names = collectAttendeeNames(markdown);
-  return markdown
-    .split(/\r?\n/)
-    .map((line) => redactLine(line, names))
-    .join('\n');
+function makePublicMarkdown(markdown) {
+  return markdown;
 }
 
 function extractDate(markdown, fileName) {
@@ -569,6 +535,7 @@ function buildDetailHtml({ title, description, content }) {
       .header-logo { height: 38px; }
     }
   </style>
+  <link rel="stylesheet" href="../assets/interface.css">
 </head>
 
 <body>
@@ -699,6 +666,7 @@ function buildIndexHtml(docs) {
       .doc-title { font-size: 16px; }
     }
   </style>
+  <link rel="stylesheet" href="../assets/interface.css">
 </head>
 
 <body>
