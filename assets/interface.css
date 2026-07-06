@@ -200,17 +200,22 @@ button:focus-visible {
   font-weight: 700 !important;
   line-height: 1.2;
   text-transform: none !important;
+  overflow-wrap: normal !important;
+  white-space: nowrap !important;
 }
 
 .doc-date {
   order: 1;
+  flex: 0 0 auto;
   max-width: none;
   color: #111111 !important;
   font-size: 20px !important;
   font-weight: 700 !important;
   line-height: 1.15;
   font-variant-numeric: tabular-nums;
-  word-break: keep-all;
+  overflow-wrap: normal !important;
+  word-break: keep-all !important;
+  white-space: nowrap !important;
 }
 
 .doc-title {
@@ -289,7 +294,7 @@ button:focus-visible {
 }
 
 .archive-footer {
-  text-align: left !important;
+  text-align: center !important;
   border-top: 1px solid #111111 !important;
   margin-top: 48px !important;
   padding-top: 18px !important;
@@ -684,6 +689,8 @@ button:focus-visible {
     border-right: 0;
     border-bottom: 1px solid #D9D9D9;
     flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 12px !important;
     justify-content: space-between;
     margin-bottom: 14px !important;
     padding: 0 0 12px;

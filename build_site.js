@@ -3,6 +3,7 @@ const path = require('path');
 const {
   escapeAttr,
   escapeHtml,
+  escapeNoBreakHtml,
   readJson,
   relativeTo,
   toPosixPath,
@@ -13,7 +14,7 @@ const rootDir = __dirname;
 const catalogPath = path.join(rootDir, '_source', 'catalog.json');
 const momManifestPath = path.join(rootDir, '_source', 'generated', 'mom.json');
 const homeFilePath = path.join(rootDir, 'index.html');
-const assetVersion = '20260707-1';
+const assetVersion = '20260707-2';
 
 const categoryLabels = {
   all: '전체',
@@ -99,7 +100,7 @@ function renderCard(doc, outputFile) {
   return `      <a href="${escapeAttr(pageHref(doc.href, outputFile))}" class="doc-card" data-category="${escapeAttr(doc.category)}">
         <div class="card-meta">
           <span class="badge-category">${escapeHtml(label)}</span>
-          <span class="doc-date">${escapeHtml(doc.date)}</span>
+          <span class="doc-date">${escapeNoBreakHtml(doc.date)}</span>
         </div>
         <h2 class="doc-title">${escapeHtml(doc.title)}</h2>
         <p class="doc-excerpt">${escapeHtml(doc.excerpt)}</p>

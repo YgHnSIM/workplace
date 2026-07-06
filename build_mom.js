@@ -3,6 +3,7 @@ const path = require('path');
 const {
   escapeAttr,
   escapeHtml,
+  escapeNoBreakHtml,
   relativeTo,
   writeTextFile,
 } = require('./lib/site-utils');
@@ -11,7 +12,7 @@ const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
 const generatedDir = path.join(rootDir, '_source', 'generated');
-const assetVersion = '20260707-1';
+const assetVersion = '20260707-2';
 
 function sanitizeUrl(value) {
   const url = String(value || '').trim();
@@ -541,7 +542,7 @@ function buildIndexHtml(docs) {
   const cards = docs.map((doc) => `      <a href="${escapeAttr(doc.outputFileName)}" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
-          <span class="doc-date">${escapeHtml(doc.date)}</span>
+          <span class="doc-date">${escapeNoBreakHtml(doc.date)}</span>
         </div>
         <h2 class="doc-title">${escapeHtml(doc.title)}</h2>
         <p class="doc-excerpt">${escapeHtml(doc.excerpt)}</p>
