@@ -148,6 +148,14 @@ const templateHTML = `<!DOCTYPE html>
       padding-left: 10px;
     }
 
+    .subsubsection-title {
+      font-size: calc(var(--font-size-base) * 1.08);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+
     .body-text {
       font-size: var(--font-size-base);
       color: var(--text-secondary);
@@ -165,6 +173,16 @@ const templateHTML = `<!DOCTYPE html>
 
     .bullet-list li {
       margin-bottom: 8px;
+    }
+
+    .content-link {
+      color: var(--color-accent);
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .content-link:hover {
+      color: #1d4ed8;
     }
 
     /* Table Styles */
@@ -480,8 +498,8 @@ const templateHTML = `<!DOCTYPE html>
       const bodyElements = clone.querySelector('.mom-body').children;
       for (let i = 0; i < bodyElements.length; i++) {
         const el = bodyElements[i];
-        if (el.tagName === 'H2' || el.tagName === 'H3') {
-          plainText += \`\\n\${el.innerText}\\n\\n\`;
+        if (el.tagName === 'H2' || el.tagName === 'H3' || el.tagName === 'H4') {
+          plainText += \`\\n\text\\n\\n\`;
         } else if (el.tagName === 'P') {
           plainText += \`\text\\n\\n\`;
         } else if (el.tagName === 'UL') {
@@ -539,7 +557,9 @@ function parseMarkdown(md) {
       const tag = idx === 0 ? 'th' : 'td';
       tableHtml += '  <tr>\n';
       cells.forEach(cell => {
-        const cellText = cell.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        const cellText = cell
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="content-link">$1</a>');
         tableHtml += `    <${tag}>${cellText}</${tag}>\n`;
       });
       tableHtml += '  </tr>\n';
@@ -558,8 +578,9 @@ function parseMarkdown(md) {
       tableRows = [];
     }
 
-    // List end condition
-    if (inList && !line.startsWith('-') && !line.startsWith('*')) {
+    // List end condition (skip empty lines to aggregate lists)
+    const isListItem = line.startsWith('- ') || line.startsWith('* ');
+    if (inList && !isListItem && line !== '') {
       html += "</ul>\n";
       inList = false;
     }
@@ -582,8 +603,13 @@ function parseMarkdown(md) {
       const text = line.replace(/^###\s+/, '').replace(/\*\*/g, '');
       html += `<h3 class="subsection-title">${text}</h3>\n`;
     }
+    // Heading 4
+    else if (line.startsWith('#### ')) {
+      const text = line.replace(/^####\s+/, '').replace(/\*\*/g, '');
+      html += `<h4 class="subsubsection-title">${text}</h4>\n`;
+    }
     // Divider
-    else if (line === '---') {
+    else if (line === '---' || line.match(/^---+$/)) {
       html += `<hr class="divider">\n`;
     }
     // Table rows
@@ -597,12 +623,17 @@ function parseMarkdown(md) {
         html += `<ul class="bullet-list">\n`;
         inList = true;
       }
-      const text = line.replace(/^[-*]\s+/, '').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const text = line
+        .replace(/^[-*]\s+/, '')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="content-link">$1</a>');
       html += `  <li>${text}</li>\n`;
     }
     // Default Paragraphs
     else {
-      const text = line.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const text = line
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\[(.*?)\]\((.*?)\)/g, '<a href="$2" class="content-link">$1</a>');
       html += `<p class="body-text">${text}</p>\n`;
     }
   }

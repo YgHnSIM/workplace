@@ -142,6 +142,14 @@
       padding-left: 10px;
     }
 
+    .subsubsection-title {
+      font-size: calc(var(--font-size-base) * 1.08);
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-top: 24px;
+      margin-bottom: 10px;
+    }
+
     .body-text {
       font-size: var(--font-size-base);
       color: var(--text-secondary);
@@ -159,6 +167,16 @@
 
     .bullet-list li {
       margin-bottom: 8px;
+    }
+
+    .content-link {
+      color: var(--color-accent);
+      text-decoration: underline;
+      font-weight: 700;
+    }
+
+    .content-link:hover {
+      color: #1d4ed8;
     }
 
     /* Table Styles */
@@ -603,8 +621,8 @@
       const bodyElements = clone.querySelector('.mom-body').children;
       for (let i = 0; i < bodyElements.length; i++) {
         const el = bodyElements[i];
-        if (el.tagName === 'H2' || el.tagName === 'H3') {
-          plainText += `\n${el.innerText}\n\n`;
+        if (el.tagName === 'H2' || el.tagName === 'H3' || el.tagName === 'H4') {
+          plainText += `\n	ext\n\n`;
         } else if (el.tagName === 'P') {
           plainText += `	ext\n\n`;
         } else if (el.tagName === 'UL') {
