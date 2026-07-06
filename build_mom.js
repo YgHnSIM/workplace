@@ -4,6 +4,8 @@ const path = require('path');
 const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
+const generatedDir = path.join(rootDir, '_source', 'generated');
+const assetVersion = '20260707-1';
 
 function escapeHtml(value) {
   return String(value)
@@ -18,13 +20,10 @@ function escapeAttr(value) {
   return escapeHtml(value).replace(/`/g, '&#96;');
 }
 
-function escapeRegExp(value) {
-  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
 function sanitizeUrl(value) {
   const url = String(value || '').trim();
   if (!url) return '#';
+  if (url.startsWith('//')) return '#';
   if (/^(https?:|mailto:|tel:)/i.test(url)) return url;
   if (/^[./#?A-Za-z0-9_%~가-힣-]/.test(url) && !/^[a-z][a-z0-9+.-]*:/i.test(url)) {
     return url;
@@ -211,27 +210,6 @@ function parseMarkdown(markdown, title) {
 
 function cleanHeadingText(line) {
   return stripMarkdown(line.replace(/^#{1,6}\s+/, ''));
-}
-
-function getPublicSectionType(line) {
-  const clean = cleanHeadingText(line);
-  const roman = clean.match(/^([IVX]+)\.\s+/i);
-  const numbered = clean.match(/^(\d+)\.\s*/);
-  const isMajorSection = roman || numbered || /회의 개요|주요 결정|결정사항|결정 사항|핵심 요약|차기 회의/.test(clean);
-
-  if (!isMajorSection) return null;
-  if (/회의 개요/.test(clean)) return 'overview';
-  if (/주요 결정|결정사항|결정 사항|핵심 요약/.test(clean)) return 'summary';
-  if (/차기 회의/.test(clean)) return 'next';
-
-  if (roman) {
-    const key = roman[1].toUpperCase();
-    if (key === 'I') return 'overview';
-    if (key === 'IV') return 'summary';
-    if (key === 'V') return 'next';
-  }
-
-  return 'private';
 }
 
 function extractTitle(markdown, fileName) {
@@ -535,7 +513,7 @@ function buildDetailHtml({ title, description, content }) {
       .header-logo { height: 38px; }
     }
   </style>
-  <link rel="stylesheet" href="../assets/interface.css">
+  <link rel="stylesheet" href="../assets/interface.css?v=${assetVersion}">
 </head>
 
 <body>
@@ -559,7 +537,7 @@ ${content}
   </article>
 
 ${buildUtilityBar()}
-  <script src="../assets/document-tools.js"></script>
+  <script src="../assets/document-tools.js?v=${assetVersion}"></script>
 </body>
 
 </html>
@@ -666,7 +644,7 @@ function buildIndexHtml(docs) {
       .doc-title { font-size: 16px; }
     }
   </style>
-  <link rel="stylesheet" href="../assets/interface.css">
+  <link rel="stylesheet" href="../assets/interface.css?v=${assetVersion}">
 </head>
 
 <body>
@@ -707,6 +685,7 @@ function readSourceFiles() {
 
 function build() {
   fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(generatedDir, { recursive: true });
 
   const docs = readSourceFiles().map((file) => {
     const sourcePath = path.join(sourceDir, file);
@@ -734,11 +713,25 @@ function build() {
 
   docs.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
   fs.writeFileSync(path.join(outputDir, 'index.html'), buildIndexHtml(docs), 'utf8');
+  fs.writeFileSync(
+    path.join(generatedDir, 'mom.json'),
+    `${JSON.stringify(docs.map((doc) => ({
+      category: 'mom',
+      href: `MoM/${doc.outputFileName}`,
+      title: doc.title,
+      date: doc.date,
+      excerpt: doc.excerpt,
+      action: '회의록 전문 보기',
+      sortKey: doc.sortKey,
+    })), null, 2)}\n`,
+    'utf8',
+  );
 
   docs.forEach((doc) => {
     console.log(`Generated ${path.relative(rootDir, doc.outputPath)} from ${path.relative(rootDir, doc.sourcePath)}`);
   });
   console.log(`Generated ${path.relative(rootDir, path.join(outputDir, 'index.html'))}`);
+  console.log(`Generated ${path.relative(rootDir, path.join(generatedDir, 'mom.json'))}`);
 }
 
 try {

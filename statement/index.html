@@ -472,13 +472,13 @@
       }
     }
   </style>
-  <link rel="stylesheet" href="../assets/interface.css">
+  <link rel="stylesheet" href="../assets/interface.css?v=20260707-1">
 </head>
 
 <body>
   <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>
 
-  <article class="statement-container" id="statement-article">
+  <article class="statement-container document-article" id="statement-article" data-document-category="성명서">
     <!-- Header -->
     <header class="statement-header">
       <div class="header-top-row">
@@ -493,7 +493,7 @@
     </header>
 
     <!-- Main Content Body -->
-    <main class="statement-body">
+    <main class="statement-body" data-copy-body>
       <!-- 서두 -->
       <section class="intro-section">
         <p class="body-text">
@@ -670,124 +670,7 @@
     </div>
   </div>
 
-  <script>
-    // Text scaling variables
-    let currentScale = 1.0;
-    const scaleStep = 0.1;
-    const minScale = 0.8;
-    const maxScale = 1.5;
-
-    // Sizing and navigation handlers
-    const zoomInBtn = document.getElementById('zoom-in-btn');
-    const zoomOutBtn = document.getElementById('zoom-out-btn');
-    const zoomResetBtn = document.getElementById('zoom-reset-btn');
-    const copyBtn = document.getElementById('copy-btn');
-    const printBtn = document.getElementById('print-btn');
-    const toTopBtn = document.getElementById('to-top-btn');
-
-    zoomInBtn.addEventListener('click', () => changeTextSize('up'));
-    zoomOutBtn.addEventListener('click', () => changeTextSize('down'));
-    zoomResetBtn.addEventListener('click', () => changeTextSize('reset'));
-    copyBtn.addEventListener('click', copyStatementText);
-    printBtn.addEventListener('click', () => window.print());
-    toTopBtn.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-
-    function changeTextSize(direction) {
-      if (direction === 'up') {
-        currentScale = Math.min(currentScale + scaleStep, maxScale);
-      } else if (direction === 'down') {
-        currentScale = Math.max(currentScale - scaleStep, minScale);
-      } else if (direction === 'reset') {
-        currentScale = 1.0;
-      }
-      document.documentElement.style.setProperty('--font-scale', currentScale.toFixed(1));
-    }
-
-    function copyStatementText() {
-      const article = document.getElementById('statement-article');
-      if (!article) return;
-      
-      const clone = article.cloneNode(true);
-      
-      let plainText = "";
-      
-      const category = clone.querySelector('.statement-category')?.innerText || "성명서";
-      plainText += `[${category}]\n\n`;
-      
-      const title = clone.querySelector('.statement-title')?.innerText || "";
-      plainText += `${title}\n\n`;
-      
-      const dateText = "2026년 7월 6일";
-      const orgText = clone.querySelector('.signature-org')?.innerText || clone.querySelector('.signature-org-logo')?.getAttribute('alt') || "우체국물류지원단 물류노동조합";
-      plainText += `${dateText} | ${orgText}\n\n`;
-      plainText += "==================================================\n\n";
-      
-      // Get all sections in order
-      const sections = clone.querySelectorAll('.statement-body section');
-      sections.forEach((section) => {
-        const titleEl = section.querySelector('.section-title');
-        if (titleEl) {
-          plainText += `${titleEl.innerText}\n\n`;
-        }
-        
-        const children = section.children;
-        for (let i = 0; i < children.length; i++) {
-          const child = children[i];
-          if (child.classList.contains('body-text')) {
-            plainText += `${child.innerText}\n\n`;
-          } else if (child.classList.contains('demands')) {
-            const listItems = child.querySelectorAll('ol li');
-            listItems.forEach((li, idx) => {
-              plainText += `${idx + 1}. ${li.innerText}\n`;
-            });
-            plainText += "\n";
-          }
-        }
-      });
-      
-      // Closing block
-      const closing = clone.querySelector('.closing-block');
-      if (closing) {
-        plainText += "==================================================\n\n";
-        const highlights = closing.querySelectorAll('.closing-highlight');
-        highlights.forEach(h => {
-          plainText += `${h.innerText}\n`;
-        });
-        const concluding = closing.querySelector('.closing-text');
-        if (concluding) {
-          plainText += `\n${concluding.innerText}\n\n`;
-        }
-      }
-      
-      // Signature
-      const sig = clone.querySelector('.signature-block');
-      if (sig) {
-        const sigDate = sig.querySelector('.signature-date')?.innerText || "";
-        const sigOrg = sig.querySelector('.signature-org')?.innerText || sig.querySelector('.signature-org-logo')?.getAttribute('alt') || "";
-        plainText += `\n${sigDate}\n\n${sigOrg}\n`;
-      }
-      
-      navigator.clipboard.writeText(plainText.trim()).then(() => {
-        alert("성명서 전체 텍스트가 클립보드에 복사되었습니다.");
-      }).catch(err => {
-        console.error("복사 실패:", err);
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = plainText.trim();
-        document.body.appendChild(textarea);
-        textarea.select();
-        try {
-          document.execCommand('copy');
-          alert("성명서 전체 텍스트가 클립보드에 복사되었습니다. (대체 방식)");
-        } catch (e) {
-          alert("텍스트 복사에 실패했습니다. 직접 복사해주세요.");
-        }
-        document.body.removeChild(textarea);
-      });
-    }
-  </script>
+  <script src="../assets/document-tools.js?v=20260707-1"></script>
 </body>
 
 </html>

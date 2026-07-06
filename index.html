@@ -4,294 +4,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>우체국물류지원단 물류노동조합 공개 자료실</title>
+  <title>아카이브 - 우체국물류지원단 물류노동조합</title>
   <meta name="description" content="우체국물류지원단 물류노동조합의 활동 자료 보관소입니다.">
   <link rel="icon" href="logo_정사각형.png" type="image/png">
-  <style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-
-    :root {
-      --bg-page: #f8fafc;
-      --bg-card: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --color-accent: #1e3a8a;
-      --color-accent-light: #eff6ff;
-      --color-border: #e2e8f0;
-      --font-main: 'Pretendard', sans-serif;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: var(--font-main);
-      background-color: var(--bg-page);
-      color: var(--text-primary);
-      line-height: 1.6;
-      display: flex;
-      justify-content: center;
-      padding: 60px 20px;
-    }
-
-    .archive-container {
-      width: 100%;
-      max-width: 800px;
-    }
-
-    /* Header Section */
-    .archive-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 50px;
-      border-bottom: 2px solid var(--color-border);
-      padding-bottom: 30px;
-    }
-
-    .header-logo {
-      height: 60px;
-      object-fit: contain;
-      margin-bottom: 20px;
-    }
-
-    .archive-title {
-      font-size: 28px;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-
-    .archive-desc {
-      font-size: 16px;
-      color: var(--text-muted);
-      margin-top: 8px;
-      font-weight: 500;
-    }
-
-    /* Filter Bar */
-    .filter-bar {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-
-    .filter-btn {
-      background-color: var(--bg-card);
-      border: 1px solid var(--color-border);
-      color: var(--text-secondary);
-      font-weight: 700;
-      font-size: 14px;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .filter-btn.active {
-      background-color: var(--color-accent);
-      border-color: var(--color-accent);
-      color: #ffffff;
-    }
-
-    .filter-btn:hover:not(.active) {
-      background-color: #f1f5f9;
-      border-color: #cbd5e1;
-    }
-
-    /* Document Card List */
-    .doc-list {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .doc-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      text-decoration: none;
-      display: block;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .doc-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      border-color: #bfdbfe;
-    }
-
-    .doc-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background-color: var(--color-accent);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .doc-card:hover::before {
-      opacity: 1;
-    }
-
-    .card-meta {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 12px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .badge-category {
-      background-color: var(--color-accent-light);
-      color: var(--color-accent);
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .doc-date {
-      color: var(--text-muted);
-    }
-
-    .doc-title {
-      font-size: 20px;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1.4;
-      margin-bottom: 10px;
-      word-break: keep-all;
-      transition: color 0.2s ease;
-    }
-
-    .doc-card:hover .doc-title {
-      color: var(--color-accent);
-    }
-
-    .doc-excerpt {
-      font-size: 15px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      word-break: keep-all;
-      margin-bottom: 16px;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      font-weight: 700;
-      font-size: 14px;
-      color: var(--color-accent);
-      gap: 4px;
-    }
-
-    .card-footer svg {
-      width: 16px;
-      height: 16px;
-      transition: transform 0.2s ease;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.5;
-    }
-
-    .doc-card:hover .card-footer svg {
-      transform: translateX(4px);
-    }
-
-    /* Info banner */
-    .info-banner {
-      background-color: #fafbfc;
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      padding: 16px;
-      margin-top: 40px;
-      display: flex;
-      gap: 12px;
-      align-items: flex-start;
-    }
-
-    .info-banner svg {
-      width: 20px;
-      height: 20px;
-      stroke: var(--text-muted);
-      stroke-width: 2;
-      fill: none;
-      flex-shrink: 0;
-      margin-top: 2px;
-    }
-
-    .info-text {
-      font-size: 14px;
-      color: var(--text-secondary);
-      font-weight: 500;
-    }
-
-    /* Footer */
-    .archive-footer {
-      text-align: center;
-      margin-top: 60px;
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 500;
-      border-top: 1px solid var(--color-border);
-      padding-top: 24px;
-    }
-
-    /* Mobile adjustments */
-    @media (max-width: 600px) {
-      body {
-        padding: 30px 15px;
-      }
-      .archive-header {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-      }
-      .header-logo {
-        height: 48px;
-      }
-      .archive-title {
-        font-size: 22px;
-      }
-      .doc-card {
-        padding: 18px;
-      }
-      .doc-title {
-        font-size: 17px;
-      }
-      .doc-excerpt {
-        font-size: 14px;
-      }
-    }
-  </style>
-  <link rel="stylesheet" href="assets/interface.css">
+  <link rel="stylesheet" href="assets/interface.css?v=20260707-1">
 </head>
 
 <body>
-
-  <div class="archive-container">
-    <!-- Header -->
+  <main class="archive-container">
     <header class="archive-header">
       <img src="logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
       <h1 class="archive-title">아카이브</h1>
       <p class="archive-desc">우체국물류지원단 물류노동조합의 활동 자료 보관소입니다.</p>
     </header>
 
-    <!-- Filter Buttons -->
     <div class="filter-bar">
       <button class="filter-btn active" id="filter-all" type="button" data-filter="all" aria-pressed="true">전체</button>
       <button class="filter-btn" id="filter-statement" type="button" data-filter="statement" aria-pressed="false">성명서</button>
@@ -300,9 +26,7 @@
       <button class="filter-btn" id="filter-notice" type="button" data-filter="notice" aria-pressed="false">알림</button>
     </div>
 
-    <!-- Document List -->
-    <div class="doc-list">
-      <!-- 성명서 Card -->
+    <section class="doc-list" aria-label="아카이브 목록">
       <a href="statement/성명서_202607.html" class="doc-card" data-category="statement">
         <div class="card-meta">
           <span class="badge-category">성명서</span>
@@ -318,14 +42,13 @@
         </div>
       </a>
 
-      <!-- 회의록 Card -->
       <a href="MoM/202607.html" class="doc-card" data-category="mom">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년 7월 3일</span>
         </div>
         <h2 class="doc-title">2026년 7월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">통상임금 소송 쟁점과 미참여 배경 안내, 각 지부 현장 안내, 판결·조정 결과 후 재논의 계획을 정리한 운영위원회 회의록입니다.</p>
+        <p class="doc-excerpt">통상임금 소송 - 소문에 휩쓸리지 않도록 소송 쟁점과 미참여 배경을 조합원에게 설명 - 각 지부 현장 안내, 판결·조정 결과 후 재논의</p>
         <div class="card-footer">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -340,7 +63,7 @@
           <span class="doc-date">2026년 5월 8일</span>
         </div>
         <h2 class="doc-title">2026년 5월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보해 연장 근로 부담을 완화하고 현장 운영의 안정성을 기하는 방안을 정리한 회의록입니다.</p>
+        <p class="doc-excerpt">기대 효과: 현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보함으로써 연장 근로 부담을 완화하고 현장 운영의 안정성을 기할 수 있음.</p>
         <div class="card-footer">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -355,7 +78,7 @@
           <span class="doc-date">2026년 4월 3일</span>
         </div>
         <h2 class="doc-title">2026년 4월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">근로자의 날 표창과 지부별 안건 등 운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <p class="doc-excerpt">근로자의 날 표창: 작년 안양지부 수혜에 이어, 올해는 부평지부 조합원을 추천하기로 하였습니다.</p>
         <div class="card-footer">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -453,50 +176,24 @@
           </svg>
         </div>
       </a>
-    </div>
+    </section>
 
-    <!-- Security Info Banner -->
     <div class="info-banner">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="12" y1="16" x2="12" y2="12"></line>
         <line x1="12" y1="8" x2="12.01" y2="8"></line>
       </svg>
       <div class="info-text">
-        조합 내부 민감 의결 자료는 지부 회의를 통해 대면 배포되며, 본 외부 아카이브에는 운영위원회 공식 결정 회의록 요약본만 게재됩니다.
+        운영위원회 회의록은 원문 기준으로 전문 공개됩니다. 외부 공개에 적합하지 않은 자료는 원본 단계에서 제외한 뒤 등록합니다.
       </div>
     </div>
 
-    <!-- Footer -->
     <footer class="archive-footer">
       <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
     </footer>
-  </div>
-
-  <script>
-    // Filtering logic
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    const cards = document.querySelectorAll('.doc-card');
-
-    filterButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const filter = button.dataset.filter || 'all';
-        setActiveFilter(button);
-        cards.forEach(card => {
-          card.hidden = filter !== 'all' && card.dataset.category !== filter;
-        });
-      });
-    });
-
-    function setActiveFilter(activeBtn) {
-      document.querySelectorAll('.filter-btn').forEach(btn => {
-        btn.classList.remove('active');
-        btn.setAttribute('aria-pressed', 'false');
-      });
-      activeBtn.classList.add('active');
-      activeBtn.setAttribute('aria-pressed', 'true');
-    }
-  </script>
+  </main>
+  <script src="assets/archive-filter.js?v=20260707-1"></script>
 </body>
 
 </html>

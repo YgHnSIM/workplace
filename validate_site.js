@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 const rootDir = __dirname;
-const ignoredDirs = new Set(['.git', '~', '_source']);
+const ignoredDirs = new Set(['.git', '~', '_source', 'node_modules']);
 const errors = [];
 
 function walk(dir) {
@@ -18,7 +18,7 @@ function walk(dir) {
 }
 
 function isExternalRef(ref) {
-  return /^(https?:|mailto:|tel:|#|javascript:)/i.test(ref);
+  return /^(https?:|mailto:|tel:|#)/i.test(ref);
 }
 
 function validateRefs(filePath, html) {
@@ -26,12 +26,35 @@ function validateRefs(filePath, html) {
   let match;
   while ((match = refPattern.exec(html)) !== null) {
     const ref = match[1];
-    if (!ref || isExternalRef(ref)) continue;
+    if (!ref) continue;
+    if (/^javascript:/i.test(ref)) {
+      errors.push(`${path.relative(rootDir, filePath)} contains unsafe javascript URL: ${ref}`);
+      continue;
+    }
+    if (ref.startsWith('//')) {
+      errors.push(`${path.relative(rootDir, filePath)} contains protocol-relative URL: ${ref}`);
+      continue;
+    }
+    if (isExternalRef(ref)) continue;
 
     const cleanRef = ref.split('#')[0].split('?')[0];
     if (!cleanRef) continue;
 
-    const resolved = path.resolve(path.dirname(filePath), cleanRef);
+    if (/^[a-z][a-z0-9+.-]*:/i.test(cleanRef)) {
+      errors.push(`${path.relative(rootDir, filePath)} contains unsupported URL protocol: ${ref}`);
+      continue;
+    }
+
+    const resolved = cleanRef.startsWith('/')
+      ? path.resolve(rootDir, `.${cleanRef}`)
+      : path.resolve(path.dirname(filePath), cleanRef);
+    const rootWithSep = `${rootDir}${path.sep}`;
+
+    if (resolved !== rootDir && !resolved.startsWith(rootWithSep)) {
+      errors.push(`${path.relative(rootDir, filePath)} references file outside site root: ${ref}`);
+      continue;
+    }
+
     if (!fs.existsSync(resolved)) {
       errors.push(`${path.relative(rootDir, filePath)} references missing file: ${ref}`);
     }
@@ -45,10 +68,22 @@ function validatePlaceholders(filePath, html) {
     { pattern: /TODO|FIXME/i, label: 'TODO/FIXME marker' },
     { pattern: /2026년\s+월\s+일/, label: 'empty Korean date' },
     { pattern: /\\text|\\next|\bext\b/, label: 'broken copy-text marker' },
+    { pattern: /공개용 요약본|요약본만|회의 개요·주요 결정사항·차기 회의 안내만|민감 의결 자료/, label: 'outdated limited-disclosure policy text' },
   ];
 
   badPatterns.forEach(({ pattern, label }) => {
     if (pattern.test(html)) errors.push(`${relative} contains ${label}`);
+  });
+}
+
+function validateProjectText() {
+  ['README.md'].forEach((file) => {
+    const filePath = path.join(rootDir, file);
+    if (!fs.existsSync(filePath)) return;
+    const text = fs.readFileSync(filePath, 'utf8');
+    if (/공개용 요약본|요약본만|회의 개요·주요 결정사항·차기 회의 안내만|민감 의결 자료/.test(text)) {
+      errors.push(`${file} contains outdated limited-disclosure policy text`);
+    }
   });
 }
 
@@ -77,7 +112,7 @@ function validateMomIndex() {
     });
 }
 
-function validatePublicMomAttendees() {
+function validateNoRedactedMomAttendees() {
   const publicDir = path.join(rootDir, 'MoM');
   if (!fs.existsSync(publicDir)) return;
 
@@ -89,10 +124,20 @@ function validatePublicMomAttendees() {
       let match;
       while ((match = rowPattern.exec(html)) !== null) {
         if (match[2].includes('세부 명단 비공개')) {
-          errors.push(`${path.join('MoM', file)} hides ${match[1]} list`);
+          errors.push(`${path.join('MoM', file)} contains redacted ${match[1]} list`);
         }
       }
     });
+}
+
+function validateRemovedFiles() {
+  [
+    path.join(rootDir, 'notice', 'test.html'),
+  ].forEach((file) => {
+    if (fs.existsSync(file)) {
+      errors.push(`${path.relative(rootDir, file)} should be removed from the public site`);
+    }
+  });
 }
 
 function main() {
@@ -104,9 +149,11 @@ function main() {
       validatePlaceholders(file, html);
     });
 
+  validateProjectText();
+  validateRemovedFiles();
   validatePublicMomSources();
   validateMomIndex();
-  validatePublicMomAttendees();
+  validateNoRedactedMomAttendees();
 
   if (errors.length > 0) {
     console.error(errors.join('\n'));

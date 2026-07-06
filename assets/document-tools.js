@@ -57,6 +57,12 @@
       return;
     }
 
+    if (tag === 'IMG') {
+      const alt = normalizeText(node.getAttribute('alt'));
+      if (alt) lines.push(alt, '');
+      return;
+    }
+
     if (node.classList.contains('table-container')) {
       const table = node.querySelector('table');
       if (table) {

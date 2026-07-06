@@ -3,4 +3,5 @@
 .agents/
 .gemini/
 .codex-remote-attachments/
+_source/generated/
 ~/

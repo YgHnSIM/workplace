@@ -156,7 +156,9 @@ button:focus-visible {
   border-bottom: 1px solid #111111 !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+  color: #111111 !important;
   padding: 28px 0 !important;
+  text-decoration: none !important;
   transform: none !important;
 }
 
@@ -238,6 +240,8 @@ button:focus-visible {
 
 .card-footer {
   grid-column: 2;
+  align-items: center !important;
+  display: flex !important;
   justify-content: flex-start !important;
   color: #111111 !important;
   font-size: 14px !important;
@@ -254,7 +258,12 @@ button:focus-visible {
 
 .card-footer svg {
   color: #002FA7;
+  fill: none !important;
+  flex: 0 0 auto;
+  height: 16px !important;
   stroke: currentColor !important;
+  stroke-width: 2.5 !important;
+  width: 16px !important;
 }
 
 .doc-card:hover .card-footer svg {

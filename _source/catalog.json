@@ -1,0 +1,44 @@
+{
+  "documents": [
+    {
+      "category": "statement",
+      "href": "statement/성명서_202607.html",
+      "title": "교섭대표노조와 우체국물류지원단, 우정사업본부는 물류노동자의 노동강도 증가와 차별 문제 해결에 즉각 나서라",
+      "date": "2026년 7월 6일",
+      "excerpt": "소포·수하물 구분 노동자 노동강도 증가 대책 수립, 10년째 동결된 직무수당 현실화, 명절상여금 차별 철폐, 그리고 퇴직으로 인한 자연감소 인력에 대한 안정적 인력 충원을 촉구하는 노동조합 성명서입니다.",
+      "action": "성명서 보기",
+      "groupOrder": 10,
+      "order": 10
+    },
+    {
+      "category": "knowledge",
+      "href": "knowledge/test.html",
+      "title": "지식 임시 페이지",
+      "date": "임시 페이지",
+      "excerpt": "지식 분류 연결 확인을 위해 만든 임시 페이지입니다. 실제 자료가 준비되면 이 항목은 교체됩니다.",
+      "action": "지식 페이지 보기",
+      "groupOrder": 30,
+      "order": 10
+    },
+    {
+      "category": "notice",
+      "href": "notice/logistics-union-9-years.html",
+      "title": "우체국물류지원단 물류노동조합 9년의 투쟁과 역사",
+      "date": "2026년 7월 6일",
+      "excerpt": "서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다.",
+      "action": "알림 보기",
+      "groupOrder": 40,
+      "order": 10
+    },
+    {
+      "category": "notice",
+      "href": "notice/2025-performance-pay.html",
+      "title": "2025년 성과급 계산 방식",
+      "date": "2026년 7월 6일",
+      "excerpt": "직무수당 10,000원, 내부평가 B등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내 이미지입니다.",
+      "action": "알림 보기",
+      "groupOrder": 40,
+      "order": 20
+    }
+  ]
+}
