@@ -370,21 +370,68 @@
     }
 
     @media (max-width: 600px) {
+      :root {
+        --font-size-base: calc(15px * var(--font-scale));
+        --font-size-title: calc(23px * var(--font-scale));
+        --font-size-section-title: calc(18px * var(--font-scale));
+        --font-size-closing-highlight: calc(17px * var(--font-scale));
+        --spacing-unit: 1.3rem;
+      }
+      body {
+        padding: 10px 8px 100px 8px; /* Safe padding for bottom bar */
+      }
+      .statement-container {
+        padding: 28px 16px;
+        border-radius: 8px;
+        box-shadow: none;
+        border: none;
+      }
+      .statement-header {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+      }
+      .statement-meta {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        margin-top: 15px;
+      }
+      .meta-divider {
+        display: none;
+      }
+      .body-text {
+        text-indent: 1.0em; /* Reduced indent on mobile */
+      }
+      .demands {
+        padding: 20px 15px;
+      }
+      .demands ol {
+        padding-left: 15px;
+      }
+      .closing-block {
+        padding: 20px 15px;
+      }
+      .signature-block {
+        margin-top: 40px;
+        padding-top: 30px;
+      }
+      .signature-org {
+        font-size: calc(var(--font-size-base) * 1.2);
+      }
       .utility-bar {
-        bottom: 20px;
-        right: 20px;
-        left: 20px;
+        bottom: 16px;
+        right: 16px;
+        left: 16px;
         flex-direction: row;
         justify-content: space-around;
         padding: 8px;
         border-radius: 16px;
-        width: calc(100% - 40px);
+        width: calc(100% - 32px);
+        background: rgba(255, 255, 255, 0.94);
+        box-shadow: 0 4px 25px rgba(0, 0, 0, 0.12);
       }
       .utility-tooltip {
         display: none;
-      }
-      body {
-        padding-bottom: 90px; /* Space for horizontal toolbar */
       }
     }
   </style>
@@ -571,6 +618,14 @@
       </button>
       <span class="utility-tooltip">인쇄 / PDF</span>
     </div>
+    <div class="utility-button-container">
+      <button id="to-top-btn" aria-label="맨 위로 이동">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+      </button>
+      <span class="utility-tooltip">맨 위로</span>
+    </div>
   </div>
 
   <script>
@@ -580,18 +635,22 @@
     const minScale = 0.8;
     const maxScale = 1.5;
 
-    // Sizing handlers
+    // Sizing and navigation handlers
     const zoomInBtn = document.getElementById('zoom-in-btn');
     const zoomOutBtn = document.getElementById('zoom-out-btn');
     const zoomResetBtn = document.getElementById('zoom-reset-btn');
     const copyBtn = document.getElementById('copy-btn');
     const printBtn = document.getElementById('print-btn');
+    const toTopBtn = document.getElementById('to-top-btn');
 
     zoomInBtn.addEventListener('click', () => changeTextSize('up'));
     zoomOutBtn.addEventListener('click', () => changeTextSize('down'));
     zoomResetBtn.addEventListener('click', () => changeTextSize('reset'));
     copyBtn.addEventListener('click', copyStatementText);
     printBtn.addEventListener('click', () => window.print());
+    toTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
 
     function changeTextSize(direction) {
       if (direction === 'up') {
