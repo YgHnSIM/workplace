@@ -273,52 +273,15 @@ function redactLine(line, names) {
     }
   }
 
-  let result = line;
-  names.forEach((name) => {
-    result = result.replace(new RegExp(`${escapeRegExp(name)}\\s*(위원장|사무국장|국장|지부장|감사|간사|위원)`, 'g'), '담당 $1');
-    result = result.replace(new RegExp(escapeRegExp(name), 'g'), '담당자');
-  });
-  return result;
+  return line;
 }
 
 function makePublicMarkdown(markdown, title) {
   const names = collectAttendeeNames(markdown);
-  const sections = [];
-  let current = { type: 'private', lines: [] };
-
-  markdown.split(/\r?\n/).forEach((line) => {
-    const type = /^#{1,6}\s+/.test(line.trim()) ? getPublicSectionType(line.trim()) : null;
-    const clean = cleanHeadingText(line.trim());
-    const isDocumentTitle = /^#\s+/.test(line.trim()) && clean === title;
-
-    if (type && !isDocumentTitle) {
-      if (current.lines.length > 0) sections.push(current);
-      current = { type, lines: [line] };
-      return;
-    }
-
-    if (!isDocumentTitle) current.lines.push(line);
-  });
-  if (current.lines.length > 0) sections.push(current);
-
-  const publicLines = [];
-  sections.forEach((section) => {
-    if (!['overview', 'summary', 'next'].includes(section.type)) return;
-    section.lines.forEach((line) => {
-      if (/^<br\s*\/?>$/i.test(line.trim())) return;
-      publicLines.push(redactLine(line, names));
-    });
-    publicLines.push('');
-  });
-
-  if (publicLines.length === 0) {
-    return markdown
-      .split(/\r?\n/)
-      .map((line) => redactLine(line, names))
-      .join('\n');
-  }
-
-  return publicLines.join('\n').trim();
+  return markdown
+    .split(/\r?\n/)
+    .map((line) => redactLine(line, names))
+    .join('\n');
 }
 
 function extractDate(markdown, fileName) {
@@ -357,7 +320,7 @@ function extractExcerpt(publicMarkdown) {
     if (list) return stripMarkdown(list[1]).slice(0, 120);
   }
 
-  return '회의 개요, 주요 결정사항, 차기 회의 안내를 정리한 공개용 요약본입니다.';
+  return '운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.';
 }
 
 function buildUtilityBar() {
@@ -621,7 +584,6 @@ function buildDetailHtml({ title, description, content }) {
         <div class="mom-category">회의록</div>
       </div>
       <h1 class="statement-title">${escapeHtml(title)}</h1>
-      <p class="public-note">공개용 요약본입니다. 참석자 세부 명단과 내부 대응 세부사항은 비공개 처리했습니다.</p>
     </header>
 
     <main class="mom-body" data-copy-body>
@@ -646,7 +608,7 @@ function buildIndexHtml(docs) {
         <h2 class="doc-title">${escapeHtml(doc.title)}</h2>
         <p class="doc-excerpt">${escapeHtml(doc.excerpt)}</p>
         <div class="card-footer">
-          공개 요약 보기
+          회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>`).join('\n\n');
@@ -658,7 +620,7 @@ function buildIndexHtml(docs) {
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>운영위원회 회의록 아카이브 - 우체국물류지원단 물류노동조합</title>
-  <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 공개용 회의록 요약 일람입니다.">
+  <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
@@ -748,7 +710,7 @@ function buildIndexHtml(docs) {
     <header class="archive-header">
       <img src="../logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
       <h1 class="archive-title">운영위원회 회의록</h1>
-      <p class="archive-desc">공개 가능한 회의 개요, 주요 결정사항, 차기 회의 안내를 모은 요약 아카이브입니다.</p>
+      <p class="archive-desc">우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 보관소입니다.</p>
     </header>
 
     <div class="doc-list">
@@ -786,7 +748,7 @@ function build() {
     const content = parseMarkdown(publicMarkdown, title);
     const match = file.match(/^(\d{6})/);
     const outputFileName = match ? `${match[1]}.html` : `${path.basename(file, '.md')}.html`;
-    const description = `${title} 공개용 요약본입니다.`;
+    const description = `${title} - 우체국물류지원단 물류노동조합 공식 회의록입니다.`;
     const outputPath = path.join(outputDir, outputFileName);
 
     fs.writeFileSync(outputPath, buildDetailHtml({ title, description, content }), 'utf8');

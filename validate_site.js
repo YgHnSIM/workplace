@@ -78,40 +78,20 @@ function validateMomIndex() {
 }
 
 function validatePublicPrivacy() {
-  const sourceDir = path.join(rootDir, '_source', 'MoM');
   const publicDir = path.join(rootDir, 'MoM');
-  if (!fs.existsSync(sourceDir) || !fs.existsSync(publicDir)) return;
-
-  const names = new Set();
-  fs.readdirSync(sourceDir)
-    .filter((file) => path.extname(file).toLowerCase() === '.md')
-    .forEach((file) => {
-      const markdown = fs.readFileSync(path.join(sourceDir, file), 'utf8');
-      markdown.split(/\r?\n/).forEach((line) => {
-        if (!/^\s*\|/.test(line)) return;
-        const cells = line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|').map((cell) => cell.trim());
-        const label = cells[0] || '';
-        if (!/(참석|참관)/.test(label) || !cells[1]) return;
-        cells[1]
-          .replace(/<br\s*\/?>/gi, ',')
-          .split(',')
-          .map((part) => part.replace(/\([^)]*\)/g, '').trim())
-          .forEach((part) => {
-            const match = part.match(/^[가-힣]{2,4}/);
-            if (match) names.add(match[0]);
-          });
-      });
-    });
+  if (!fs.existsSync(publicDir)) return;
 
   fs.readdirSync(publicDir)
     .filter((file) => /^\d{6}\.html$/.test(file))
     .forEach((file) => {
       const html = fs.readFileSync(path.join(publicDir, file), 'utf8');
-      names.forEach((name) => {
-        if (html.includes(name)) {
-          errors.push(`${path.join('MoM', file)} contains unredacted attendee/observer name: ${name}`);
+      const rowPattern = /<tr>\s*<td>(?:<strong>)?(참석자?|참관)(?:<\/strong>)?<\/td>\s*<td>(.*?)<\/td>\s*<\/tr>/gs;
+      let match;
+      while ((match = rowPattern.exec(html)) !== null) {
+        if (!match[2].includes('세부 명단 비공개')) {
+          errors.push(`${path.join('MoM', file)} exposes ${match[1]} list`);
         }
-      });
+      }
     });
 }
 
