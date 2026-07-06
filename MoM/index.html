@@ -5,11 +5,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>운영위원회 회의록 아카이브 - 우체국물류지원단 물류노동조합</title>
-  <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.">
+  <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 공개용 회의록 요약 일람입니다.">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
   <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-
     :root {
       --bg-page: #f8fafc;
       --bg-card: #ffffff;
@@ -21,13 +20,7 @@
       --color-border: #e2e8f0;
       --font-main: 'Pretendard', sans-serif;
     }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
+    * { margin: 0; padding: 0; box-sizing: border-box; }
     body {
       font-family: var(--font-main);
       background-color: var(--bg-page);
@@ -38,12 +31,7 @@
       align-items: center;
       padding: 60px 20px;
     }
-
-    .archive-container {
-      width: 100%;
-      max-width: 800px;
-    }
-
+    .archive-container { width: 100%; max-width: 800px; }
     .back-link {
       display: inline-flex;
       align-items: center;
@@ -53,316 +41,143 @@
       font-size: 14px;
       font-weight: 700;
       margin-bottom: 24px;
-      align-self: flex-start;
-      transition: color 0.2s ease;
+      transition: color .2s ease;
     }
-
-    .back-link:hover {
-      color: var(--color-accent);
-    }
-
-    .back-link svg {
-      width: 16px;
-      height: 16px;
-      fill: none;
-      stroke: currentColor;
-      stroke-width: 2.5;
-    }
-
-    /* Header Section */
-    .archive-header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      margin-bottom: 40px;
-      border-bottom: 2px solid var(--color-border);
-      padding-bottom: 30px;
-    }
-
-    .header-logo {
-      height: 50px;
-      object-fit: contain;
-      margin-bottom: 20px;
-    }
-
-    .archive-title {
-      font-size: 26px;
-      font-weight: 800;
-      color: var(--text-primary);
-      letter-spacing: -0.02em;
-    }
-
-    .archive-desc {
-      font-size: 15px;
-      color: var(--text-muted);
-      margin-top: 8px;
-      font-weight: 500;
-    }
-
-    /* Document Card List */
-    .doc-list {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
+    .back-link:hover { color: var(--color-accent); }
+    .back-link svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; }
+    .archive-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 40px; border-bottom: 2px solid var(--color-border); padding-bottom: 30px; }
+    .header-logo { height: 50px; object-fit: contain; margin-bottom: 20px; }
+    .archive-title { font-size: 26px; font-weight: 800; letter-spacing: 0; }
+    .archive-desc { font-size: 15px; color: var(--text-muted); margin-top: 8px; font-weight: 500; word-break: keep-all; }
+    .doc-list { display: flex; flex-direction: column; gap: 20px; }
     .doc-card {
       background-color: var(--bg-card);
       border: 1px solid var(--color-border);
-      border-radius: 12px;
+      border-radius: 8px;
       padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 6px -1px rgba(0,0,0,.02), 0 2px 4px -1px rgba(0,0,0,.02);
+      transition: all .25s cubic-bezier(.4,0,.2,1);
       text-decoration: none;
       display: block;
       position: relative;
       overflow: hidden;
     }
-
-    .doc-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-      border-color: #bfdbfe;
-    }
-
-    .doc-card::before {
-      content: '';
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      background-color: var(--color-accent);
-      opacity: 0;
-      transition: opacity 0.2s ease;
-    }
-
-    .doc-card:hover::before {
-      opacity: 1;
-    }
-
-    .card-meta {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-      margin-bottom: 12px;
-      font-size: 13px;
-      font-weight: 700;
-    }
-
-    .badge-category {
-      background-color: var(--color-accent-light);
-      color: var(--color-accent);
-      padding: 2px 8px;
-      border-radius: 4px;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-
-    .doc-date {
-      color: var(--text-muted);
-    }
-
-    .doc-title {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--text-primary);
-      line-height: 1.4;
-      margin-bottom: 10px;
-      word-break: keep-all;
-      transition: color 0.2s ease;
-    }
-
-    .doc-card:hover .doc-title {
-      color: var(--color-accent);
-    }
-
-    .doc-excerpt {
-      font-size: 14px;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      word-break: keep-all;
-      margin-bottom: 16px;
-    }
-
-    .card-footer {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      font-weight: 700;
-      font-size: 13px;
-      color: var(--color-accent);
-      gap: 4px;
-    }
-
-    .card-footer svg {
-      width: 14px;
-      height: 14px;
-      transition: transform 0.2s ease;
-      stroke: currentColor;
-      fill: none;
-      stroke-width: 2.5;
-    }
-
-    .doc-card:hover .card-footer svg {
-      transform: translateX(4px);
-    }
-
-    /* Footer */
-    .archive-footer {
-      text-align: center;
-      margin-top: 60px;
-      font-size: 13px;
-      color: var(--text-muted);
-      font-weight: 500;
-      border-top: 1px solid var(--color-border);
-      padding-top: 24px;
-    }
-
-    /* Mobile adjustments */
+    .doc-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.05), 0 4px 6px -2px rgba(0,0,0,.05); border-color: #bfdbfe; }
+    .doc-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: var(--color-accent); opacity: 0; transition: opacity .2s ease; }
+    .doc-card:hover::before { opacity: 1; }
+    .card-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; font-size: 13px; font-weight: 700; }
+    .badge-category { background-color: var(--color-accent-light); color: var(--color-accent); padding: 2px 8px; border-radius: 4px; letter-spacing: .05em; }
+    .doc-date { color: var(--text-muted); }
+    .doc-title { font-size: 18px; font-weight: 800; color: var(--text-primary); line-height: 1.4; margin-bottom: 10px; word-break: keep-all; transition: color .2s ease; }
+    .doc-card:hover .doc-title { color: var(--color-accent); }
+    .doc-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; margin-bottom: 16px; }
+    .card-footer { display: flex; justify-content: flex-end; align-items: center; font-weight: 700; font-size: 13px; color: var(--color-accent); gap: 4px; }
+    .card-footer svg { width: 14px; height: 14px; transition: transform .2s ease; stroke: currentColor; fill: none; stroke-width: 2.5; }
+    .doc-card:hover .card-footer svg { transform: translateX(4px); }
+    .archive-footer { text-align: center; margin-top: 60px; font-size: 13px; color: var(--text-muted); font-weight: 500; border-top: 1px solid var(--color-border); padding-top: 24px; }
     @media (max-width: 600px) {
-      body {
-        padding: 30px 15px;
-      }
-      .archive-header {
-        margin-bottom: 30px;
-        padding-bottom: 20px;
-      }
-      .header-logo {
-        height: 40px;
-      }
-      .archive-title {
-        font-size: 20px;
-      }
-      .doc-card {
-        padding: 18px;
-      }
-      .doc-title {
-        font-size: 16px;
-      }
+      body { padding: 30px 15px; }
+      .archive-header { margin-bottom: 30px; padding-bottom: 20px; }
+      .header-logo { height: 40px; }
+      .archive-title { font-size: 20px; }
+      .doc-card { padding: 18px; }
+      .doc-title { font-size: 16px; }
     }
   </style>
 </head>
 
 <body>
-
   <div class="archive-container">
     <a href="../index.html" class="back-link">
-      <svg viewBox="0 0 24 24">
-        <line x1="19" y1="12" x2="5" y2="12"></line>
-        <polyline points="12 19 5 12 12 5"></polyline>
-      </svg>
+      <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
       메인 자료실로 돌아가기
     </a>
-
-    <!-- Header -->
     <header class="archive-header">
       <img src="../logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
       <h1 class="archive-title">운영위원회 회의록</h1>
-      <p class="archive-desc">우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 보관소입니다.</p>
+      <p class="archive-desc">공개 가능한 회의 개요, 주요 결정사항, 차기 회의 안내를 모은 요약 아카이브입니다.</p>
     </header>
 
-    <!-- Document List -->
     <div class="doc-list">
-      <!-- 7월 -->
       <a href="202607.html" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년 7월 3일</span>
         </div>
         <h2 class="doc-title">2026년 7월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">통상임금 소송 현황 및 조합 대응, 폭염기 물류현장 온열질환 예방 대책, 조합 재정 결산 보고 및 하반기 노동 강도 개선 연대 활동 계획을 수립하고 의결했습니다.</p>
+        <p class="doc-excerpt">통상임금 소송 - 소문에 휩쓸리지 않도록 소송 쟁점과 미참여 배경을 조합원에게 설명 - 각 지부 현장 안내, 판결·조정 결과 후 재논의</p>
         <div class="card-footer">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          공개 요약 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <!-- 5월 -->
       <a href="202605.html" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
-          <span class="doc-date">2026년 5월 15일</span>
+          <span class="doc-date">2026년 5월 8일</span>
         </div>
         <h2 class="doc-title">2026년 5월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">노사 공동 노정 위원회 결과 공유, 단체 교섭 상반기 조율안 평가, 조합원 조직 확대 방안 및 안전 장비 노후화 실태 조사 대책을 승인하고 결정했습니다.</p>
+        <p class="doc-excerpt">워크숍 - 6월 12일(금) 공무직 노조 합동 워크숍 개최 의결 (당일 코스)</p>
         <div class="card-footer">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          공개 요약 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <!-- 4월 -->
       <a href="202604.html" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
-          <span class="doc-date">2026년 4월 10일</span>
+          <span class="doc-date">2026년 4월 3일</span>
         </div>
         <h2 class="doc-title">2026년 4월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">춘계 체육행사 지원금 집행, 상반기 현장 대의원대회 개최 준비, 장기 근속 조합원 포상 기준안 마련 및 물류 노동자 처우 개선 연대 사업 안건을 논의했습니다.</p>
+        <p class="doc-excerpt">근로자의 날 표창: 작년 안양지부 수혜에 이어, 올해는 부평지부 조합원을 추천하기로 하였습니다.</p>
         <div class="card-footer">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          공개 요약 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <!-- 3월 -->
       <a href="202603.html" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년 3월 6일</span>
         </div>
         <h2 class="doc-title">2026년 3월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">우정사업본부 노사정 포럼 참석 보고, 신규 채용 인력 안전 교육 강화 방안, 복지기금 적립 비율 변경안 및 조합 소식지 정기 간행물 발행 건을 승인했습니다.</p>
+        <p class="doc-excerpt">회의 개요, 주요 결정사항, 차기 회의 안내를 정리한 공개용 요약본입니다.</p>
         <div class="card-footer">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          공개 요약 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <!-- 2월 -->
       <a href="202602.html" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
-          <span class="doc-date">2026년 2월 13일</span>
+          <span class="doc-date">2026년 1월 30일</span>
         </div>
         <h2 class="doc-title">2026년 2월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">설 명절 상여금 지급 현황 점검, 당직 근무 수당 현실화 제안, 지역 본부별 동절기 빙판 사고 예방책 보강 및 조합 재정 보고 의결 건을 의논했습니다.</p>
+        <p class="doc-excerpt">회의 개요, 주요 결정사항, 차기 회의 안내를 정리한 공개용 요약본입니다.</p>
         <div class="card-footer">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          공개 요약 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <!-- 1월 -->
       <a href="202601.html" class="doc-card">
         <div class="card-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년 1월 9일</span>
         </div>
         <h2 class="doc-title">2026년 1월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">2026년도 신년 사업 계획안 확정, 1분기 투쟁 방향 설정, 정기 대의원총회 일정 심의 및 조합 예산안 보고를 승인하고 통과시켰습니다.</p>
+        <p class="doc-excerpt">회의 개요, 주요 결정사항, 차기 회의 안내를 정리한 공개용 요약본입니다.</p>
         <div class="card-footer">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
+          공개 요약 보기
+          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
     </div>
 
-    <!-- Footer -->
     <footer class="archive-footer">
       <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
     </footer>

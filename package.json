@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "build": "node build_mom.js",
+    "validate": "node validate_site.js",
+    "check": "node --check build_mom.js && node --check validate_site.js && npm run build && npm run validate"
+  }
+}
