@@ -116,20 +116,7 @@ function renderFilterBar() {
     </div>`;
 }
 
-function renderInfoBanner() {
-  return `    <div class="info-banner">
-      <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <circle cx="12" cy="12" r="10"></circle>
-        <line x1="12" y1="16" x2="12" y2="12"></line>
-        <line x1="12" y1="8" x2="12.01" y2="8"></line>
-      </svg>
-      <div class="info-text">
-        운영위원회 회의록은 원문 기준으로 전문 공개됩니다. 외부 공개에 적합하지 않은 자료는 원본 단계에서 제외한 뒤 등록합니다.
-      </div>
-    </div>`;
-}
-
-function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false, includeInfo = false }) {
+function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false }) {
   const cards = docs.map((doc) => renderCard(doc, outputFile)).join('\n\n');
   const script = includeFilter ? `\n  <script src="assets/archive-filter.js?v=${assetVersion}"></script>` : '';
 
@@ -157,7 +144,7 @@ ${includeFilter ? `${renderFilterBar()}\n\n` : ''}    <section class="doc-list" 
 ${cards}
     </section>
 
-${includeInfo ? `${renderInfoBanner()}\n\n` : ''}    <footer class="archive-footer">
+    <footer class="archive-footer">
       <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
     </footer>
   </main>${script}
@@ -183,7 +170,6 @@ function build() {
     docs,
     outputFile: homePath,
     includeFilter: true,
-    includeInfo: true,
   }));
 
   ['knowledge', 'notice'].forEach((category) => {
