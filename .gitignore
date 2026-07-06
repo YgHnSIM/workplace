@@ -1,7 +1,6 @@
-# Ignore internal meeting minutes and transcripts
-*회의록*.md
+# Ignore internal meeting minutes, transcripts and raw data folder
+MoM/
 *.txt
-회의록 프레임.md
 
 # Ignore local tool directories
 .agents/
