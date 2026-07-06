@@ -1,9 +1,18 @@
 const fs = require('fs');
 const path = require('path');
+const {
+  escapeAttr,
+  escapeHtml,
+  readJson,
+  relativeTo,
+  toPosixPath,
+  writeTextFile,
+} = require('./lib/site-utils');
 
 const rootDir = __dirname;
 const catalogPath = path.join(rootDir, '_source', 'catalog.json');
 const momManifestPath = path.join(rootDir, '_source', 'generated', 'mom.json');
+const homeFilePath = path.join(rootDir, 'index.html');
 const assetVersion = '20260707-1';
 
 const categoryLabels = {
@@ -25,25 +34,20 @@ const categoryTitles = {
   },
 };
 
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
+function isHomeOutput(outputFile) {
+  return outputFile === homeFilePath;
 }
 
-function escapeAttr(value) {
-  return escapeHtml(value).replace(/`/g, '&#96;');
+function assetPrefixFor(outputFile) {
+  return isHomeOutput(outputFile) ? '' : '../';
 }
 
-function readJson(filePath) {
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+function renderBackLink(outputFile) {
+  return isHomeOutput(outputFile) ? '' : '    <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>\n';
 }
 
 function normalizeHref(href) {
-  const value = String(href || '').trim().replace(/\\/g, '/');
+  const value = toPosixPath(String(href || '').trim());
   if (!value || value.startsWith('/') || value.startsWith('//')) {
     throw new Error(`Unsafe href in catalog: ${href}`);
   }
@@ -62,7 +66,7 @@ function pageHref(docHref, outputFile) {
   if (!fs.existsSync(target)) {
     throw new Error(`Catalog target is missing: ${normalized}`);
   }
-  const relative = path.relative(path.dirname(outputFile), target).replace(/\\/g, '/');
+  const relative = toPosixPath(path.relative(path.dirname(outputFile), target));
   return relative || path.basename(target);
 }
 
@@ -117,8 +121,9 @@ function renderFilterBar() {
 }
 
 function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false }) {
+  const assetPrefix = assetPrefixFor(outputFile);
   const cards = docs.map((doc) => renderCard(doc, outputFile)).join('\n\n');
-  const script = includeFilter ? `\n  <script src="assets/archive-filter.js?v=${assetVersion}"></script>` : '';
+  const script = includeFilter ? `\n  <script src="${assetPrefix}assets/archive-filter.js?v=${assetVersion}"></script>` : '';
 
   return `<!DOCTYPE html>
 <html lang="ko">
@@ -128,14 +133,14 @@ function buildArchiveHtml({ title, description, docs, outputFile, includeFilter 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>${escapeHtml(title)} - 우체국물류지원단 물류노동조합</title>
   <meta name="description" content="${escapeAttr(description)}">
-  <link rel="icon" href="${outputFile === path.join(rootDir, 'index.html') ? '' : '../'}logo_정사각형.png" type="image/png">
-  <link rel="stylesheet" href="${outputFile === path.join(rootDir, 'index.html') ? '' : '../'}assets/interface.css?v=${assetVersion}">
+  <link rel="icon" href="${assetPrefix}logo_정사각형.png" type="image/png">
+  <link rel="stylesheet" href="${assetPrefix}assets/interface.css?v=${assetVersion}">
 </head>
 
 <body>
   <main class="archive-container">
-${outputFile === path.join(rootDir, 'index.html') ? '' : '    <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>\n'}    <header class="archive-header">
-      <img src="${outputFile === path.join(rootDir, 'index.html') ? '' : '../'}logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
+${renderBackLink(outputFile)}    <header class="archive-header">
+      <img src="${assetPrefix}logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
       <h1 class="archive-title">${escapeHtml(title)}</h1>
       <p class="archive-desc">${escapeHtml(description)}</p>
     </header>
@@ -155,20 +160,18 @@ ${cards}
 }
 
 function writeFile(filePath, html) {
-  fs.mkdirSync(path.dirname(filePath), { recursive: true });
-  fs.writeFileSync(filePath, html, 'utf8');
-  console.log(`Generated ${path.relative(rootDir, filePath)}`);
+  writeTextFile(filePath, html);
+  console.log(`Generated ${relativeTo(rootDir, filePath)}`);
 }
 
 function build() {
   const docs = readDocuments();
-  const homePath = path.join(rootDir, 'index.html');
 
-  writeFile(homePath, buildArchiveHtml({
+  writeFile(homeFilePath, buildArchiveHtml({
     title: '아카이브',
     description: '우체국물류지원단 물류노동조합의 활동 자료 보관소입니다.',
     docs,
-    outputFile: homePath,
+    outputFile: homeFilePath,
     includeFilter: true,
   }));
 

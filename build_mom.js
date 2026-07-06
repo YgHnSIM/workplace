@@ -1,24 +1,17 @@
 const fs = require('fs');
 const path = require('path');
+const {
+  escapeAttr,
+  escapeHtml,
+  relativeTo,
+  writeTextFile,
+} = require('./lib/site-utils');
 
 const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
 const generatedDir = path.join(rootDir, '_source', 'generated');
 const assetVersion = '20260707-1';
-
-function escapeHtml(value) {
-  return String(value)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#39;');
-}
-
-function escapeAttr(value) {
-  return escapeHtml(value).replace(/`/g, '&#96;');
-}
 
 function sanitizeUrl(value) {
   const url = String(value || '').trim();
@@ -683,55 +676,68 @@ function readSourceFiles() {
     .sort();
 }
 
-function build() {
-  fs.mkdirSync(outputDir, { recursive: true });
-  fs.mkdirSync(generatedDir, { recursive: true });
+function createMomDocument(file) {
+  const sourcePath = path.join(sourceDir, file);
+  const markdown = fs.readFileSync(sourcePath, 'utf8');
+  const title = extractTitle(markdown, file);
+  const publicMarkdown = makePublicMarkdown(markdown, title);
+  const content = parseMarkdown(publicMarkdown, title);
+  const match = file.match(/^(\d{6})/);
+  const outputFileName = match ? `${match[1]}.html` : `${path.basename(file, '.md')}.html`;
+  const description = `${title} - 우체국물류지원단 물류노동조합 공식 회의록입니다.`;
+  const outputPath = path.join(outputDir, outputFileName);
 
-  const docs = readSourceFiles().map((file) => {
-    const sourcePath = path.join(sourceDir, file);
-    const markdown = fs.readFileSync(sourcePath, 'utf8');
-    const title = extractTitle(markdown, file);
-    const publicMarkdown = makePublicMarkdown(markdown, title);
-    const content = parseMarkdown(publicMarkdown, title);
-    const match = file.match(/^(\d{6})/);
-    const outputFileName = match ? `${match[1]}.html` : `${path.basename(file, '.md')}.html`;
-    const description = `${title} - 우체국물류지원단 물류노동조합 공식 회의록입니다.`;
-    const outputPath = path.join(outputDir, outputFileName);
+  return {
+    sourcePath,
+    outputPath,
+    outputFileName,
+    title,
+    date: extractDate(markdown, file),
+    excerpt: extractExcerpt(publicMarkdown),
+    sortKey: match ? match[1] : file,
+    html: buildDetailHtml({ title, description, content }),
+  };
+}
 
-    fs.writeFileSync(outputPath, buildDetailHtml({ title, description, content }), 'utf8');
+function writeMomDocument(doc) {
+  writeTextFile(doc.outputPath, doc.html);
+}
 
-    return {
-      sourcePath,
-      outputPath,
-      outputFileName,
-      title,
-      date: extractDate(markdown, file),
-      excerpt: extractExcerpt(publicMarkdown),
-      sortKey: match ? match[1] : file,
-    };
+function toManifestDocument(doc) {
+  return {
+    category: 'mom',
+    href: `MoM/${doc.outputFileName}`,
+    title: doc.title,
+    date: doc.date,
+    excerpt: doc.excerpt,
+    action: '회의록 전문 보기',
+    sortKey: doc.sortKey,
+  };
+}
+
+function writeMomManifest(docs) {
+  writeTextFile(
+    path.join(generatedDir, 'mom.json'),
+    `${JSON.stringify(docs.map(toManifestDocument), null, 2)}\n`,
+  );
+}
+
+function logGeneratedFiles(docs) {
+  docs.forEach((doc) => {
+    console.log(`Generated ${relativeTo(rootDir, doc.outputPath)} from ${relativeTo(rootDir, doc.sourcePath)}`);
   });
+  console.log(`Generated ${relativeTo(rootDir, path.join(outputDir, 'index.html'))}`);
+  console.log(`Generated ${relativeTo(rootDir, path.join(generatedDir, 'mom.json'))}`);
+}
+
+function build() {
+  const docs = readSourceFiles().map(createMomDocument);
+  docs.forEach(writeMomDocument);
 
   docs.sort((a, b) => b.sortKey.localeCompare(a.sortKey));
-  fs.writeFileSync(path.join(outputDir, 'index.html'), buildIndexHtml(docs), 'utf8');
-  fs.writeFileSync(
-    path.join(generatedDir, 'mom.json'),
-    `${JSON.stringify(docs.map((doc) => ({
-      category: 'mom',
-      href: `MoM/${doc.outputFileName}`,
-      title: doc.title,
-      date: doc.date,
-      excerpt: doc.excerpt,
-      action: '회의록 전문 보기',
-      sortKey: doc.sortKey,
-    })), null, 2)}\n`,
-    'utf8',
-  );
-
-  docs.forEach((doc) => {
-    console.log(`Generated ${path.relative(rootDir, doc.outputPath)} from ${path.relative(rootDir, doc.sourcePath)}`);
-  });
-  console.log(`Generated ${path.relative(rootDir, path.join(outputDir, 'index.html'))}`);
-  console.log(`Generated ${path.relative(rootDir, path.join(generatedDir, 'mom.json'))}`);
+  writeTextFile(path.join(outputDir, 'index.html'), buildIndexHtml(docs));
+  writeMomManifest(docs);
+  logGeneratedFiles(docs);
 }
 
 try {

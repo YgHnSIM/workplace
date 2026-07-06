@@ -2,6 +2,6 @@
   "scripts": {
     "build": "node build_mom.js && node build_site.js",
     "validate": "node validate_site.js",
-    "check": "node --check build_mom.js && node --check build_site.js && node --check validate_site.js && npm run build && npm run validate"
+    "check": "node --check lib/site-utils.js && node --check build_mom.js && node --check build_site.js && node --check validate_site.js && npm run build && npm run validate"
   }
 }

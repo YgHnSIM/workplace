@@ -1,25 +1,15 @@
 const fs = require('fs');
 const path = require('path');
+const {
+  isExternalRef,
+  relativeTo,
+  toPosixPath,
+  walkFiles,
+} = require('./lib/site-utils');
 
 const rootDir = __dirname;
 const ignoredDirs = new Set(['.git', '~', '_source', 'node_modules']);
 const errors = [];
-
-function walk(dir) {
-  const entries = fs.readdirSync(dir, { withFileTypes: true });
-  const files = [];
-  entries.forEach((entry) => {
-    if (ignoredDirs.has(entry.name)) return;
-    const fullPath = path.join(dir, entry.name);
-    if (entry.isDirectory()) files.push(...walk(fullPath));
-    if (entry.isFile()) files.push(fullPath);
-  });
-  return files;
-}
-
-function isExternalRef(ref) {
-  return /^(https?:|mailto:|tel:|#)/i.test(ref);
-}
 
 function validateRefs(filePath, html) {
   const refPattern = /\b(?:href|src)="([^"]+)"/g;
@@ -28,11 +18,11 @@ function validateRefs(filePath, html) {
     const ref = match[1];
     if (!ref) continue;
     if (/^javascript:/i.test(ref)) {
-      errors.push(`${path.relative(rootDir, filePath)} contains unsafe javascript URL: ${ref}`);
+      errors.push(`${relativeTo(rootDir, filePath)} contains unsafe javascript URL: ${ref}`);
       continue;
     }
     if (ref.startsWith('//')) {
-      errors.push(`${path.relative(rootDir, filePath)} contains protocol-relative URL: ${ref}`);
+      errors.push(`${relativeTo(rootDir, filePath)} contains protocol-relative URL: ${ref}`);
       continue;
     }
     if (isExternalRef(ref)) continue;
@@ -41,7 +31,7 @@ function validateRefs(filePath, html) {
     if (!cleanRef) continue;
 
     if (/^[a-z][a-z0-9+.-]*:/i.test(cleanRef)) {
-      errors.push(`${path.relative(rootDir, filePath)} contains unsupported URL protocol: ${ref}`);
+      errors.push(`${relativeTo(rootDir, filePath)} contains unsupported URL protocol: ${ref}`);
       continue;
     }
 
@@ -51,18 +41,18 @@ function validateRefs(filePath, html) {
     const rootWithSep = `${rootDir}${path.sep}`;
 
     if (resolved !== rootDir && !resolved.startsWith(rootWithSep)) {
-      errors.push(`${path.relative(rootDir, filePath)} references file outside site root: ${ref}`);
+      errors.push(`${relativeTo(rootDir, filePath)} references file outside site root: ${ref}`);
       continue;
     }
 
     if (!fs.existsSync(resolved)) {
-      errors.push(`${path.relative(rootDir, filePath)} references missing file: ${ref}`);
+      errors.push(`${relativeTo(rootDir, filePath)} references missing file: ${ref}`);
     }
   }
 }
 
 function validatePlaceholders(filePath, html) {
-  const relative = path.relative(rootDir, filePath);
+  const relative = relativeTo(rootDir, filePath);
   const badPatterns = [
     { pattern: /\?\?/, label: 'placeholder ??' },
     { pattern: /TODO|FIXME/i, label: 'TODO/FIXME marker' },
@@ -88,9 +78,10 @@ function validateProjectText() {
 }
 
 function validatePublicMomSources() {
-  const publicMarkdown = walk(path.join(rootDir, 'MoM')).filter((file) => path.extname(file).toLowerCase() === '.md');
+  const publicMarkdown = walkFiles(path.join(rootDir, 'MoM'), { ignoredDirs })
+    .filter((file) => path.extname(file).toLowerCase() === '.md');
   publicMarkdown.forEach((file) => {
-    errors.push(`public MoM directory contains raw markdown: ${path.relative(rootDir, file)}`);
+    errors.push(`public MoM directory contains raw markdown: ${relativeTo(rootDir, file)}`);
   });
 }
 
@@ -124,7 +115,7 @@ function validateNoRedactedMomAttendees() {
       let match;
       while ((match = rowPattern.exec(html)) !== null) {
         if (match[2].includes('세부 명단 비공개')) {
-          errors.push(`${path.join('MoM', file)} contains redacted ${match[1]} list`);
+          errors.push(`${toPosixPath(path.join('MoM', file))} contains redacted ${match[1]} list`);
         }
       }
     });
@@ -135,13 +126,13 @@ function validateRemovedFiles() {
     path.join(rootDir, 'notice', 'test.html'),
   ].forEach((file) => {
     if (fs.existsSync(file)) {
-      errors.push(`${path.relative(rootDir, file)} should be removed from the public site`);
+      errors.push(`${relativeTo(rootDir, file)} should be removed from the public site`);
     }
   });
 }
 
 function main() {
-  walk(rootDir)
+  walkFiles(rootDir, { ignoredDirs })
     .filter((file) => path.extname(file).toLowerCase() === '.html')
     .forEach((file) => {
       const html = fs.readFileSync(file, 'utf8');
