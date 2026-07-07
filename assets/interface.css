@@ -758,6 +758,157 @@ button:focus-visible {
   word-break: keep-all;
 }
 
+.analysis-note {
+  border-left: 6px solid #FF4F00;
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.6;
+  margin: 18px 0 0;
+  padding: 0 0 0 14px;
+  word-break: keep-all;
+}
+
+.insight-grid {
+  display: grid;
+  gap: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 24px 0 0;
+  border: 1px solid #111111;
+  border-bottom: 0;
+}
+
+.insight-card {
+  border-bottom: 1px solid #111111;
+  color: #222222;
+  min-height: 168px;
+  padding: 18px;
+}
+
+.insight-card:nth-child(odd) {
+  border-right: 1px solid #D9D9D9;
+}
+
+.insight-label {
+  color: #FF4F00;
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.insight-card strong {
+  color: #111111;
+  display: block;
+  font-size: 20px;
+  line-height: 1.35;
+  margin-bottom: 10px;
+  word-break: keep-all;
+}
+
+.insight-card p {
+  font-size: 15px;
+  line-height: 1.65;
+  margin: 0;
+  word-break: keep-all;
+}
+
+.double-cut-flow {
+  border: 1px solid #111111;
+  display: grid;
+  gap: 0;
+  grid-template-columns: 1fr 48px 1fr 48px 1fr;
+  margin: 24px 0 0;
+}
+
+.flow-step,
+.flow-arrow {
+  min-height: 168px;
+}
+
+.flow-step {
+  padding: 18px;
+}
+
+.flow-step:not(:last-child),
+.flow-arrow {
+  border-right: 1px solid #D9D9D9;
+}
+
+.flow-arrow {
+  align-items: center;
+  color: #FF4F00;
+  display: flex;
+  font-size: 28px;
+  font-weight: 700;
+  justify-content: center;
+}
+
+.flow-number {
+  color: #FF4F00;
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.flow-step strong {
+  color: #111111;
+  display: block;
+  font-size: 19px;
+  line-height: 1.35;
+  margin-bottom: 10px;
+  word-break: keep-all;
+}
+
+.flow-step p {
+  color: #333333;
+  font-size: 14px;
+  line-height: 1.65;
+  margin: 0;
+  word-break: keep-all;
+}
+
+.chapter-list {
+  border-top: 1px solid #111111;
+  list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+}
+
+.chapter-list li {
+  border-bottom: 1px solid #D9D9D9;
+  display: grid;
+  gap: 18px;
+  grid-template-columns: 104px minmax(0, 1fr);
+  padding: 16px 0;
+}
+
+.chapter-time {
+  color: #FF4F00;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.chapter-copy strong {
+  color: #111111;
+  display: block;
+  font-size: 16px;
+  line-height: 1.4;
+  margin-bottom: 6px;
+  word-break: keep-all;
+}
+
+.chapter-copy span {
+  color: #333333;
+  display: block;
+  font-size: 14px;
+  line-height: 1.6;
+  word-break: keep-all;
+}
+
 .formula-list {
   border: 1px solid #111111;
   list-style: none;
@@ -1075,6 +1226,33 @@ button:focus-visible {
 
   .post-figure {
     padding: 10px;
+  }
+
+  .insight-grid,
+  .double-cut-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .insight-card:nth-child(odd),
+  .flow-step:not(:last-child),
+  .flow-arrow {
+    border-right: 0;
+  }
+
+  .flow-step,
+  .flow-arrow {
+    min-height: 0;
+  }
+
+  .flow-arrow {
+    border-bottom: 1px solid #D9D9D9;
+    min-height: 44px;
+    transform: none;
+  }
+
+  .chapter-list li {
+    gap: 8px;
+    grid-template-columns: 1fr;
   }
 
   .post-table,
