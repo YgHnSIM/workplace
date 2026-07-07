@@ -148,7 +148,7 @@
     fallbackCopy(text, successMessage);
   }
 
-  function fallbackCopy(text, successMessage) {
+  function fallbackCopy(text, successMessage, failureMessage = '복사에 실패했습니다. 직접 복사해주세요.') {
     const textarea = document.createElement('textarea');
     textarea.value = text;
     textarea.setAttribute('readonly', '');
@@ -160,9 +160,23 @@
       document.execCommand('copy');
       alert(successMessage);
     } catch (error) {
-      alert('텍스트 복사에 실패했습니다. 직접 복사해주세요.');
+      alert(failureMessage);
     }
     document.body.removeChild(textarea);
+  }
+
+  function copyPageLink() {
+    const url = window.location.href;
+    const successMessage = '웹페이지 링크가 클립보드에 복사되었습니다.';
+    const failureMessage = '링크 복사에 실패했습니다. 주소창의 링크를 직접 복사해주세요.';
+
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(() => {
+        alert(successMessage);
+      }).catch(() => fallbackCopy(url, successMessage, failureMessage));
+      return;
+    }
+    fallbackCopy(url, successMessage, failureMessage);
   }
 
   document.addEventListener('DOMContentLoaded', () => {
@@ -171,7 +185,7 @@
     document.getElementById('zoom-out-btn')?.addEventListener('click', () => changeTextSize('down'));
     document.getElementById('zoom-reset-btn')?.addEventListener('click', () => changeTextSize('reset'));
     document.getElementById('copy-btn')?.addEventListener('click', copyDocumentText);
-    document.getElementById('print-btn')?.addEventListener('click', () => window.print());
+    document.getElementById('copy-link-btn')?.addEventListener('click', copyPageLink);
     document.getElementById('to-top-btn')?.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
