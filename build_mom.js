@@ -12,7 +12,7 @@ const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
 const generatedDir = path.join(rootDir, '_source', 'generated');
-const assetVersion = '20260707-6';
+const assetVersion = '20260708-1';
 
 function sanitizeUrl(value) {
   const url = String(value || '').trim();
@@ -371,7 +371,7 @@ ${buildUtilityBar()}
 function buildIndexHtml(docs) {
   const cards = docs.map((doc, index) => {
     const idBase = `mom-doc-${index + 1}`;
-    return `      <a href="${escapeAttr(doc.outputFileName)}" class="doc-card" aria-labelledby="${idBase}-title" aria-describedby="${idBase}-meta ${idBase}-excerpt ${idBase}-action">
+    return `      <a href="${escapeAttr(doc.outputFileName)}" class="doc-card" data-category="mom" aria-labelledby="${idBase}-title" aria-describedby="${idBase}-meta ${idBase}-excerpt ${idBase}-action">
         <div class="card-meta" id="${idBase}-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">${escapeNoBreakHtml(doc.date)}</span>
