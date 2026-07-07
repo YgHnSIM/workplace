@@ -96,6 +96,42 @@
       .trim();
   }
 
+  function buildDocumentToc() {
+    const article = document.querySelector('.document-article');
+    if (!article || article.querySelector('.document-toc') || article.querySelector('.history-nav')) return;
+
+    const body = article.querySelector('[data-copy-body]');
+    if (!body) return;
+
+    const headings = Array.from(body.querySelectorAll('h2, h3'))
+      .filter((heading) => normalizeText(heading.innerText));
+    if (headings.length < 2) return;
+
+    const nav = document.createElement('nav');
+    nav.className = 'document-toc';
+    nav.setAttribute('aria-label', '문서 목차');
+
+    const title = document.createElement('h2');
+    title.className = 'document-toc-title';
+    title.textContent = '문서 목차';
+    nav.appendChild(title);
+
+    const links = document.createElement('div');
+    links.className = 'document-toc-links';
+
+    headings.forEach((heading, index) => {
+      if (!heading.id) heading.id = `section-${index + 1}`;
+      const link = document.createElement('a');
+      link.className = `document-toc-link document-toc-level-${heading.tagName === 'H3' ? '3' : '2'}`;
+      link.href = `#${heading.id}`;
+      link.textContent = normalizeText(heading.innerText);
+      links.appendChild(link);
+    });
+
+    nav.appendChild(links);
+    body.before(nav);
+  }
+
   function copyDocumentText() {
     const article = document.querySelector('.document-article') || document.getElementById('mom-article') || document.getElementById('statement-article');
     if (!article) return;
@@ -130,6 +166,7 @@
   }
 
   document.addEventListener('DOMContentLoaded', () => {
+    buildDocumentToc();
     document.getElementById('zoom-in-btn')?.addEventListener('click', () => changeTextSize('up'));
     document.getElementById('zoom-out-btn')?.addEventListener('click', () => changeTextSize('down'));
     document.getElementById('zoom-reset-btn')?.addEventListener('click', () => changeTextSize('reset'));

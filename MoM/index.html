@@ -7,84 +7,7 @@
   <title>운영위원회 회의록 아카이브 - 우체국물류지원단 물류노동조합</title>
   <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
-  <style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-    :root {
-      --bg-page: #f8fafc;
-      --bg-card: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --color-accent: #1e3a8a;
-      --color-accent-light: #eff6ff;
-      --color-border: #e2e8f0;
-      --font-main: 'Pretendard', sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--font-main);
-      background-color: var(--bg-page);
-      color: var(--text-primary);
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 60px 20px;
-    }
-    .archive-container { width: 100%; max-width: 800px; }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      transition: color .2s ease;
-    }
-    .back-link:hover { color: var(--color-accent); }
-    .back-link svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; }
-    .archive-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 40px; border-bottom: 2px solid var(--color-border); padding-bottom: 30px; }
-    .header-logo { height: 50px; object-fit: contain; margin-bottom: 20px; }
-    .archive-title { font-size: 26px; font-weight: 800; letter-spacing: 0; }
-    .archive-desc { font-size: 15px; color: var(--text-muted); margin-top: 8px; font-weight: 500; word-break: keep-all; }
-    .doc-list { display: flex; flex-direction: column; gap: 20px; }
-    .doc-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,.02), 0 2px 4px -1px rgba(0,0,0,.02);
-      transition: all .25s cubic-bezier(.4,0,.2,1);
-      text-decoration: none;
-      display: block;
-      position: relative;
-      overflow: hidden;
-    }
-    .doc-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.05), 0 4px 6px -2px rgba(0,0,0,.05); border-color: #bfdbfe; }
-    .doc-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: var(--color-accent); opacity: 0; transition: opacity .2s ease; }
-    .doc-card:hover::before { opacity: 1; }
-    .card-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; font-size: 13px; font-weight: 700; }
-    .badge-category { background-color: var(--color-accent-light); color: var(--color-accent); padding: 2px 8px; border-radius: 4px; letter-spacing: .05em; }
-    .doc-date { color: var(--text-muted); }
-    .doc-title { font-size: 18px; font-weight: 800; color: var(--text-primary); line-height: 1.4; margin-bottom: 10px; word-break: keep-all; transition: color .2s ease; }
-    .doc-card:hover .doc-title { color: var(--color-accent); }
-    .doc-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; margin-bottom: 16px; }
-    .card-footer { display: flex; justify-content: flex-end; align-items: center; font-weight: 700; font-size: 13px; color: var(--color-accent); gap: 4px; }
-    .card-footer svg { width: 14px; height: 14px; transition: transform .2s ease; stroke: currentColor; fill: none; stroke-width: 2.5; }
-    .doc-card:hover .card-footer svg { transform: translateX(4px); }
-    .archive-footer { text-align: center; margin-top: 60px; font-size: 13px; color: var(--text-muted); font-weight: 500; border-top: 1px solid var(--color-border); padding-top: 24px; }
-    @media (max-width: 600px) {
-      body { padding: 30px 15px; }
-      .archive-header { margin-bottom: 30px; padding-bottom: 20px; }
-      .header-logo { height: 40px; }
-      .archive-title { font-size: 20px; }
-      .doc-card { padding: 18px; }
-      .doc-title { font-size: 16px; }
-    }
-  </style>
-  <link rel="stylesheet" href="../assets/interface.css?v=20260707-3">
+  <link rel="stylesheet" href="../assets/interface.css?v=20260707-4">
 </head>
 
 <body>
@@ -100,79 +23,79 @@
     </header>
 
     <div class="doc-list">
-      <a href="202607.html" class="doc-card">
-        <div class="card-meta">
+      <a href="202607.html" class="doc-card" aria-labelledby="mom-doc-1-title" aria-describedby="mom-doc-1-meta mom-doc-1-excerpt mom-doc-1-action">
+        <div class="card-meta" id="mom-doc-1-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년&nbsp;7월&nbsp;3일</span>
         </div>
-        <h2 class="doc-title">2026년 7월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">통상임금 소송 - 소문에 휩쓸리지 않도록 소송 쟁점과 미참여 배경을 조합원에게 설명 - 각 지부 현장 안내, 판결·조정 결과 후 재논의</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="mom-doc-1-title">2026년 7월 운영위원회 회의록</h2>
+        <p class="doc-excerpt" id="mom-doc-1-excerpt">통상임금 소송 - 소문에 휩쓸리지 않도록 소송 쟁점과 미참여 배경을 조합원에게 설명 - 각 지부 현장 안내, 판결·조정 결과 후 재논의</p>
+        <div class="card-footer" id="mom-doc-1-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <a href="202605.html" class="doc-card">
-        <div class="card-meta">
+      <a href="202605.html" class="doc-card" aria-labelledby="mom-doc-2-title" aria-describedby="mom-doc-2-meta mom-doc-2-excerpt mom-doc-2-action">
+        <div class="card-meta" id="mom-doc-2-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년&nbsp;5월&nbsp;8일</span>
         </div>
-        <h2 class="doc-title">2026년 5월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">기대 효과: 현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보함으로써 연장 근로 부담을 완화하고 현장 운영의 안정성을 기할 수 있음.</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="mom-doc-2-title">2026년 5월 운영위원회 회의록</h2>
+        <p class="doc-excerpt" id="mom-doc-2-excerpt">기대 효과: 현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보함으로써 연장 근로 부담을 완화하고 현장 운영의 안정성을 기할 수 있음.</p>
+        <div class="card-footer" id="mom-doc-2-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <a href="202604.html" class="doc-card">
-        <div class="card-meta">
+      <a href="202604.html" class="doc-card" aria-labelledby="mom-doc-3-title" aria-describedby="mom-doc-3-meta mom-doc-3-excerpt mom-doc-3-action">
+        <div class="card-meta" id="mom-doc-3-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년&nbsp;4월&nbsp;3일</span>
         </div>
-        <h2 class="doc-title">2026년 4월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">근로자의 날 표창: 작년 안양지부 수혜에 이어, 올해는 부평지부 조합원을 추천하기로 하였습니다.</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="mom-doc-3-title">2026년 4월 운영위원회 회의록</h2>
+        <p class="doc-excerpt" id="mom-doc-3-excerpt">근로자의 날 표창: 작년 안양지부 수혜에 이어, 올해는 부평지부 조합원을 추천하기로 하였습니다.</p>
+        <div class="card-footer" id="mom-doc-3-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <a href="202603.html" class="doc-card">
-        <div class="card-meta">
+      <a href="202603.html" class="doc-card" aria-labelledby="mom-doc-4-title" aria-describedby="mom-doc-4-meta mom-doc-4-excerpt mom-doc-4-action">
+        <div class="card-meta" id="mom-doc-4-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년&nbsp;3월&nbsp;6일</span>
         </div>
-        <h2 class="doc-title">2026년 3월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="mom-doc-4-title">2026년 3월 운영위원회 회의록</h2>
+        <p class="doc-excerpt" id="mom-doc-4-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer" id="mom-doc-4-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <a href="202602.html" class="doc-card">
-        <div class="card-meta">
+      <a href="202602.html" class="doc-card" aria-labelledby="mom-doc-5-title" aria-describedby="mom-doc-5-meta mom-doc-5-excerpt mom-doc-5-action">
+        <div class="card-meta" id="mom-doc-5-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년&nbsp;1월&nbsp;30일</span>
         </div>
-        <h2 class="doc-title">2026년 2월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="mom-doc-5-title">2026년 2월 운영위원회 회의록</h2>
+        <p class="doc-excerpt" id="mom-doc-5-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer" id="mom-doc-5-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
       </a>
 
-      <a href="202601.html" class="doc-card">
-        <div class="card-meta">
+      <a href="202601.html" class="doc-card" aria-labelledby="mom-doc-6-title" aria-describedby="mom-doc-6-meta mom-doc-6-excerpt mom-doc-6-action">
+        <div class="card-meta" id="mom-doc-6-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">2026년&nbsp;1월&nbsp;9일</span>
         </div>
-        <h2 class="doc-title">2026년 1월 운영위원회 회의록</h2>
-        <p class="doc-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="mom-doc-6-title">2026년 1월 운영위원회 회의록</h2>
+        <p class="doc-excerpt" id="mom-doc-6-excerpt">운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.</p>
+        <div class="card-footer" id="mom-doc-6-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>

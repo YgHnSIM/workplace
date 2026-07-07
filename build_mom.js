@@ -12,7 +12,7 @@ const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
 const generatedDir = path.join(rootDir, '_source', 'generated');
-const assetVersion = '20260707-3';
+const assetVersion = '20260707-4';
 
 function sanitizeUrl(value) {
   const url = String(value || '').trim();
@@ -88,12 +88,14 @@ function renderTable(rows) {
   const validRows = rows.filter((row) => !isTableSeparator(row));
   if (validRows.length === 0) return '';
 
+  const headers = splitTableRow(validRows[0]).map(stripMarkdown);
   let html = '<div class="table-container">\n<table class="mom-table">\n';
   validRows.forEach((row, rowIndex) => {
     const tag = rowIndex === 0 ? 'th' : 'td';
     html += '  <tr>\n';
-    splitTableRow(row).forEach((cell) => {
-      html += `    <${tag}>${renderInline(cell)}</${tag}>\n`;
+    splitTableRow(row).forEach((cell, cellIndex) => {
+      const label = rowIndex === 0 ? '' : ` data-label="${escapeAttr(headers[cellIndex] || '')}"`;
+      html += `    <${tag}${label}>${renderInline(cell)}</${tag}>\n`;
     });
     html += '  </tr>\n';
   });
@@ -131,6 +133,8 @@ function headingClass(level) {
 function parseMarkdown(markdown, title) {
   const lines = markdown.split(/\r?\n/);
   let html = '';
+  const toc = [];
+  let headingIndex = 0;
 
   for (let i = 0; i < lines.length; i += 1) {
     const rawLine = lines[i];
@@ -181,7 +185,10 @@ function parseMarkdown(markdown, title) {
       if (text && text !== title) {
         const level = heading[1].length;
         const [tag, className] = headingClass(level);
-        html += `<${tag} class="${className}">${escapeHtml(text)}</${tag}>\n`;
+        const id = `section-${headingIndex + 1}`;
+        headingIndex += 1;
+        if (level <= 3) toc.push({ id, text, level });
+        html += `<${tag} id="${id}" class="${className}">${escapeHtml(text)}</${tag}>\n`;
       }
       continue;
     }
@@ -199,7 +206,7 @@ function parseMarkdown(markdown, title) {
     html += `<p class="body-text">${renderInline(paragraph.join(' '))}</p>\n`;
   }
 
-  return html;
+  return { content: html, toc };
 }
 
 function cleanHeadingText(line) {
@@ -302,7 +309,24 @@ function buildUtilityBar() {
   </div>`;
 }
 
-function buildDetailHtml({ title, description, content }) {
+function renderDocumentToc(toc) {
+  if (!toc.length) return '';
+
+  const links = toc.map((item) => (
+    `        <a href="#${escapeAttr(item.id)}" class="document-toc-link document-toc-level-${item.level}">${escapeHtml(item.text)}</a>`
+  )).join('\n');
+
+  return `    <nav class="document-toc" aria-label="문서 목차">
+      <h2 class="document-toc-title">문서 목차</h2>
+      <div class="document-toc-links">
+${links}
+      </div>
+    </nav>
+
+`;
+}
+
+function buildDetailHtml({ title, description, content, toc }) {
   return `<!DOCTYPE html>
 <html lang="ko">
 
@@ -312,201 +336,6 @@ function buildDetailHtml({ title, description, content }) {
   <title>${escapeHtml(title)} - 우체국물류지원단 물류노동조합</title>
   <meta name="description" content="${escapeAttr(description)}">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
-  <style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-    :root {
-      --font-scale: 1.0;
-      --font-size-base: calc(16px * var(--font-scale));
-      --font-size-title: calc(26px * var(--font-scale));
-      --font-size-section-title: calc(20px * var(--font-scale));
-      --font-size-subsection-title: calc(17px * var(--font-scale));
-      --spacing-unit: 1.5rem;
-      --bg-page: #f8fafc;
-      --bg-card: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --color-accent: #1e3a8a;
-      --color-accent-light: #eff6ff;
-      --color-border: #e2e8f0;
-      --font-main: 'Pretendard', sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--font-main);
-      background-color: var(--bg-page);
-      color: var(--text-primary);
-      line-height: 1.8;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px 100px;
-    }
-    .mom-container {
-      width: 100%;
-      max-width: 800px;
-      background-color: var(--bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: 12px;
-      padding: 48px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,.05), 0 2px 4px -1px rgba(0,0,0,.03);
-    }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      align-self: flex-start;
-      max-width: 800px;
-      width: 100%;
-      transition: color .2s ease;
-    }
-    .back-link:hover { color: var(--color-accent); }
-    .back-link svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; }
-    .mom-header { border-bottom: 2px solid var(--color-border); padding-bottom: 20px; margin-bottom: 30px; }
-    .header-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-    .header-logo { height: 48px; object-fit: contain; }
-    .mom-category {
-      font-size: 13px;
-      font-weight: 800;
-      background-color: var(--color-accent-light);
-      color: var(--color-accent);
-      padding: 4px 10px;
-      border-radius: 4px;
-      letter-spacing: .05em;
-    }
-    .statement-title { font-size: var(--font-size-title); font-weight: 900; line-height: 1.4; word-break: keep-all; }
-    .public-note {
-      margin-top: 16px;
-      color: var(--text-muted);
-      font-size: 14px;
-      font-weight: 600;
-      word-break: keep-all;
-    }
-    .section-title {
-      font-size: var(--font-size-section-title);
-      font-weight: 800;
-      color: var(--color-accent);
-      margin-top: 40px;
-      margin-bottom: 16px;
-      border-bottom: 2px solid var(--color-accent-light);
-      padding-bottom: 8px;
-    }
-    .subsection-title {
-      font-size: var(--font-size-subsection-title);
-      font-weight: 800;
-      margin-top: 28px;
-      margin-bottom: 12px;
-      border-left: 4px solid var(--color-accent);
-      padding-left: 10px;
-    }
-    .subsubsection-title {
-      font-size: calc(var(--font-size-base) * 1.08);
-      font-weight: 800;
-      margin-top: 24px;
-      margin-bottom: 10px;
-    }
-    .body-text {
-      font-size: var(--font-size-base);
-      color: var(--text-secondary);
-      margin-bottom: var(--spacing-unit);
-      text-align: justify;
-      word-break: keep-all;
-    }
-    .bullet-list { margin-left: 24px; margin-bottom: var(--spacing-unit); color: var(--text-secondary); font-size: var(--font-size-base); }
-    .bullet-list li { margin-bottom: 8px; }
-    .bullet-list .list-level-1 { margin-left: 1.25rem; }
-    .bullet-list .list-level-2 { margin-left: 2.5rem; }
-    .content-link { color: var(--color-accent); text-decoration: underline; font-weight: 700; }
-    .quote-block {
-      border-left: 4px solid var(--color-border);
-      color: var(--text-secondary);
-      margin: 0 0 var(--spacing-unit);
-      padding: 8px 0 8px 16px;
-      background: #fafbfc;
-    }
-    .table-container { width: 100%; overflow-x: auto; margin: 20px 0 30px; border: 1px solid var(--color-border); border-radius: 8px; }
-    .mom-table { width: 100%; border-collapse: collapse; font-size: calc(var(--font-size-base) * .95); text-align: left; min-width: 500px; }
-    .mom-table th, .mom-table td { padding: 12px 16px; border-bottom: 1px solid var(--color-border); vertical-align: top; }
-    .mom-table th { background-color: var(--color-accent-light); color: var(--color-accent); font-weight: 800; border-bottom: 2px solid var(--color-border); }
-    .mom-table tr:last-child th, .mom-table tr:last-child td { border-bottom: none; }
-    .mom-table td strong { color: var(--color-accent); }
-    .divider { border: none; border-top: 1px solid var(--color-border); margin: 30px 0; }
-    .utility-bar {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: rgba(255,255,255,.9);
-      backdrop-filter: blur(10px);
-      border: 1px solid var(--color-border);
-      border-radius: 30px;
-      padding: 6px 12px;
-      display: flex;
-      gap: 8px;
-      box-shadow: 0 10px 25px -5px rgba(0,0,0,.1), 0 8px 10px -6px rgba(0,0,0,.05);
-      z-index: 1000;
-    }
-    .utility-button-container { position: relative; }
-    .utility-bar button {
-      background: none;
-      border: none;
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      color: var(--text-secondary);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all .2s ease;
-    }
-    .utility-bar button:hover { background-color: var(--color-accent-light); color: var(--color-accent); }
-    .utility-bar button svg { width: 20px; height: 20px; }
-    .utility-tooltip {
-      position: absolute;
-      bottom: 100%;
-      left: 50%;
-      transform: translateX(-50%) translateY(-8px);
-      background-color: var(--text-primary);
-      color: #fff;
-      font-size: 11px;
-      font-weight: 700;
-      padding: 4px 8px;
-      border-radius: 4px;
-      white-space: nowrap;
-      pointer-events: none;
-      opacity: 0;
-      transition: opacity .2s ease;
-    }
-    .utility-button-container:hover .utility-tooltip { opacity: 1; }
-    @media print {
-      body { background-color: #fff; padding: 0; }
-      .mom-container { box-shadow: none; border: none; padding: 0; }
-      .utility-bar, .back-link { display: none !important; }
-    }
-    @media (max-width: 600px) {
-      body { padding: 20px 10px 100px; }
-      .mom-container { padding: 24px 16px; box-shadow: none; border: none; }
-      .back-link { padding-left: 16px; }
-      .statement-title { font-size: calc(20px * var(--font-scale)); }
-      .utility-bar {
-        bottom: 16px;
-        right: 16px;
-        left: 16px;
-        justify-content: space-around;
-        padding: 8px;
-        border-radius: 16px;
-        width: calc(100% - 32px);
-      }
-      .utility-tooltip { display: none; }
-      .header-top-row { flex-direction: column; align-items: flex-start; gap: 16px; }
-      .header-logo { height: 38px; }
-    }
-  </style>
   <link rel="stylesheet" href="../assets/interface.css?v=${assetVersion}">
 </head>
 
@@ -525,6 +354,7 @@ function buildDetailHtml({ title, description, content }) {
       <h1 class="statement-title">${escapeHtml(title)}</h1>
     </header>
 
+${renderDocumentToc(toc)}
     <main class="mom-body" data-copy-body>
 ${content}
     </main>
@@ -539,18 +369,21 @@ ${buildUtilityBar()}
 }
 
 function buildIndexHtml(docs) {
-  const cards = docs.map((doc) => `      <a href="${escapeAttr(doc.outputFileName)}" class="doc-card">
-        <div class="card-meta">
+  const cards = docs.map((doc, index) => {
+    const idBase = `mom-doc-${index + 1}`;
+    return `      <a href="${escapeAttr(doc.outputFileName)}" class="doc-card" aria-labelledby="${idBase}-title" aria-describedby="${idBase}-meta ${idBase}-excerpt ${idBase}-action">
+        <div class="card-meta" id="${idBase}-meta">
           <span class="badge-category">회의록</span>
           <span class="doc-date">${escapeNoBreakHtml(doc.date)}</span>
         </div>
-        <h2 class="doc-title">${escapeHtml(doc.title)}</h2>
-        <p class="doc-excerpt">${escapeHtml(doc.excerpt)}</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="${idBase}-title">${escapeHtml(doc.title)}</h2>
+        <p class="doc-excerpt" id="${idBase}-excerpt">${escapeHtml(doc.excerpt)}</p>
+        <div class="card-footer" id="${idBase}-action">
           회의록 전문 보기
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
-      </a>`).join('\n\n');
+      </a>`;
+  }).join('\n\n');
 
   return `<!DOCTYPE html>
 <html lang="ko">
@@ -561,83 +394,6 @@ function buildIndexHtml(docs) {
   <title>운영위원회 회의록 아카이브 - 우체국물류지원단 물류노동조합</title>
   <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
-  <style>
-    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
-    :root {
-      --bg-page: #f8fafc;
-      --bg-card: #ffffff;
-      --text-primary: #0f172a;
-      --text-secondary: #334155;
-      --text-muted: #64748b;
-      --color-accent: #1e3a8a;
-      --color-accent-light: #eff6ff;
-      --color-border: #e2e8f0;
-      --font-main: 'Pretendard', sans-serif;
-    }
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: var(--font-main);
-      background-color: var(--bg-page);
-      color: var(--text-primary);
-      line-height: 1.6;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 60px 20px;
-    }
-    .archive-container { width: 100%; max-width: 800px; }
-    .back-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 14px;
-      font-weight: 700;
-      margin-bottom: 24px;
-      transition: color .2s ease;
-    }
-    .back-link:hover { color: var(--color-accent); }
-    .back-link svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2.5; }
-    .archive-header { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 40px; border-bottom: 2px solid var(--color-border); padding-bottom: 30px; }
-    .header-logo { height: 50px; object-fit: contain; margin-bottom: 20px; }
-    .archive-title { font-size: 26px; font-weight: 800; letter-spacing: 0; }
-    .archive-desc { font-size: 15px; color: var(--text-muted); margin-top: 8px; font-weight: 500; word-break: keep-all; }
-    .doc-list { display: flex; flex-direction: column; gap: 20px; }
-    .doc-card {
-      background-color: var(--bg-card);
-      border: 1px solid var(--color-border);
-      border-radius: 8px;
-      padding: 24px;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,.02), 0 2px 4px -1px rgba(0,0,0,.02);
-      transition: all .25s cubic-bezier(.4,0,.2,1);
-      text-decoration: none;
-      display: block;
-      position: relative;
-      overflow: hidden;
-    }
-    .doc-card:hover { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,.05), 0 4px 6px -2px rgba(0,0,0,.05); border-color: #bfdbfe; }
-    .doc-card::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px; background-color: var(--color-accent); opacity: 0; transition: opacity .2s ease; }
-    .doc-card:hover::before { opacity: 1; }
-    .card-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 12px; font-size: 13px; font-weight: 700; }
-    .badge-category { background-color: var(--color-accent-light); color: var(--color-accent); padding: 2px 8px; border-radius: 4px; letter-spacing: .05em; }
-    .doc-date { color: var(--text-muted); }
-    .doc-title { font-size: 18px; font-weight: 800; color: var(--text-primary); line-height: 1.4; margin-bottom: 10px; word-break: keep-all; transition: color .2s ease; }
-    .doc-card:hover .doc-title { color: var(--color-accent); }
-    .doc-excerpt { font-size: 14px; color: var(--text-secondary); line-height: 1.6; word-break: keep-all; margin-bottom: 16px; }
-    .card-footer { display: flex; justify-content: flex-end; align-items: center; font-weight: 700; font-size: 13px; color: var(--color-accent); gap: 4px; }
-    .card-footer svg { width: 14px; height: 14px; transition: transform .2s ease; stroke: currentColor; fill: none; stroke-width: 2.5; }
-    .doc-card:hover .card-footer svg { transform: translateX(4px); }
-    .archive-footer { text-align: center; margin-top: 60px; font-size: 13px; color: var(--text-muted); font-weight: 500; border-top: 1px solid var(--color-border); padding-top: 24px; }
-    @media (max-width: 600px) {
-      body { padding: 30px 15px; }
-      .archive-header { margin-bottom: 30px; padding-bottom: 20px; }
-      .header-logo { height: 40px; }
-      .archive-title { font-size: 20px; }
-      .doc-card { padding: 18px; }
-      .doc-title { font-size: 16px; }
-    }
-  </style>
   <link rel="stylesheet" href="../assets/interface.css?v=${assetVersion}">
 </head>
 
@@ -682,7 +438,7 @@ function createMomDocument(file) {
   const markdown = fs.readFileSync(sourcePath, 'utf8');
   const title = extractTitle(markdown, file);
   const publicMarkdown = makePublicMarkdown(markdown, title);
-  const content = parseMarkdown(publicMarkdown, title);
+  const parsed = parseMarkdown(publicMarkdown, title);
   const match = file.match(/^(\d{6})/);
   const outputFileName = match ? `${match[1]}.html` : `${path.basename(file, '.md')}.html`;
   const description = `${title} - 우체국물류지원단 물류노동조합 공식 회의록입니다.`;
@@ -696,7 +452,7 @@ function createMomDocument(file) {
     date: extractDate(markdown, file),
     excerpt: extractExcerpt(publicMarkdown),
     sortKey: match ? match[1] : file,
-    html: buildDetailHtml({ title, description, content }),
+    html: buildDetailHtml({ title, description, content: parsed.content, toc: parsed.toc }),
   };
 }
 

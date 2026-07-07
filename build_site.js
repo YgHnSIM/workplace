@@ -14,7 +14,7 @@ const rootDir = __dirname;
 const catalogPath = path.join(rootDir, '_source', 'catalog.json');
 const momManifestPath = path.join(rootDir, '_source', 'generated', 'mom.json');
 const homeFilePath = path.join(rootDir, 'index.html');
-const assetVersion = '20260707-3';
+const assetVersion = '20260707-4';
 
 const categoryLabels = {
   all: '전체',
@@ -73,10 +73,12 @@ function pageHref(docHref, outputFile) {
 
 function readDocuments() {
   const catalog = readJson(catalogPath);
-  const manualDocs = catalog.documents.map((doc) => ({
-    ...doc,
-    href: normalizeHref(doc.href),
-  }));
+  const manualDocs = catalog.documents
+    .filter((doc) => !doc.draft)
+    .map((doc) => ({
+      ...doc,
+      href: normalizeHref(doc.href),
+    }));
 
   const momDocs = readJson(momManifestPath).map((doc, index) => ({
     ...doc,
@@ -95,35 +97,50 @@ function renderIconChevron() {
           </svg>`;
 }
 
-function renderCard(doc, outputFile) {
+function renderCard(doc, outputFile, index) {
   const label = categoryLabels[doc.category] || doc.category;
-  return `      <a href="${escapeAttr(pageHref(doc.href, outputFile))}" class="doc-card" data-category="${escapeAttr(doc.category)}">
-        <div class="card-meta">
+  const idBase = `doc-${index + 1}`;
+  const metaId = `${idBase}-meta`;
+  const titleId = `${idBase}-title`;
+  const excerptId = `${idBase}-excerpt`;
+  const actionId = `${idBase}-action`;
+  return `      <a href="${escapeAttr(pageHref(doc.href, outputFile))}" class="doc-card" data-category="${escapeAttr(doc.category)}" aria-labelledby="${titleId}" aria-describedby="${metaId} ${excerptId} ${actionId}">
+        <div class="card-meta" id="${metaId}">
           <span class="badge-category">${escapeHtml(label)}</span>
           <span class="doc-date">${escapeNoBreakHtml(doc.date)}</span>
         </div>
-        <h2 class="doc-title">${escapeHtml(doc.title)}</h2>
-        <p class="doc-excerpt">${escapeHtml(doc.excerpt)}</p>
-        <div class="card-footer">
+        <h2 class="doc-title" id="${titleId}">${escapeHtml(doc.title)}</h2>
+        <p class="doc-excerpt" id="${excerptId}">${escapeHtml(doc.excerpt)}</p>
+        <div class="card-footer" id="${actionId}">
           ${escapeHtml(doc.action || `${label} 보기`)}
           ${renderIconChevron()}
         </div>
       </a>`;
 }
 
-function renderFilterBar() {
-  return `    <div class="filter-bar">
-      <button class="filter-btn active" id="filter-all" type="button" data-filter="all" aria-pressed="true">전체</button>
-      <button class="filter-btn" id="filter-statement" type="button" data-filter="statement" aria-pressed="false">성명서</button>
-      <button class="filter-btn" id="filter-mom" type="button" data-filter="mom" aria-pressed="false">회의록</button>
-      <button class="filter-btn" id="filter-knowledge" type="button" data-filter="knowledge" aria-pressed="false">지식</button>
-      <button class="filter-btn" id="filter-notice" type="button" data-filter="notice" aria-pressed="false">알림</button>
+function renderFilterButton(category, active = false) {
+  return `      <button class="filter-btn${active ? ' active' : ''}" id="filter-${escapeAttr(category)}" type="button" data-filter="${escapeAttr(category)}" aria-pressed="${active ? 'true' : 'false'}">${escapeHtml(categoryLabels[category] || category)}</button>`;
+}
+
+function renderFilterBar(docs) {
+  const categories = Object.keys(categoryLabels)
+    .filter((category) => category !== 'all' && docs.some((doc) => doc.category === category));
+  const buttons = [
+    renderFilterButton('all', true),
+    ...categories.map((category) => renderFilterButton(category)),
+  ].join('\n');
+
+  return `    <div class="filter-bar" role="toolbar" aria-label="자료 분류 필터">
+${buttons}
     </div>`;
 }
 
 function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false }) {
   const assetPrefix = assetPrefixFor(outputFile);
-  const cards = docs.map((doc) => renderCard(doc, outputFile)).join('\n\n');
+  const cards = docs.map((doc, index) => renderCard(doc, outputFile, index)).join('\n\n');
+  const listContent = cards || `      <div class="empty-state" role="status">
+        <p>아직 공개된 ${escapeHtml(title)} 자료가 없습니다.</p>
+      </div>`;
   const script = includeFilter ? `\n  <script src="${assetPrefix}assets/archive-filter.js?v=${assetVersion}"></script>` : '';
 
   return `<!DOCTYPE html>
@@ -146,8 +163,8 @@ ${renderBackLink(outputFile)}    <header class="archive-header">
       <p class="archive-desc">${escapeHtml(description)}</p>
     </header>
 
-${includeFilter ? `${renderFilterBar()}\n\n` : ''}    <section class="doc-list" aria-label="${escapeAttr(title)} 목록">
-${cards}
+${includeFilter ? `${renderFilterBar(docs)}\n\n` : ''}    <section class="doc-list${docs.length === 0 ? ' is-empty' : ''}" aria-label="${escapeAttr(title)} 목록">
+${listContent}
     </section>
 
     <footer class="archive-footer">
