@@ -500,6 +500,7 @@ button:focus-visible {
 .subsubsection-title {
   color: #111111 !important;
   font-weight: 700 !important;
+  scroll-margin-top: 24px;
   word-break: keep-all;
 }
 
@@ -534,6 +535,44 @@ button:focus-visible {
 .subsubsection-title {
   font-size: calc(var(--font-size-base, 16px) * 1.06) !important;
   margin: 24px 0 10px !important;
+}
+
+.mom-body .bullet-list {
+  list-style-position: outside;
+  margin: 0 0 34px 1.25rem;
+  padding: 0;
+}
+
+.mom-body .bullet-list li {
+  line-height: 1.78;
+  margin: 0;
+  padding: 0 0 14px;
+}
+
+.mom-body .bullet-list li + li {
+  border-top: 1px solid #D9D9D9;
+  padding-top: 14px;
+}
+
+.mom-body .bullet-list li:last-child {
+  padding-bottom: 0;
+}
+
+.mom-body .bullet-list li::marker {
+  color: #002FA7;
+}
+
+.mom-body .subsection-title + .bullet-list,
+.mom-body .subsubsection-title + .bullet-list {
+  margin-top: 14px;
+}
+
+.mom-body .bullet-list + .subsection-title {
+  margin-top: 42px !important;
+}
+
+.mom-body .bullet-list + .subsubsection-title {
+  margin-top: 30px !important;
 }
 
 .demands,
@@ -916,6 +955,19 @@ button:focus-visible {
   .mom-body,
   .post-article {
     padding: 0 16px 48px;
+  }
+
+  .mom-body .bullet-list {
+    margin-bottom: 30px;
+    margin-left: 1.1rem;
+  }
+
+  .mom-body .bullet-list li {
+    padding-bottom: 13px;
+  }
+
+  .mom-body .bullet-list li + li {
+    padding-top: 13px;
   }
 
   .document-toc {
