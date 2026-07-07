@@ -12,7 +12,7 @@ const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
 const generatedDir = path.join(rootDir, '_source', 'generated');
-const assetVersion = '20260707-5';
+const assetVersion = '20260707-6';
 
 function sanitizeUrl(value) {
   const url = String(value || '').trim();

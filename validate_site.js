@@ -123,6 +123,7 @@ function validateNoRedactedMomAttendees() {
 
 function validateRemovedFiles() {
   [
+    path.join(rootDir, 'knowledge', 'test.html'),
     path.join(rootDir, 'notice', 'test.html'),
   ].forEach((file) => {
     if (fs.existsSync(file)) {

@@ -704,6 +704,20 @@ button:focus-visible {
   padding-top: 12px;
 }
 
+.post-video {
+  border: 1px solid #111111;
+  margin: 0 0 24px;
+  padding: 16px;
+  background: #FFFFFF;
+}
+
+.post-video-frame {
+  aspect-ratio: 16 / 9;
+  border: 0;
+  display: block;
+  width: 100%;
+}
+
 .post-summary {
   border-top: 1px solid #111111;
   margin-top: 32px;

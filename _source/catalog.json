@@ -12,12 +12,11 @@
     },
     {
       "category": "knowledge",
-      "href": "knowledge/test.html",
-      "title": "지식 임시 페이지",
-      "draft": true,
-      "date": "임시 페이지",
-      "excerpt": "지식 분류 연결 확인을 위해 만든 임시 페이지입니다. 실제 자료가 준비되면 이 항목은 교체됩니다.",
-      "action": "지식 페이지 보기",
+      "href": "knowledge/sick-leave-double-reduction.html",
+      "title": "병가 일수까지 반토막 낸 이중삭감의 모순",
+      "date": "2026년 7월 7일",
+      "excerpt": "병가 일수까지 반토막 낸 이중삭감 문제를 다룬 YouTube 영상 자료입니다.",
+      "action": "영상 자료 보기",
       "groupOrder": 30,
       "order": 10
     },

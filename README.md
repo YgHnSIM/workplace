@@ -15,7 +15,7 @@
 | `_source/catalog.json` | 성명서, 알림, 지식 문서의 공개 목록 메타데이터입니다. |
 | `statement/` | 성명서 상세 HTML입니다. |
 | `notice/` | 알림 상세 HTML과 첨부 이미지입니다. |
-| `knowledge/` | 지식 자료 섹션입니다. 현재 공개 목록은 비어 있습니다. |
+| `knowledge/` | 지식 자료 상세 HTML과 목록 페이지입니다. |
 | `assets/` | 공통 CSS, 문서 툴바, 아카이브 필터 스크립트입니다. |
 | `build_mom.js` | 회의록 HTML과 `MoM/index.html`을 생성합니다. |
 | `build_site.js` | 루트 아카이브, `notice/index.html`, `knowledge/index.html`을 생성합니다. |
@@ -25,6 +25,8 @@
 
 - 성명서: `statement/성명서_202607.html`
 - 운영위원회 회의록 목록: `MoM/index.html`
+- 지식 자료
+  - `knowledge/sick-leave-double-reduction.html`
 - 알림
   - `notice/logistics-union-9-years.html`
   - `notice/2025-performance-pay.html`
@@ -98,5 +100,6 @@ git push
 - `_source/`는 `_config.yml`에서 Pages 배포 제외 대상으로 지정되어 있습니다.
 - `MoM/` 폴더에는 원본 Markdown을 두지 않습니다. 검증 스크립트가 public 회의록 폴더의 Markdown 파일을 오류로 처리합니다.
 - `statement/index.html`은 중복 별칭 페이지로 제거했습니다. 성명서는 개별 HTML 파일로 연결합니다.
+- `knowledge/test.html`은 임시 페이지로 제거했습니다. 지식 자료는 실제 공개 글만 둡니다.
 - `notice/test.html`은 공개 사이트에 있으면 검증 실패로 처리됩니다.
 - 공통 CSS 또는 JS를 바꾸면 `build_mom.js`, `build_site.js`의 `assetVersion`도 함께 올려 캐시를 갱신합니다.
