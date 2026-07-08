@@ -14,7 +14,7 @@ const rootDir = __dirname;
 const catalogPath = path.join(rootDir, '_source', 'catalog.json');
 const momManifestPath = path.join(rootDir, '_source', 'generated', 'mom.json');
 const homeFilePath = path.join(rootDir, 'index.html');
-const assetVersion = '20260708-2';
+const assetVersion = '20260709-1';
 
 const categoryLabels = {
   all: '전체',

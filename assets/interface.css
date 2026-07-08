@@ -967,6 +967,7 @@ button:focus-visible {
 
 .utility-button-container {
   display: flex;
+  position: relative;
 }
 
 .utility-bar button {
@@ -1007,9 +1008,23 @@ button:focus-visible {
   font-family: var(--font-main) !important;
   bottom: auto !important;
   left: auto !important;
+  opacity: 0;
+  padding: 6px 8px;
+  pointer-events: none;
+  position: absolute;
   right: 52px !important;
   top: 50%;
   transform: translateY(-50%) !important;
+  transition: opacity 120ms ease;
+  visibility: hidden;
+  white-space: nowrap;
+  z-index: 1001;
+}
+
+.utility-button-container:hover .utility-tooltip,
+.utility-button-container:focus-within .utility-tooltip {
+  opacity: 1;
+  visibility: visible;
 }
 
 @media print {
