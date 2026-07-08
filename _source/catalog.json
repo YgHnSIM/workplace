@@ -12,6 +12,16 @@
     },
     {
       "category": "knowledge",
+      "href": "knowledge/retirement-benefit-db-dc-guide.html",
+      "title": "퇴직금·퇴직연금 DB/DC 선택 안내 v1",
+      "date": "2026년 7월 8일",
+      "excerpt": "퇴직금 제도의 기원, 고용보험·국민연금·퇴직연금으로의 기능 분화, 사내·사외 적립 차이, DB와 DC 선택 기준을 정리한 조합원 안내 초안입니다.",
+      "action": "지식 자료 보기",
+      "groupOrder": 30,
+      "order": 5
+    },
+    {
+      "category": "knowledge",
       "href": "knowledge/sick-leave-double-reduction.html",
       "title": "병가 일수까지 반토막 낸 이중삭감의 모순",
       "date": "2026년 7월 7일",
