@@ -13,6 +13,24 @@ const sourceDir = path.join(rootDir, '_source', 'MoM');
 const outputDir = path.join(rootDir, 'MoM');
 const generatedDir = path.join(rootDir, '_source', 'generated');
 const assetVersion = '20260709-1';
+const assetCache = new Map();
+
+function readAssetText(...parts) {
+  const assetPath = path.join(rootDir, ...parts);
+  if (!assetCache.has(assetPath)) {
+    assetCache.set(assetPath, fs.readFileSync(assetPath, 'utf8'));
+  }
+  return assetCache.get(assetPath);
+}
+
+function inlineInterfaceCss() {
+  return `  <style>\n${readAssetText('assets', 'interface.css')}\n  </style>`;
+}
+
+function inlineDocumentToolsJs() {
+  const script = readAssetText('assets', 'document-tools.js').replace(/<\/script/gi, '<\\/script');
+  return `  <script>\n${script}\n  </script>`;
+}
 
 function sanitizeUrl(value) {
   const url = String(value || '').trim();
@@ -263,6 +281,10 @@ function extractExcerpt(publicMarkdown) {
 
     const list = line.match(/^\s*[-*]\s+(.*)$/);
     if (list) return stripMarkdown(list[1]).slice(0, 120);
+
+    if (line.trim() && !/^#{1,6}\s+/.test(line) && !/^\s*>/.test(line) && !/^\s*\|/.test(line)) {
+      return stripMarkdown(line).slice(0, 120);
+    }
   }
 
   return '운영위원회 회의 주요 내용과 결정사항을 정리한 회의록입니다.';
@@ -309,6 +331,13 @@ function buildUtilityBar() {
   </div>`;
 }
 
+function renderLogoMark() {
+  return `<div class="header-logo logo-mark" role="img" aria-label="우체국물류지원단 물류노동조합 로고">
+          <span>우체국물류지원단</span>
+          <strong>물류노동조합</strong>
+        </div>`;
+}
+
 function renderDocumentToc(toc) {
   if (!toc.length) return '';
 
@@ -337,6 +366,7 @@ function buildDetailHtml({ title, description, content, toc }) {
   <meta name="description" content="${escapeAttr(description)}">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
   <link rel="stylesheet" href="../assets/interface.css?v=${assetVersion}">
+${inlineInterfaceCss()}
 </head>
 
 <body>
@@ -348,7 +378,7 @@ function buildDetailHtml({ title, description, content, toc }) {
   <article class="mom-container document-article" id="mom-article" data-document-category="회의록">
     <header class="mom-header">
       <div class="header-top-row">
-        <img src="../logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
+        ${renderLogoMark()}
         <div class="mom-category">회의록</div>
       </div>
       <h1 class="statement-title">${escapeHtml(title)}</h1>
@@ -361,7 +391,7 @@ ${content}
   </article>
 
 ${buildUtilityBar()}
-  <script src="../assets/document-tools.js?v=${assetVersion}"></script>
+${inlineDocumentToolsJs()}
 </body>
 
 </html>
@@ -395,6 +425,7 @@ function buildIndexHtml(docs) {
   <meta name="description" content="우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.">
   <link rel="icon" href="../logo_정사각형.png" type="image/png">
   <link rel="stylesheet" href="../assets/interface.css?v=${assetVersion}">
+${inlineInterfaceCss()}
 </head>
 
 <body>
@@ -404,7 +435,7 @@ function buildIndexHtml(docs) {
       첫 페이지로 돌아가기
     </a>
     <header class="archive-header">
-      <img src="../logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
+      ${renderLogoMark()}
       <h1 class="archive-title">운영위원회 회의록</h1>
       <p class="archive-desc">우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 보관소입니다.</p>
     </header>

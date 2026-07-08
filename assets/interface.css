@@ -422,6 +422,43 @@ button:focus-visible {
   object-position: left center;
 }
 
+.header-logo.logo-mark {
+  border-left: 8px solid #002FA7;
+  display: inline-flex !important;
+  flex-direction: column;
+  height: auto !important;
+  justify-content: center;
+  max-width: 160px;
+  min-height: 48px;
+  min-width: 150px;
+  object-fit: initial;
+  object-position: initial;
+  padding-left: 10px;
+  word-break: keep-all;
+}
+
+.header-logo.logo-mark span,
+.header-logo.logo-mark strong {
+  display: block;
+  font-family: var(--font-main);
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+
+.header-logo.logo-mark span {
+  color: #4B6CB5;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.header-logo.logo-mark strong {
+  color: #111111;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.05;
+}
+
 .statement-category,
 .mom-category {
   background: #002FA7 !important;
@@ -1149,6 +1186,20 @@ button:focus-visible {
 
   .header-top-row .header-logo {
     height: 38px !important;
+  }
+
+  .header-logo.logo-mark {
+    min-height: 38px;
+    min-width: 138px;
+    padding-left: 8px;
+  }
+
+  .header-logo.logo-mark span {
+    font-size: 11px;
+  }
+
+  .header-logo.logo-mark strong {
+    font-size: 16px;
   }
 
   .statement-title,
