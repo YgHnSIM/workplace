@@ -1,7 +1,12 @@
 # Ignore raw voice transcripts and local tool folders
 *.txt
+!robots.txt
 .agents/
 .gemini/
 .codex-remote-attachments/
+node_modules/
+.playwright-cli/
+_site/
+output/playwright/
 _source/generated/
 ~/

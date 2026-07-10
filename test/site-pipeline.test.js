@@ -1,0 +1,279 @@
+const test = require('node:test');
+const assert = require('node:assert/strict');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
+const { spawnSync } = require('child_process');
+const {
+  parseSrcset,
+  resolveReference,
+  validateSite,
+} = require('../validate_site');
+const {
+  findMarkdownSyntaxResidues,
+  markdownResidueFixtures,
+  parseFrontMatter,
+  parseMarkdown,
+} = require('../build_mom');
+const { stageSite } = require('../scripts/stage-site');
+const { verifyGeneratedFiles } = require('../scripts/verify-generated');
+
+const temporaryDirectories = [];
+
+function write(filePath, content = '') {
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, content, 'utf8');
+}
+
+function html(body = '<h1>Fixture</h1>') {
+  return `<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fixture</title>
+  <meta name="description" content="Fixture description">
+  <link rel="canonical" href="https://example.com/workplace/fixture.html">
+  <meta property="og:title" content="Fixture">
+  <meta property="og:description" content="Fixture description">
+  <meta property="og:url" content="https://example.com/workplace/fixture.html">
+  <meta property="og:image" content="https://example.com/image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Fixture">
+  <meta name="twitter:description" content="Fixture description">
+  <meta name="twitter:image" content="https://example.com/image.png">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage"}</script>
+</head>
+<body>${body}</body>
+</html>
+`;
+}
+
+function createFixture() {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'workplace-site-'));
+  temporaryDirectories.push(root);
+
+  write(path.join(root, 'index.html'), html());
+  write(path.join(root, '.nojekyll'));
+  write(path.join(root, 'robots.txt'), 'User-agent: *\nAllow: /\n');
+  write(path.join(root, 'sitemap.xml'), '<?xml version="1.0"?><urlset></urlset>\n');
+  ['assets', 'MoM', 'statement', 'knowledge', 'notice'].forEach((directory) => {
+    fs.mkdirSync(path.join(root, directory), { recursive: true });
+  });
+  ['MoM', 'knowledge', 'notice'].forEach((directory) => {
+    write(path.join(root, directory, 'index.html'), html());
+  });
+  write(path.join(root, '_source', 'catalog.json'), '{"documents":[]}\n');
+  write(path.join(root, '_source', 'generated', 'mom.json'), '[]\n');
+  fs.mkdirSync(path.join(root, '_source', 'MoM'), { recursive: true });
+  return root;
+}
+
+function git(cwd, args) {
+  const result = spawnSync('git', args, { cwd, encoding: 'utf8' });
+  assert.equal(result.status, 0, result.stderr || result.stdout);
+}
+
+test.after(() => {
+  temporaryDirectories.forEach((directory) => fs.rmSync(directory, { recursive: true, force: true }));
+});
+
+test('clean staging removes stale files and copies only the public allowlist', () => {
+  const root = createFixture();
+  write(path.join(root, '_site', 'private.txt'), 'stale');
+  write(path.join(root, 'private-notes.md'), 'not public');
+
+  const result = stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  assert.equal(fs.existsSync(path.join(root, '_site', 'private.txt')), false);
+  assert.equal(fs.existsSync(path.join(root, '_site', 'private-notes.md')), false);
+  assert.deepEqual(result.rootFiles, [
+    '.nojekyll', 'MoM', 'assets', 'index.html', 'knowledge', 'notice',
+    'robots.txt', 'sitemap.xml', 'statement',
+  ]);
+});
+
+test('a minimal staged Pages artifact passes validation', () => {
+  const root = createFixture();
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({
+    projectRoot: root,
+    siteRoot: path.join(root, '_site'),
+    pagesBasePath: '/workplace/',
+  });
+
+  assert.deepEqual(result.errors, []);
+});
+
+test('HTML parsing catches single-quoted unsafe URLs and inline handlers', () => {
+  const root = createFixture();
+  write(
+    path.join(root, 'index.html'),
+    html("<h1>Fixture</h1><a href='java&#x09;script:alert(1)' onclick='alert(1)'>Bad link</a>"),
+  );
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.ok(result.errors.some((error) => error.includes('unsafe javascript: URL')));
+  assert.ok(result.errors.some((error) => error.includes('inline event handler onclick')));
+});
+
+test('srcset and poster URLs are resolved from parsed attributes', () => {
+  const root = createFixture();
+  ['image.png', 'image-2x.png', 'poster.png'].forEach((name) => write(path.join(root, 'assets', name)));
+  write(
+    path.join(root, 'index.html'),
+    html(`<h1>Fixture</h1>
+      <img src="assets/image.png" srcset='assets/image.png 1x, assets/image-2x.png 2x' width="10" height="10" alt="">
+      <video poster='assets/poster.png'></video>`),
+  );
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.deepEqual(result.errors, []);
+  assert.deepEqual(parseSrcset('one.png 1x, two.png 2x'), [
+    { url: 'one.png', descriptor: '1x' },
+    { url: 'two.png', descriptor: '2x' },
+  ]);
+});
+
+test('Pages root-relative URLs must include the configured project base path', () => {
+  const root = createFixture();
+  const context = {
+    attribute: 'href',
+    documents: new Map(),
+    filePath: path.join(root, 'index.html'),
+    pagesBasePath: '/workplace/',
+    siteRoot: root,
+  };
+
+  const valid = resolveReference('/workplace/index.html', context);
+  const invalid = resolveReference('/index.html', context);
+
+  assert.equal(valid.targetPath, path.join(root, 'index.html'));
+  assert.match(invalid.error, /bypasses the Pages base path/);
+});
+
+test('layout regressions catch Markdown residue, missing image dimensions, and eager iframes', () => {
+  const root = createFixture();
+  write(path.join(root, 'assets', 'image.png'));
+  write(
+    path.join(root, 'index.html'),
+    html(`<h1>Fixture</h1><p>Unclosed **marker</p>
+      <img src="assets/image.png" alt="Fixture">
+      <iframe src="https://example.com/embed" title="Fixture"></iframe>`),
+  );
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.ok(result.errors.some((error) => error.includes('raw ** emphasis marker')));
+  assert.ok(result.errors.some((error) => error.includes('positive integer width and height')));
+  assert.ok(result.errors.some((error) => error.includes('iframe must use loading="lazy"')));
+});
+
+test('manifest comparison rejects stale MoM HTML', () => {
+  const root = createFixture();
+  write(path.join(root, 'MoM', 'orphan.html'), html());
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.ok(result.errors.some((error) => error.includes('MoM/orphan.html is stale or orphaned')));
+});
+
+test('catalog schema rejects invalid dates and duplicate public hrefs', () => {
+  const root = createFixture();
+  write(path.join(root, 'knowledge', 'duplicate.html'), html('<h1>Duplicate</h1>'));
+  const document = {
+    category: 'knowledge',
+    href: 'knowledge/duplicate.html',
+    title: 'Duplicate',
+    date: '2026-02-30',
+    excerpt: 'Duplicate fixture',
+    groupOrder: 1,
+    order: 1,
+  };
+  write(
+    path.join(root, '_source', 'catalog.json'),
+    `${JSON.stringify({ documents: [document, { ...document, order: 2 }] })}\n`,
+  );
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.ok(result.errors.some((error) => error.includes('valid ISO date')));
+  assert.ok(result.errors.some((error) => error.includes('Duplicate document output path')));
+});
+
+test('frontmatter slug collisions are rejected before stale output can deploy', () => {
+  const root = createFixture();
+  const source = (title) => `---
+title: "${title}"
+date: 2026-07-10
+excerpt: "Fixture"
+type: minutes
+slug: same-output
+---
+`;
+  write(path.join(root, '_source', 'MoM', 'one.md'), source('One'));
+  write(path.join(root, '_source', 'MoM', 'two.md'), source('Two'));
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.ok(result.errors.some((error) => error.includes('Duplicate MoM output path MoM/same-output.html')));
+});
+
+test('generated-file drift check passes clean commits and rejects rebuilt changes', () => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'workplace-generated-'));
+  temporaryDirectories.push(root);
+  git(root, ['init', '--quiet']);
+  git(root, ['config', 'user.email', 'fixture@example.com']);
+  git(root, ['config', 'user.name', 'Fixture']);
+  write(path.join(root, 'index.html'), 'first build\n');
+  git(root, ['add', 'index.html']);
+  git(root, ['commit', '--quiet', '-m', 'fixture']);
+
+  assert.doesNotThrow(() => verifyGeneratedFiles({ cwd: root, generatedPaths: ['index.html'] }));
+  write(path.join(root, 'index.html'), 'drifted build\n');
+  assert.throws(
+    () => verifyGeneratedFiles({ cwd: root, generatedPaths: ['index.html'] }),
+    /Generated public files are out of date/,
+  );
+});
+
+test('MoM builder regression fixtures reject known Markdown residue', () => {
+  markdownResidueFixtures.forEach((fixture) => {
+    const issues = findMarkdownSyntaxResidues(fixture.markdown);
+    assert.ok(
+      issues.some((issue) => issue.code === fixture.expectedCode),
+      `${fixture.name} should produce ${fixture.expectedCode}`,
+    );
+  });
+});
+
+test('MoM builder parses frontmatter and renders CommonMark content', () => {
+  const source = `---
+title: "Fixture minutes"
+date: 2026-07-10
+excerpt: "Fixture excerpt"
+type: minutes
+slug: fixture-minutes
+---
+
+## Decision
+
+This has **strong text** and [a link](https://example.com).
+`;
+  const parsedSource = parseFrontMatter(source, path.join(process.cwd(), '_source', 'MoM', 'fixture.md'));
+  const rendered = parseMarkdown(parsedSource.body, parsedSource.metadata.title);
+
+  assert.equal(parsedSource.metadata.slug, 'fixture-minutes');
+  assert.match(rendered.content, /<strong>strong text<\/strong>/);
+  assert.match(rendered.content, /class="content-link"/);
+  assert.equal(rendered.toc[0].text, 'Decision');
+});

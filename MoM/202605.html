@@ -5,1420 +5,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2026년 5월 운영위원회 회의록 - 우체국물류지원단 물류노동조합</title>
-  <meta name="description" content="2026년 5월 운영위원회 회의록 - 우체국물류지원단 물류노동조합 공식 회의록입니다.">
-  <link rel="icon" href="../logo_정사각형.png" type="image/png">
-  <link rel="stylesheet" href="../assets/interface.css?v=20260709-1">
-  <style>
-:root {
-  --font-scale: 1.0;
-  --font-size-base: calc(17px * var(--font-scale));
-  --font-size-title: calc(30px * var(--font-scale));
-  --font-size-section-title: calc(22px * var(--font-scale));
-  --font-size-subsection-title: calc(18px * var(--font-scale));
-  --font-size-meta: calc(14px * var(--font-scale));
-  --spacing-unit: 1.6rem;
-  --bg-page: #FFFFFF;
-  --bg-card: #FFFFFF;
-  --text-primary: #111111;
-  --text-secondary: #333333;
-  --text-muted: #666666;
-  --color-accent: #002FA7;
-  --color-accent-light: #F7F7F8;
-  --color-border: #111111;
-  --font-main: "Helvetica Neue", Arial, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-  letter-spacing: 0 !important;
-}
-
-html {
-  background: #FFFFFF;
-}
-
-body {
-  align-items: center !important;
-  display: flex !important;
-  font-family: var(--font-main) !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important;
-  background: #FFFFFF !important;
-  color: #111111 !important;
-  margin: 0 !important;
-  padding: 44px 24px 96px !important;
-}
-
-a:focus-visible,
-button:focus-visible {
-  outline: 2px solid #002FA7;
-  outline-offset: 3px;
-}
-
-.archive-container,
-.back-link,
-.mom-container,
-.statement-container {
-  width: min(1120px, calc(100vw - 48px)) !important;
-}
-
-.archive-container {
-  max-width: none !important;
-}
-
-.archive-header {
-  position: relative;
-  display: grid !important;
-  grid-template-columns: 180px minmax(0, 1fr);
-  column-gap: 36px;
-  align-items: end !important;
-  text-align: left !important;
-  border-top: 1px solid #111111 !important;
-  border-bottom: 1px solid #111111 !important;
-  padding: 22px 0 30px !important;
-  margin: 0 0 28px !important;
-}
-
-.archive-header::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 84px;
-  height: 4px;
-  background: #002FA7;
-}
-
-.archive-header > .header-logo {
-  grid-row: 1 / span 2;
-  grid-column: 1;
-  height: 52px !important;
-  max-width: 160px;
-  object-fit: contain;
-  object-position: left center;
-  margin: 0 !important;
-  align-self: start;
-}
-
-.archive-title {
-  grid-column: 2;
-  max-width: 820px;
-  font-size: clamp(30px, 5vw, 64px) !important;
-  font-weight: 700 !important;
-  line-height: 1.02 !important;
-  color: #111111 !important;
-  word-break: keep-all;
-}
-
-.archive-desc {
-  grid-column: 2;
-  max-width: 720px;
-  margin-top: 16px !important;
-  color: #333333 !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
-  line-height: 1.55 !important;
-  word-break: keep-all;
-}
-
-.filter-bar {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
-  gap: 0 !important;
-  margin: 0 0 0 !important;
-  padding-bottom: 28px;
-  border-bottom: 1px solid #111111;
-}
-
-.filter-btn {
-  min-height: 44px;
-  background: #FFFFFF !important;
-  border: 1px solid #111111 !important;
-  border-left: 0 !important;
-  border-radius: 0 !important;
-  color: #111111 !important;
-  padding: 8px 18px !important;
-  font-family: var(--font-main) !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  min-width: 0;
-  width: 100%;
-  text-transform: none !important;
-  box-shadow: none !important;
-}
-
-.filter-btn:first-child {
-  border-left: 1px solid #111111 !important;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-  background: #002FA7 !important;
-  border-color: #111111 !important;
-  color: #FFFFFF !important;
-}
-
-.doc-list {
-  gap: 0 !important;
-  border-top: 1px solid #111111;
-}
-
-.filter-bar + .doc-list {
-  border-top: 0;
-}
-
-.doc-list.is-empty {
-  border-top: 0;
-}
-
-.empty-state {
-  background: #F7F7F8;
-  border: 1px solid #111111;
-  color: #333333;
-  font-size: 16px;
-  line-height: 1.6;
-  padding: 24px 28px;
-}
-
-.empty-state p {
-  margin: 0;
-}
-
-.doc-card {
-  --category-color: #002FA7;
-  display: grid !important;
-  grid-template-columns: minmax(168px, 220px) minmax(0, 1fr);
-  column-gap: 34px;
-  background: #FFFFFF !important;
-  border: 0 !important;
-  border-bottom: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: #111111 !important;
-  overflow: hidden;
-  padding: 28px 0 28px 20px !important;
-  position: relative;
-  text-decoration: none !important;
-  transform: none !important;
-}
-
-.doc-card[data-category="statement"] {
-  --category-color: #E4002B;
-}
-
-.doc-card[data-category="mom"] {
-  --category-color: #002FA7;
-}
-
-.doc-card[data-category="knowledge"] {
-  --category-color: #FF4F00;
-}
-
-.doc-card[data-category="notice"] {
-  --category-color: #007A3D;
-}
-
-.doc-card[hidden] {
-  display: none !important;
-}
-
-.doc-card::before {
-  background: var(--category-color);
-  bottom: 28px;
-  content: "" !important;
-  left: 0;
-  position: absolute;
-  top: 28px;
-  width: 6px;
-}
-
-.doc-card:hover {
-  background: #F7F7F8 !important;
-  border-color: #111111 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-.card-meta {
-  display: flex !important;
-  grid-column: 1;
-  grid-row: 1 / span 3;
-  align-items: flex-start !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  margin: 0 !important;
-  padding-right: 18px;
-  border-right: 1px solid #D9D9D9;
-  font-size: 13px !important;
-  line-height: 1.2;
-}
-
-.badge-category {
-  display: block;
-  order: 2;
-  background: transparent !important;
-  color: var(--category-color) !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  line-height: 1.2;
-  text-transform: none !important;
-  overflow-wrap: normal !important;
-  white-space: nowrap !important;
-}
-
-.doc-date {
-  display: block;
-  order: 1;
-  flex: 0 0 auto;
-  max-width: none;
-  color: #111111 !important;
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  line-height: 1.15;
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: normal !important;
-  word-break: keep-all !important;
-  white-space: nowrap !important;
-}
-
-.doc-title {
-  grid-column: 2;
-  color: #111111 !important;
-  font-size: clamp(20px, 2.4vw, 30px) !important;
-  font-weight: 700 !important;
-  line-height: 1.28 !important;
-  margin: 0 0 12px !important;
-  word-break: keep-all;
-}
-
-.doc-card:hover .doc-title {
-  color: var(--category-color) !important;
-}
-
-.doc-excerpt {
-  grid-column: 2;
-  max-width: 820px;
-  color: #333333 !important;
-  font-size: 15px !important;
-  font-weight: 400 !important;
-  line-height: 1.65 !important;
-  margin: 0 0 18px !important;
-  word-break: keep-all;
-}
-
-.card-footer {
-  grid-column: 2;
-  align-items: center !important;
-  display: flex !important;
-  justify-content: flex-start !important;
-  color: #111111 !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  gap: 8px !important;
-}
-
-.card-footer::before {
-  content: "";
-  width: 28px;
-  height: 1px;
-  background: var(--category-color);
-}
-
-.card-footer svg {
-  color: var(--category-color);
-  fill: none !important;
-  flex: 0 0 auto;
-  height: 16px !important;
-  stroke: currentColor !important;
-  stroke-width: 2.5 !important;
-  width: 16px !important;
-}
-
-.doc-card:hover .card-footer svg {
-  transform: none !important;
-}
-
-.info-banner {
-  background: #F7F7F8 !important;
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  margin-top: 32px !important;
-}
-
-.info-banner svg {
-  stroke: #002FA7 !important;
-}
-
-.info-text,
-.archive-footer {
-  color: #333333 !important;
-  font-weight: 400 !important;
-}
-
-.archive-footer {
-  text-align: center !important;
-  border-top: 1px solid #111111 !important;
-  margin-top: 48px !important;
-  padding-top: 18px !important;
-}
-
-.back-link {
-  align-self: center !important;
-  color: #111111 !important;
-  text-decoration: none !important;
-  border-bottom: 1px solid #111111;
-  padding-bottom: 4px;
-  margin-bottom: 20px !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-}
-
-.back-link:hover {
-  color: #002FA7 !important;
-}
-
-.back-link svg {
-  fill: none;
-  height: 16px;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  width: 16px;
-}
-
-.statement-container,
-.mom-container {
-  max-width: none !important;
-  background: #FFFFFF !important;
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  overflow: visible !important;
-}
-
-.statement-container::before {
-  content: none !important;
-}
-
-.statement-header,
-.mom-header {
-  display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  column-gap: 36px;
-  border-bottom: 1px solid #111111 !important;
-  margin: 0 0 42px !important;
-  padding: 26px 28px 34px !important;
-}
-
-.header-top-row {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  align-items: flex-start !important;
-  border-right: 1px solid #D9D9D9;
-  display: flex !important;
-  flex-direction: column;
-  gap: 18px !important;
-  justify-content: flex-start !important;
-  margin: 0 !important;
-  padding-right: 20px;
-}
-
-.header-top-row .header-logo {
-  height: 48px !important;
-  max-width: 154px;
-  object-fit: contain;
-  object-position: left center;
-}
-
-.header-logo.logo-mark {
-  border-left: 8px solid #002FA7;
-  display: inline-flex !important;
-  flex-direction: column;
-  height: auto !important;
-  justify-content: center;
-  max-width: 160px;
-  min-height: 48px;
-  min-width: 150px;
-  object-fit: initial;
-  object-position: initial;
-  padding-left: 10px;
-  word-break: keep-all;
-}
-
-.header-logo.logo-mark span,
-.header-logo.logo-mark strong {
-  display: block;
-  font-family: var(--font-main);
-  letter-spacing: 0;
-  white-space: nowrap;
-}
-
-.header-logo.logo-mark span {
-  color: #4B6CB5;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.header-logo.logo-mark strong {
-  color: #111111;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.05;
-}
-
-.statement-category,
-.mom-category {
-  background: #002FA7 !important;
-  border-radius: 0 !important;
-  color: #FFFFFF !important;
-  display: inline-block;
-  font-size: var(--font-size-meta, 13px) !important;
-  font-weight: 700 !important;
-  line-height: 1.2;
-  padding: 5px 8px !important;
-}
-
-.statement-title {
-  grid-column: 2;
-  color: #111111 !important;
-  font-size: clamp(30px, 4.2vw, 48px) !important;
-  font-weight: 700 !important;
-  line-height: 1.08 !important;
-  margin: 0 !important;
-  max-width: 880px;
-  word-break: keep-all;
-}
-
-.statement-meta {
-  grid-column: 2;
-  color: #333333 !important;
-  font-size: var(--font-size-meta, 14px) !important;
-  font-weight: 700 !important;
-  margin-top: 18px !important;
-}
-
-.statement-body,
-.mom-body {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 0 28px 56px;
-}
-
-.document-toc {
-  max-width: 820px;
-  margin: 0 auto 36px;
-  padding: 0 28px;
-}
-
-.document-toc-title {
-  border-top: 1px solid #111111;
-  color: #111111;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  margin: 0;
-  padding: 14px 0 12px;
-}
-
-.document-toc-links {
-  border: 1px solid #111111;
-  border-bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
-.document-toc-link {
-  border-bottom: 1px solid #111111;
-  color: #111111;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
-  min-height: 44px;
-  padding: 11px 12px;
-  text-decoration: none;
-  word-break: keep-all;
-}
-
-.document-toc-link:hover {
-  background: #002FA7;
-  color: #FFFFFF;
-}
-
-.document-toc-level-3 {
-  color: #333333;
-  font-weight: 400;
-}
-
-.statement-body section {
-  margin-bottom: 44px !important;
-}
-
-.body-text {
-  color: #222222 !important;
-  font-size: var(--font-size-base, 17px) !important;
-  font-weight: 400 !important;
-  line-height: 1.82 !important;
-  margin-bottom: var(--spacing-unit, 1.6rem) !important;
-  text-align: left !important;
-  text-indent: 0 !important;
-  word-break: keep-all;
-}
-
-.section-title,
-.subsection-title,
-.subsubsection-title {
-  color: #111111 !important;
-  font-weight: 700 !important;
-  scroll-margin-top: 24px;
-  word-break: keep-all;
-}
-
-.section-title {
-  position: relative;
-  border: 0 !important;
-  border-top: 1px solid #111111 !important;
-  font-size: var(--font-size-section-title, 22px) !important;
-  line-height: 1.35 !important;
-  margin: 46px 0 20px !important;
-  padding: 16px 0 0 !important;
-}
-
-.section-title::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 58px;
-  height: 3px;
-  background: #002FA7;
-}
-
-.subsection-title {
-  border: 0 !important;
-  border-top: 1px solid #D9D9D9 !important;
-  font-size: var(--font-size-subsection-title, 18px) !important;
-  margin: 30px 0 12px !important;
-  padding: 12px 0 0 !important;
-}
-
-.subsubsection-title {
-  font-size: calc(var(--font-size-base, 16px) * 1.06) !important;
-  margin: 24px 0 10px !important;
-}
-
-.mom-body .bullet-list {
-  list-style-position: outside;
-  margin: 0 0 34px 1.25rem;
-  padding: 0;
-}
-
-.mom-body .bullet-list li {
-  line-height: 1.78;
-  margin: 0;
-  padding: 0 0 14px;
-}
-
-.mom-body .bullet-list li + li {
-  border-top: 1px solid #D9D9D9;
-  padding-top: 14px;
-}
-
-.mom-body .bullet-list li:last-child {
-  padding-bottom: 0;
-}
-
-.mom-body .bullet-list li::marker {
-  color: #002FA7;
-}
-
-.mom-body .subsection-title + .bullet-list,
-.mom-body .subsubsection-title + .bullet-list {
-  margin-top: 14px;
-}
-
-.mom-body .bullet-list + .subsection-title {
-  margin-top: 42px !important;
-}
-
-.mom-body .bullet-list + .subsubsection-title {
-  margin-top: 30px !important;
-}
-
-.demands,
-.closing-block,
-.quote-block {
-  background: #F7F7F8 !important;
-  border: 1px solid #111111 !important;
-  border-left: 6px solid #002FA7 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.demands {
-  padding: 26px 28px !important;
-}
-
-.demands li,
-.bullet-list,
-.mom-table td {
-  color: #222222 !important;
-  font-weight: 400 !important;
-}
-
-.demands li strong,
-.mom-table td strong,
-.content-link {
-  color: #002FA7 !important;
-}
-
-.closing-block {
-  padding: 26px 28px !important;
-}
-
-.closing-highlight {
-  color: #111111 !important;
-  border-bottom: 1px solid #D9D9D9 !important;
-  font-weight: 700 !important;
-}
-
-.closing-text {
-  color: #111111 !important;
-  font-weight: 700 !important;
-  text-align: left !important;
-}
-
-.signature-block {
-  border-top: 1px solid #111111 !important;
-  margin-top: 52px !important;
-  padding-top: 28px !important;
-  text-align: left !important;
-}
-
-.signature-date {
-  color: #111111 !important;
-  font-weight: 700 !important;
-}
-
-.signature-org-row {
-  justify-content: flex-start !important;
-}
-
-.signature-org-logo {
-  width: min(320px, 100%) !important;
-}
-
-.public-note {
-  color: #333333 !important;
-  font-weight: 400 !important;
-}
-
-.table-container {
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  margin: 20px 0 30px;
-  overflow-x: auto;
-  width: 100%;
-}
-
-.mom-table {
-  border-collapse: collapse;
-  font-size: calc(var(--font-size-base, 16px) * .95);
-  text-align: left;
-  width: 100%;
-}
-
-.mom-table th,
-.mom-table td {
-  border-bottom: 1px solid #D9D9D9 !important;
-  padding: 12px 16px;
-  vertical-align: top;
-}
-
-.mom-table th {
-  background: #FFFFFF !important;
-  color: #111111 !important;
-  font-weight: 700 !important;
-  border-bottom: 1px solid #111111 !important;
-}
-
-.divider {
-  border-top: 1px solid #111111 !important;
-}
-
-.post-article {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 28px 56px;
-}
-
-.post-figure {
-  border: 1px solid #111111;
-  margin: 0 0 24px;
-  padding: 16px;
-  background: #FFFFFF;
-}
-
-.post-image {
-  display: block;
-  height: auto;
-  width: 100%;
-}
-
-.post-caption {
-  border-top: 1px solid #D9D9D9;
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-top: 14px;
-  padding-top: 12px;
-}
-
-.post-video {
-  border: 1px solid #111111;
-  margin: 0 0 24px;
-  padding: 16px;
-  background: #FFFFFF;
-}
-
-.post-video-frame {
-  aspect-ratio: 16 / 9;
-  border: 0;
-  display: block;
-  width: 100%;
-}
-
-.post-summary {
-  border-top: 1px solid #111111;
-  margin-top: 32px;
-  padding-top: 18px;
-}
-
-.post-summary-title {
-  color: #111111;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.35;
-  margin: 0 0 14px;
-  word-break: keep-all;
-}
-
-.analysis-note {
-  border-left: 6px solid #FF4F00;
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 18px 0 0;
-  padding: 0 0 0 14px;
-  word-break: keep-all;
-}
-
-.insight-grid {
-  display: grid;
-  gap: 0;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 24px 0 0;
-  border: 1px solid #111111;
-  border-bottom: 0;
-}
-
-.insight-card {
-  border-bottom: 1px solid #111111;
-  color: #222222;
-  min-height: 168px;
-  padding: 18px;
-}
-
-.insight-card:nth-child(odd) {
-  border-right: 1px solid #D9D9D9;
-}
-
-.insight-label {
-  color: #FF4F00;
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.insight-card strong {
-  color: #111111;
-  display: block;
-  font-size: 20px;
-  line-height: 1.35;
-  margin-bottom: 10px;
-  word-break: keep-all;
-}
-
-.insight-card p {
-  font-size: 15px;
-  line-height: 1.65;
-  margin: 0;
-  word-break: keep-all;
-}
-
-.double-cut-flow {
-  border: 1px solid #111111;
-  display: grid;
-  gap: 0;
-  grid-template-columns: 1fr 48px 1fr 48px 1fr;
-  margin: 24px 0 0;
-}
-
-.flow-step,
-.flow-arrow {
-  min-height: 168px;
-}
-
-.flow-step {
-  padding: 18px;
-}
-
-.flow-step:not(:last-child),
-.flow-arrow {
-  border-right: 1px solid #D9D9D9;
-}
-
-.flow-arrow {
-  align-items: center;
-  color: #FF4F00;
-  display: flex;
-  font-size: 28px;
-  font-weight: 700;
-  justify-content: center;
-}
-
-.flow-number {
-  color: #FF4F00;
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.flow-step strong {
-  color: #111111;
-  display: block;
-  font-size: 19px;
-  line-height: 1.35;
-  margin-bottom: 10px;
-  word-break: keep-all;
-}
-
-.flow-step p {
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.65;
-  margin: 0;
-  word-break: keep-all;
-}
-
-.chapter-list {
-  border-top: 1px solid #111111;
-  list-style: none;
-  margin: 24px 0 0;
-  padding: 0;
-}
-
-.chapter-list li {
-  border-bottom: 1px solid #D9D9D9;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: 104px minmax(0, 1fr);
-  padding: 16px 0;
-}
-
-.chapter-time {
-  color: #FF4F00;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-
-.chapter-copy strong {
-  color: #111111;
-  display: block;
-  font-size: 16px;
-  line-height: 1.4;
-  margin-bottom: 6px;
-  word-break: keep-all;
-}
-
-.chapter-copy span {
-  color: #333333;
-  display: block;
-  font-size: 14px;
-  line-height: 1.6;
-  word-break: keep-all;
-}
-
-.formula-list {
-  border: 1px solid #111111;
-  list-style: none;
-  margin: 18px 0 24px;
-  padding: 0;
-}
-
-.formula-list li {
-  border-bottom: 1px solid #D9D9D9;
-  color: #222222;
-  font-size: 15px;
-  line-height: 1.6;
-  padding: 12px 14px;
-}
-
-.formula-list li:last-child {
-  border-bottom: 0;
-}
-
-.post-table {
-  border-collapse: collapse;
-  margin: 18px 0 24px;
-  width: 100%;
-}
-
-.post-table th,
-.post-table td {
-  border: 1px solid #111111;
-  color: #222222;
-  padding: 10px 12px;
-  text-align: left;
-  vertical-align: top;
-}
-
-.post-table th {
-  color: #111111;
-  font-weight: 700;
-}
-
-.utility-bar {
-  background: #FFFFFF !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  bottom: 24px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 0 !important;
-  padding: 0 !important;
-  position: fixed !important;
-  right: 24px !important;
-  z-index: 1000;
-}
-
-.utility-button-container {
-  display: flex;
-  position: relative;
-}
-
-.utility-bar button {
-  background: #FFFFFF !important;
-  border: 0 !important;
-  border-left: 0 !important;
-  border-top: 1px solid #D9D9D9 !important;
-  border-radius: 0 !important;
-  color: #111111 !important;
-  cursor: pointer;
-  height: 42px !important;
-  width: 42px !important;
-  transform: none !important;
-}
-
-.utility-bar button svg {
-  height: 20px;
-  stroke: currentColor;
-  stroke-width: 2;
-  width: 20px;
-}
-
-.utility-button-container:first-child button {
-  border-top: 0 !important;
-}
-
-.utility-bar button:hover {
-  background: #002FA7 !important;
-  color: #FFFFFF !important;
-  transform: none !important;
-}
-
-.utility-tooltip {
-  background: #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: #FFFFFF !important;
-  font-family: var(--font-main) !important;
-  bottom: auto !important;
-  left: auto !important;
-  opacity: 0;
-  padding: 6px 8px;
-  pointer-events: none;
-  position: absolute;
-  right: 52px !important;
-  top: 50%;
-  transform: translateY(-50%) !important;
-  transition: opacity 120ms ease;
-  visibility: hidden;
-  white-space: nowrap;
-  z-index: 1001;
-}
-
-.utility-button-container:hover .utility-tooltip,
-.utility-button-container:focus-within .utility-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
-@media print {
-  body {
-    background: #FFFFFF !important;
-    padding: 0 !important;
-  }
-
-  .statement-container,
-  .mom-container {
-    border: 0 !important;
-    width: 100% !important;
-  }
-}
-
-@media (max-width: 720px) {
-  body {
-    padding: 24px 16px 136px !important;
-  }
-
-  .archive-container,
-  .back-link,
-  .mom-container,
-  .statement-container {
-    width: 100% !important;
-  }
-
-  .archive-header {
-    grid-template-columns: 1fr;
-    row-gap: 16px;
-    padding: 18px 0 22px !important;
-  }
-
-  .archive-header > .header-logo {
-    grid-column: 1;
-    grid-row: auto;
-    height: 42px !important;
-  }
-
-  .archive-title,
-  .archive-desc {
-    grid-column: 1;
-  }
-
-  .archive-title {
-    font-size: clamp(32px, 13vw, 46px) !important;
-  }
-
-  .filter-bar {
-    display: flex !important;
-    overflow-x: auto;
-    padding-bottom: 18px;
-    scrollbar-width: thin;
-  }
-
-  .filter-btn {
-    flex: 1 0 88px;
-    min-width: 0;
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-    width: auto !important;
-  }
-
-  .doc-card {
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    padding: 22px 0 22px 18px !important;
-  }
-
-  .doc-card::before {
-    bottom: 22px;
-    top: 22px;
-  }
-
-  .card-meta {
-    grid-column: 1;
-    grid-row: auto;
-    border-right: 0;
-    border-bottom: 1px solid #D9D9D9;
-    flex-direction: row !important;
-    flex-wrap: nowrap;
-    gap: 12px !important;
-    justify-content: space-between;
-    margin-bottom: 14px !important;
-    padding: 0 0 12px;
-  }
-
-  .doc-date {
-    font-size: 15px !important;
-    max-width: none;
-  }
-
-  .doc-title,
-  .doc-excerpt,
-  .card-footer {
-    grid-column: 1;
-  }
-
-  .statement-container,
-  .mom-container {
-    border-left: 0 !important;
-    border-right: 0 !important;
-  }
-
-  .statement-header,
-  .mom-header {
-    grid-template-columns: 1fr;
-    padding: 20px 16px 26px !important;
-  }
-
-  .header-top-row {
-    grid-column: 1;
-    grid-row: auto;
-    align-items: center !important;
-    border-right: 0;
-    border-bottom: 1px solid #D9D9D9;
-    flex-direction: row;
-    justify-content: space-between !important;
-    margin-bottom: 20px !important;
-    padding: 0 0 16px;
-  }
-
-  .header-top-row .header-logo {
-    height: 38px !important;
-  }
-
-  .header-logo.logo-mark {
-    min-height: 38px;
-    min-width: 138px;
-    padding-left: 8px;
-  }
-
-  .header-logo.logo-mark span {
-    font-size: 11px;
-  }
-
-  .header-logo.logo-mark strong {
-    font-size: 16px;
-  }
-
-  .statement-title,
-  .statement-meta {
-    grid-column: 1;
-  }
-
-  .statement-title {
-    font-size: clamp(24px, 8.5vw, 34px) !important;
-    line-height: 1.12 !important;
-  }
-
-  .statement-body,
-  .mom-body,
-  .post-article {
-    padding: 0 16px 48px;
-  }
-
-  .mom-body .bullet-list {
-    margin-bottom: 30px;
-    margin-left: 1.1rem;
-  }
-
-  .mom-body .bullet-list li {
-    padding-bottom: 13px;
-  }
-
-  .mom-body .bullet-list li + li {
-    padding-top: 13px;
-  }
-
-  .document-toc {
-    margin-bottom: 28px;
-    padding: 0 16px;
-  }
-
-  .document-toc-links {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-height: 260px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-
-  .document-toc-link {
-    min-height: 42px;
-  }
-
-  .table-container {
-    border: 0 !important;
-    margin: 18px 0 28px;
-    overflow: visible;
-  }
-
-  .mom-table,
-  .mom-table tr,
-  .mom-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .mom-table tr:first-child {
-    display: none;
-  }
-
-  .mom-table tr {
-    border: 1px solid #111111;
-    margin-bottom: 12px;
-  }
-
-  .mom-table td {
-    border-bottom: 1px solid #D9D9D9 !important;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: minmax(76px, 32%) minmax(0, 1fr);
-    padding: 10px 12px !important;
-  }
-
-  .mom-table td::before {
-    color: #002FA7;
-    content: attr(data-label);
-    font-weight: 700;
-    word-break: keep-all;
-  }
-
-  .mom-table td:last-child {
-    border-bottom: 0 !important;
-  }
-
-  .post-figure {
-    padding: 10px;
-  }
-
-  .insight-grid,
-  .double-cut-flow {
-    grid-template-columns: 1fr;
-  }
-
-  .insight-card:nth-child(odd),
-  .flow-step:not(:last-child),
-  .flow-arrow {
-    border-right: 0;
-  }
-
-  .flow-step,
-  .flow-arrow {
-    min-height: 0;
-  }
-
-  .flow-arrow {
-    border-bottom: 1px solid #D9D9D9;
-    min-height: 44px;
-    transform: none;
-  }
-
-  .chapter-list li {
-    gap: 8px;
-    grid-template-columns: 1fr;
-  }
-
-  .post-table,
-  .post-table tr,
-  .post-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .post-table tr:first-child {
-    display: none;
-  }
-
-  .post-table tr {
-    border: 1px solid #111111;
-    margin-bottom: 12px;
-  }
-
-  .post-table td {
-    border: 0;
-    border-bottom: 1px solid #D9D9D9;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: minmax(76px, 32%) minmax(0, 1fr);
-  }
-
-  .post-table td::before {
-    color: #002FA7;
-    content: attr(data-label);
-    font-weight: 700;
-    word-break: keep-all;
-  }
-
-  .post-table td:last-child {
-    border-bottom: 0;
-  }
-
-  .body-text {
-    font-size: var(--font-size-base, 15px) !important;
-  }
-
-  .demands,
-  .closing-block {
-    padding: 20px 16px !important;
-  }
-
-  .utility-bar {
-    bottom: max(16px, env(safe-area-inset-bottom)) !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    left: 50% !important;
-    margin: 0 !important;
-    position: fixed !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: min(calc(100% - 32px), 360px) !important;
-  }
-
-  .utility-button-container {
-    flex: 1 1 0;
-  }
-
-  .utility-bar button {
-    border-left: 1px solid #D9D9D9 !important;
-    border-top: 0 !important;
-    flex: 1 1 0;
-    min-width: 0;
-    width: 100% !important;
-  }
-
-  .utility-button-container:first-child button {
-    border-left: 0 !important;
-  }
-
-  .utility-tooltip {
-    display: none !important;
-  }
-}
-
-  </style>
+  <meta name="description" content="병가 차별 재심 대응, 현장 안전과 휴게권 개선, 공동 워크숍과 퇴직 시점 단일화 방안을 논의했습니다.">
+  <link rel="canonical" href="https://yghnsim.github.io/workplace/MoM/202605.html">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="우체국물류지원단 물류노동조합">
+  <meta property="og:title" content="2026년 5월 운영위원회 회의록 - 우체국물류지원단 물류노동조합">
+  <meta property="og:description" content="병가 차별 재심 대응, 현장 안전과 휴게권 개선, 공동 워크숍과 퇴직 시점 단일화 방안을 논의했습니다.">
+  <meta property="og:url" content="https://yghnsim.github.io/workplace/MoM/202605.html">
+  <meta property="og:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:published_time" content="2026-05-08">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026년 5월 운영위원회 회의록 - 우체국물류지원단 물류노동조합">
+  <meta name="twitter:description" content="병가 차별 재심 대응, 현장 안전과 휴게권 개선, 공동 워크숍과 퇴직 시점 단일화 방안을 논의했습니다.">
+  <meta name="twitter:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
+  <link rel="icon" href="../assets/favicon-32.png?v=2b7f670c1bde" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192">
+  <link rel="stylesheet" href="../assets/interface.css?v=fd3a3ba27b94">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "name": "2026년 5월 운영위원회 회의록",
+  "headline": "2026년 5월 운영위원회 회의록",
+  "description": "병가 차별 재심 대응, 현장 안전과 휴게권 개선, 공동 워크숍과 퇴직 시점 단일화 방안을 논의했습니다.",
+  "url": "https://yghnsim.github.io/workplace/MoM/202605.html",
+  "image": "https://yghnsim.github.io/workplace/assets/social-card.png",
+  "inLanguage": "ko-KR",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "우체국물류지원단 물류노동조합",
+    "url": "https://yghnsim.github.io/workplace/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "우체국물류지원단 물류노동조합",
+    "url": "https://yghnsim.github.io/workplace/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yghnsim.github.io/workplace/assets/favicon-192.png"
+    }
+  },
+  "datePublished": "2026-05-08"
+}
+  </script>
 </head>
 
 <body>
   <a href="../index.html" class="back-link">
-    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
     첫 페이지로 돌아가기
   </a>
 
-  <article class="mom-container document-article" id="mom-article" data-document-category="회의록">
+  <main class="mom-container document-article" id="mom-article" data-document-category="회의록">
     <header class="mom-header">
       <div class="header-top-row">
         <div class="header-logo logo-mark" role="img" aria-label="우체국물류지원단 물류노동조합 로고">
@@ -1428,6 +70,7 @@ button:focus-visible {
         <div class="mom-category">회의록</div>
       </div>
       <h1 class="statement-title">2026년 5월 운영위원회 회의록</h1>
+      <p class="document-date"><time class="doc-date" datetime="2026-05-08">2026년&nbsp;5월&nbsp;8일</time></p>
     </header>
 
     <nav class="document-toc" aria-label="문서 목차">
@@ -1450,147 +93,190 @@ button:focus-visible {
     </nav>
 
 
-    <main class="mom-body" data-copy-body>
-<h2 id="section-1" class="section-title">I. 회의 개요</h2>
-<div class="table-container">
+    <div class="mom-body" data-copy-body>
+
+<h2 id="section-1" class="section-title"><strong>I. 회의 개요</strong></h2>
+<div class="table-container" tabindex="0" role="region" aria-label="회의록 표">
 <table class="mom-table">
-  <tr>
-    <th>구분</th>
-    <th>내용</th>
-  </tr>
-  <tr>
-    <td data-label="구분"><strong>일시</strong></td>
-    <td data-label="내용">2026년 5월 8일 (금) 오후 15:30</td>
-  </tr>
-  <tr>
-    <td data-label="구분"><strong>장소</strong></td>
-    <td data-label="내용">부천우편집중국 소회의실</td>
-  </tr>
-  <tr>
-    <td data-label="구분"><strong>참석자</strong></td>
-    <td data-label="내용">김영문(위원장), 이용석(사무국장), 박희덕, 성소옥, 송현동, 신성훈, 심영훈, 양한솔, 윤효종, 이도희, 이현준, 추교섭, 홍석민, 오승훈(소통간사), 배정필(감사)</td>
-  </tr>
+<thead>
+<tr>
+<th scope="col">구분</th>
+<th scope="col">내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="구분"><strong>일시</strong></td>
+<td data-label="내용">2026년 5월 8일 (금) 오후 15:30</td>
+</tr>
+<tr>
+<td data-label="구분"><strong>장소</strong></td>
+<td data-label="내용">부천우편집중국 소회의실</td>
+</tr>
+<tr>
+<td data-label="구분"><strong>참석자</strong></td>
+<td data-label="내용">김영문(위원장), 이용석(사무국장), 박희덕, 성소옥, 송현동, 신성훈, 심영훈, 양한솔, 윤효종, 이도희, 이현준, 추교섭, 홍석민, 오승훈(소통간사), 배정필(감사)</td>
+</tr>
+</tbody>
 </table>
 </div>
-<h2 id="section-2" class="section-title">II. 보고 안건</h2>
+<h2 id="section-2" class="section-title"><strong>II. 보고 안건</strong></h2>
 <h3 id="section-3" class="subsection-title">1. 주요 활동 및 경과 보고</h3>
 <ul class="bullet-list">
-  <li><strong>노동위원회 심의(병가 차별 건):</strong> 심문 회의에 참석하였으나 온라인 신청 시스템의 알람 미확인 등 조사관의 행정적 미숙으로 인해 노무사의 조력을 받지 못해 발언에 제약이 있었음. 공익위원들이 노사 합의의 구속력을 중시하는 경향을 보임. 회의 당일 오후 8시에 결과가 통보될 예정이며, 패소 시 중앙노동위원회(중노위)에 재신청할 계획임.</li>
+<li><strong>노동위원회 심의(병가 차별 건):</strong> 심문 회의에 참석하였으나 온라인 신청 시스템의 알람 미확인 등 조사관의 행정적 미숙으로 인해 노무사의 조력을 받지 못해 발언에 제약이 있었음. 공익위원들이 노사 합의의 구속력을 중시하는 경향을 보임. 회의 당일 오후 8시에 결과가 통보될 예정이며, 패소 시 중앙노동위원회(중노위)에 재신청할 계획임.</li>
 </ul>
-<blockquote class="quote-block">결국 지노위에서는 기각 판정으로 결정되어 향후 중노위에 재심을 신청하기로 결정함.</blockquote>
+<blockquote class="quote-block">
+<p class="body-text">결국 지노위에서는 기각 판정으로 결정되어 향후 중노위에 재심을 신청하기로 결정함.</p>
+</blockquote>
 <ul class="bullet-list">
-  <li><strong>감사실 징계안:</strong> 3월 10일에 감사실로 발송된 징계안이 위원회에 상정되었으나 아직 회신이 없어, 담당자 확인 후 단톡방에 결과를 공유하기로 함.</li>
-  <li><strong>기타 대외 동향:</strong> 최저임금 심의가 시작되어 2~3% 인상(약 10,600원~10,800원 선)이 유력한 상황이며, 특수고용직 등을 위한 근로자 추정제 입법 추진 동향을 공유함.</li>
+<li>
+<p class="body-text"><strong>감사실 징계안:</strong> 3월 10일에 감사실로 발송된 징계안이 위원회에 상정되었으나 아직 회신이 없어, 담당자 확인 후 단톡방에 결과를 공유하기로 함.</p>
+</li>
+<li>
+<p class="body-text"><strong>기타 대외 동향:</strong> 최저임금 심의가 시작되어 2~3% 인상(약 10,600원~10,800원 선)이 유력한 상황이며, 특수고용직 등을 위한 근로자 추정제 입법 추진 동향을 공유함.</p>
+</li>
 </ul>
 <h3 id="section-4" class="subsection-title">2. 조합원 및 재정 현황 보고</h3>
 <ul class="bullet-list">
-  <li>조합원 변동사항 없음.</li>
-  <li>노동절을 맞이하여 조합원들에게 간식(도넛 3종 세트 및 콜라 등)을 성공적으로 지급 완료함. 세트당 단가 5,000원(총 33만 원 지출)이며, 총무국장(성소옥)이 개인 시간을 할애하여 직접 라벨링 및 개별 포장 작업을 수행함으로써 집행부의 헌신과 예산 절감을 동시에 달성.</li>
+<li>
+<p class="body-text">조합원 변동사항 없음.</p>
+</li>
+<li>
+<p class="body-text">노동절을 맞이하여 조합원들에게 간식(도넛 3종 세트 및 콜라 등)을 성공적으로 지급 완료함. 세트당 단가 5,000원(총 33만 원 지출)이며, 총무국장(성소옥)이 개인 시간을 할애하여 직접 라벨링 및 개별 포장 작업을 수행함으로써 집행부의 헌신과 예산 절감을 동시에 달성.</p>
+</li>
 </ul>
-<div class="table-container">
+<div class="table-container" tabindex="0" role="region" aria-label="회의록 표">
 <table class="mom-table">
-  <tr>
-    <th>품목</th>
-    <th>수량/내용</th>
-    <th>금액</th>
-    <th>비고</th>
-  </tr>
-  <tr>
-    <td data-label="품목"><strong>노동절 간식</strong></td>
-    <td data-label="수량/내용">꽈배기 도넛 3종 세트 (60세트)</td>
-    <td data-label="금액">300,000원</td>
-    <td data-label="비고">부평/안물 지부 배부</td>
-  </tr>
-  <tr>
-    <td data-label="품목"><strong>음료 및 부자재</strong></td>
-    <td data-label="수량/내용">콜라, 포장용 봉투, 라벨지 등</td>
-    <td data-label="금액">30,000원</td>
-    <td data-label="비고">수작업 포장 및 라벨링</td>
-  </tr>
-  <tr>
-    <td data-label="품목"><strong>찬조금 수입</strong></td>
-    <td data-label="수량/내용">성소옥 국장 개인 찬조</td>
-    <td data-label="금액">(+) 25,000원</td>
-    <td data-label="비고">5월 결산 시 반영 예정</td>
-  </tr>
-  <tr>
-    <td data-label="품목"><strong>현재 잔액</strong></td>
-    <td data-label="수량/내용"><strong>2026년 5월 8일 기준</strong></td>
-    <td data-label="금액"><strong>1,000,665원</strong></td>
-    <td data-label="비고">-</td>
-  </tr>
+<thead>
+<tr>
+<th scope="col">품목</th>
+<th scope="col">수량/내용</th>
+<th scope="col">금액</th>
+<th scope="col">비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="품목"><strong>노동절 간식</strong></td>
+<td data-label="수량/내용">꽈배기 도넛 3종 세트 (60세트)</td>
+<td data-label="금액">300,000원</td>
+<td data-label="비고">부평/안물 지부 배부</td>
+</tr>
+<tr>
+<td data-label="품목"><strong>음료 및 부자재</strong></td>
+<td data-label="수량/내용">콜라, 포장용 봉투, 라벨지 등</td>
+<td data-label="금액">30,000원</td>
+<td data-label="비고">수작업 포장 및 라벨링</td>
+</tr>
+<tr>
+<td data-label="품목"><strong>찬조금 수입</strong></td>
+<td data-label="수량/내용">성소옥 국장 개인 찬조</td>
+<td data-label="금액">(+) 25,000원</td>
+<td data-label="비고">5월 결산 시 반영 예정</td>
+</tr>
+<tr>
+<td data-label="품목"><strong>현재 잔액</strong></td>
+<td data-label="수량/내용"><strong>2026년 5월 8일 기준</strong></td>
+<td data-label="금액"><strong>1,000,665원</strong></td>
+<td data-label="비고">-</td>
+</tr>
+</tbody>
 </table>
 </div>
 <h3 id="section-5" class="subsection-title">3. 지부별 주요 현안 보고</h3>
 <ul class="bullet-list">
-  <li><strong>안양/부평지부 공통 (안전 문제):</strong> 현장 내 전동차의 속도 제한 해제, 멜로디 소음, 상향 전멸등 불빛 등으로 인한 작업자 안전 위협이 심각함. 또한, 반복적으로 안전사고를 내는 인원이 지속적으로 현장에 재투입되는 문제에 대한 불만이 큼.</li>
-  <li><strong>사측 소통 부재 및 일방적 지시 문제:</strong> 부평 물류사업소에서 이어폰을 착용한 아르바이트생의 사고 발생 이후, 팀장 등 사측이 지부장과의 사전 논의 없이 전체 직원에게 일방적으로 이어폰 금지를 통보한 것에 대해 절차적 불만이 제기됨.</li>
+<li>
+<p class="body-text"><strong>안양/부평지부 공통 (안전 문제):</strong> 현장 내 전동차의 속도 제한 해제, 멜로디 소음, 상향 전멸등 불빛 등으로 인한 작업자 안전 위협이 심각함. 또한, 반복적으로 안전사고를 내는 인원이 지속적으로 현장에 재투입되는 문제에 대한 불만이 큼.</p>
+</li>
+<li>
+<p class="body-text"><strong>사측 소통 부재 및 일방적 지시 문제:</strong> 부평 물류사업소에서 이어폰을 착용한 아르바이트생의 사고 발생 이후, 팀장 등 사측이 지부장과의 사전 논의 없이 전체 직원에게 일방적으로 이어폰 금지를 통보한 것에 대해 절차적 불만이 제기됨.</p>
+</li>
 </ul>
 <h3 id="section-6" class="subsection-title">4. 대외 환경 및 연대 활동 보고</h3>
 <ul class="bullet-list">
-  <li><strong>교대노조 지부장 선임 이슈:</strong> 부평 교대노조 지부장 임기 만료에 따라 특정 후보(팀장, 주임 등)가 지부장을 맡을 가능성이 있으며, 이 경우 부당한 배치표 작성을 막기 위한 대응이 필요함.</li>
-  <li><strong>근로조건 관련 법적 변화:</strong> 시간 단위 연차 사용이 대통령령으로 6개월 후부터 시행될 예정이어서 적용 및 정산 방식에 대한 확인이 필요함.</li>
-  <li><strong>휴게시간 법적 쟁점:</strong> 대통령령 및 근로기준법 개정에 따라 사측의 자의적 휴게시간 쪼개기 관행을 타파해야 합니다. 8시간 근무자와의 형평성을 고려하여 4시간 근로자의 실질적 휴게권 확보 및 출퇴근 시간 정상화를 강력히 요구해야 함. </li>
-  <li class="list-level-1">50분 근무마다 10분 휴식하는 원칙을 정한 단체협약 내용과 &#39;<strong>별개로</strong>&#39; 보장받아야 할 식사 시간(법정 휴게시간)이 차별적으로 축소 및 병합 해석되고 있는 문제에 대해 소송 등 중장기적인 대응이 요구됨.</li>
+<li>
+<p class="body-text"><strong>교대노조 지부장 선임 이슈:</strong> 부평 교대노조 지부장 임기 만료에 따라 특정 후보(팀장, 주임 등)가 지부장을 맡을 가능성이 있으며, 이 경우 부당한 배치표 작성을 막기 위한 대응이 필요함.</p>
+</li>
+<li>
+<p class="body-text"><strong>근로조건 관련 법적 변화:</strong> 시간 단위 연차 사용이 대통령령으로 6개월 후부터 시행될 예정이어서 적용 및 정산 방식에 대한 확인이 필요함.</p>
+</li>
+<li>
+<p class="body-text"><strong>휴게시간 법적 쟁점:</strong> 대통령령 및 근로기준법 개정에 따라 사측의 자의적 휴게시간 쪼개기 관행을 타파해야 합니다. 8시간 근무자와의 형평성을 고려하여 4시간 근로자의 실질적 휴게권 확보 및 출퇴근 시간 정상화를 강력히 요구해야 함.</p>
+<ul class="bullet-list">
+<li class="list-level-1">50분 근무마다 10분 휴식하는 원칙을 정한 단체협약 내용과 '<strong>별개로</strong>' 보장받아야 할 식사 시간(법정 휴게시간)이 차별적으로 축소 및 병합 해석되고 있는 문제에 대해 소송 등 중장기적인 대응이 요구됨.</li>
 </ul>
-<h2 id="section-7" class="section-title">III. 심의 및 결정 안건</h2>
+</li>
+</ul>
+<h2 id="section-7" class="section-title"><strong>III. 심의 및 결정 안건</strong></h2>
 <h3 id="section-8" class="subsection-title">1. 공무직 노조 합동 공동 워크숍 개최 건</h3>
 <ul class="bullet-list">
-  <li>참석자 과반수 찬성으로 6월 12일(금) 공무직 노조와 합동으로 당일 코스 워크숍을 진행하기로 함.</li>
-  <li>주제는 우정사업본부 경영 합리화 시행 계획, 노란봉투법, 디지털 물류 전환 등으로 하며, 장소 및 세부 내용은 운영위 단톡방에서 결정하기로 함.</li>
+<li>
+<p class="body-text">참석자 과반수 찬성으로 6월 12일(금) 공무직 노조와 합동으로 당일 코스 워크숍을 진행하기로 함.</p>
+</li>
+<li>
+<p class="body-text">주제는 우정사업본부 경영 합리화 시행 계획, 노란봉투법, 디지털 물류 전환 등으로 하며, 장소 및 세부 내용은 운영위 단톡방에서 결정하기로 함.</p>
+</li>
 </ul>
 <h3 id="section-9" class="subsection-title">2. 사측의 일방적 통제에 대한 대응(절차 개선안)</h3>
 <ul class="bullet-list">
-  <li>안전사고 등 현장 내 문제 발생 시, 사측 관리자가 전체 구성원에게 직권으로 공지하기 전에 반드시 각 지부장과 선행 논의(필터링)를 거쳐 소통 및 예의를 갖추도록 강하게 요구하기로 함.</li>
+<li>안전사고 등 현장 내 문제 발생 시, 사측 관리자가 전체 구성원에게 직권으로 공지하기 전에 반드시 각 지부장과 선행 논의(필터링)를 거쳐 소통 및 예의를 갖추도록 강하게 요구하기로 함.</li>
 </ul>
 <h3 id="section-10" class="subsection-title">3. 야간 근무자 건강검진 공가 처리 건</h3>
 <ul class="bullet-list">
-  <li>야간 조 근로자가 주간에 건강검진(수면 내시경 등)을 받을 경우 연차 대신 공가 처리가 가능한지 관련 규정과 사례를 확인하기로 함.</li>
+<li>야간 조 근로자가 주간에 건강검진(수면 내시경 등)을 받을 경우 연차 대신 공가 처리가 가능한지 관련 규정과 사례를 확인하기로 함.</li>
 </ul>
 <h3 id="section-11" class="subsection-title">4. 퇴직 시점 단일화 요구</h3>
 <ul class="bullet-list">
-  <li><strong>결정 사항:</strong> 현재 6월과 12월로 이원화된 퇴직 시점을 12월로 단일화하는 방안을 본사 면담 의제로 확정함.</li>
-  <li><strong>기대 효과:</strong> 현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보함으로써 연장 근로 부담을 완화하고 현장 운영의 안정성을 기할 수 있음.</li>
+<li>
+<p class="body-text"><strong>결정 사항:</strong> 현재 6월과 12월로 이원화된 퇴직 시점을 12월로 단일화하는 방안을 본사 면담 의제로 확정함.</p>
+</li>
+<li>
+<p class="body-text"><strong>기대 효과:</strong> 현장의 만성적 인력 부족 상황에서 숙련 인력을 6개월 추가 확보함으로써 연장 근로 부담을 완화하고 현장 운영의 안정성을 기할 수 있음.</p>
+</li>
 </ul>
 <h2 id="section-12" class="section-title">IV. 주요 결정사항 요약</h2>
-<div class="table-container">
+<div class="table-container" tabindex="0" role="region" aria-label="회의록 표">
 <table class="mom-table">
-  <tr>
-    <th>번호</th>
-    <th>구분</th>
-    <th>결정 내용</th>
-  </tr>
-  <tr>
-    <td data-label="번호">1</td>
-    <td data-label="구분"><strong>워크숍</strong></td>
-    <td data-label="결정 내용">6월 12일(금) 공무직 노조 합동 워크숍 개최 의결 (당일 코스)</td>
-  </tr>
-  <tr>
-    <td data-label="번호">2</td>
-    <td data-label="구분"><strong>노동위 대응</strong></td>
-    <td data-label="결정 내용">병가 차별 건 노동위 심의 결과 패소 시 중노위 재신청 진행</td>
-  </tr>
-  <tr>
-    <td data-label="번호">3</td>
-    <td data-label="구분"><strong>노사 소통</strong></td>
-    <td data-label="결정 내용">현장 이슈 발생 시 사측이 전체 공지 전 지부장과 사전 논의하도록 요구</td>
-  </tr>
-  <tr>
-    <td data-label="번호">4</td>
-    <td data-label="구분"><strong>복무 제도</strong></td>
-    <td data-label="결정 내용">야간 근무자의 건강검진 시 공가(복무 협조) 처리 가능 여부 규정 확인</td>
-  </tr>
+<thead>
+<tr>
+<th scope="col">번호</th>
+<th scope="col">구분</th>
+<th scope="col">결정 내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="번호">1</td>
+<td data-label="구분"><strong>워크숍</strong></td>
+<td data-label="결정 내용">6월 12일(금) 공무직 노조 합동 워크숍 개최 의결 (당일 코스)</td>
+</tr>
+<tr>
+<td data-label="번호">2</td>
+<td data-label="구분"><strong>노동위 대응</strong></td>
+<td data-label="결정 내용">병가 차별 건 노동위 심의 결과 패소 시 중노위 재신청 진행</td>
+</tr>
+<tr>
+<td data-label="번호">3</td>
+<td data-label="구분"><strong>노사 소통</strong></td>
+<td data-label="결정 내용">현장 이슈 발생 시 사측이 전체 공지 전 지부장과 사전 논의하도록 요구</td>
+</tr>
+<tr>
+<td data-label="번호">4</td>
+<td data-label="구분"><strong>복무 제도</strong></td>
+<td data-label="결정 내용">야간 근무자의 건강검진 시 공가(복무 협조) 처리 가능 여부 규정 확인</td>
+</tr>
+</tbody>
 </table>
 </div>
-<h2 id="section-13" class="section-title">V. 차기 회의 안내</h2>
+<h2 id="section-13" class="section-title"><strong>V. 차기 회의 안내</strong></h2>
 <ul class="bullet-list">
-  <li><strong>일시:</strong> 2026년 6월 12일 (금) (공동 워크숍과 겸하여 진행)</li>
-  <li><strong>장소:</strong> 관악우체국 등 논의 중 (추후 단톡방을 통해 최종 확정)</li>
-  <li><strong>주요 준비/안건:</strong> 우정사업본부 경영합리화 계획 및 노란봉투법 활용 방안 발제, 디지털 물류 전환 대응 방안 등</li>
+<li><strong>일시:</strong> 2026년 6월 12일 (금) (공동 워크숍과 겸하여 진행)</li>
+<li><strong>장소:</strong> 관악우체국 등 논의 중 (추후 단톡방을 통해 최종 확정)</li>
+<li><strong>주요 준비/안건:</strong> 우정사업본부 경영합리화 계획 및 노란봉투법 활용 방안 발제, 디지털 물류 전환 대응 방안 등</li>
 </ul>
 
-    </main>
-  </article>
+    </div>
+  </main>
 
   <div class="utility-bar" id="utility-bar">
     <div class="utility-button-container">
@@ -1630,202 +316,7 @@ button:focus-visible {
       <span class="utility-tooltip">맨 위로</span>
     </div>
   </div>
-  <script>
-(function () {
-  const scaleStep = 0.1;
-  const minScale = 0.8;
-  const maxScale = 1.5;
-  let currentScale = 1.0;
-
-  function changeTextSize(direction) {
-    if (direction === 'up') currentScale = Math.min(currentScale + scaleStep, maxScale);
-    if (direction === 'down') currentScale = Math.max(currentScale - scaleStep, minScale);
-    if (direction === 'reset') currentScale = 1.0;
-    document.documentElement.style.setProperty('--font-scale', currentScale.toFixed(1));
-  }
-
-  function normalizeText(value) {
-    return String(value || '').replace(/\s+/g, ' ').trim();
-  }
-
-  function collectTable(table) {
-    return Array.from(table.querySelectorAll('tr'))
-      .map((row) => {
-        const cells = Array.from(row.querySelectorAll('th, td')).map((cell) => normalizeText(cell.innerText));
-        return cells.length ? `| ${cells.join(' | ')} |` : '';
-      })
-      .filter(Boolean)
-      .join('\n');
-  }
-
-  function collectNode(node, lines) {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
-    const tag = node.tagName;
-
-    if (/^H[1-6]$/.test(tag)) {
-      lines.push('', normalizeText(node.innerText), '');
-      return;
-    }
-
-    if (tag === 'P' || tag === 'BLOCKQUOTE') {
-      const text = normalizeText(node.innerText);
-      if (text) lines.push(text, '');
-      return;
-    }
-
-    if (tag === 'UL' || tag === 'OL') {
-      const ordered = tag === 'OL';
-      Array.from(node.children).forEach((child, index) => {
-        if (child.tagName !== 'LI') return;
-        const prefix = ordered ? `${index + 1}.` : '-';
-        lines.push(`${prefix} ${normalizeText(child.innerText)}`);
-      });
-      lines.push('');
-      return;
-    }
-
-    if (tag === 'TABLE') {
-      const tableText = collectTable(node);
-      if (tableText) lines.push(tableText, '');
-      return;
-    }
-
-    if (tag === 'IMG') {
-      const alt = normalizeText(node.getAttribute('alt'));
-      if (alt) lines.push(alt, '');
-      return;
-    }
-
-    if (node.classList.contains('table-container')) {
-      const table = node.querySelector('table');
-      if (table) {
-        const tableText = collectTable(table);
-        if (tableText) lines.push(tableText, '');
-      }
-      return;
-    }
-
-    Array.from(node.children).forEach((child) => collectNode(child, lines));
-  }
-
-  function buildPlainText(article) {
-    const lines = [];
-    const category = article.dataset.documentCategory
-      || normalizeText(article.querySelector('.mom-category, .statement-category')?.innerText)
-      || '문서';
-    const title = normalizeText(article.querySelector('.statement-title, h1')?.innerText);
-    const meta = normalizeText(article.querySelector('.statement-meta')?.innerText);
-    const body = article.querySelector('[data-copy-body]') || article.querySelector('.mom-body, .statement-body') || article;
-
-    lines.push(`[${category}]`, '');
-    if (title) lines.push(title, '');
-    if (meta) lines.push(meta, '');
-    lines.push('==================================================', '');
-    Array.from(body.children).forEach((child) => collectNode(child, lines));
-
-    return lines
-      .join('\n')
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
-  }
-
-  function buildDocumentToc() {
-    const article = document.querySelector('.document-article');
-    if (!article || article.querySelector('.document-toc') || article.querySelector('.history-nav')) return;
-
-    const body = article.querySelector('[data-copy-body]');
-    if (!body) return;
-
-    const headings = Array.from(body.querySelectorAll('h2, h3'))
-      .filter((heading) => normalizeText(heading.innerText));
-    if (headings.length < 2) return;
-
-    const nav = document.createElement('nav');
-    nav.className = 'document-toc';
-    nav.setAttribute('aria-label', '문서 목차');
-
-    const title = document.createElement('h2');
-    title.className = 'document-toc-title';
-    title.textContent = '문서 목차';
-    nav.appendChild(title);
-
-    const links = document.createElement('div');
-    links.className = 'document-toc-links';
-
-    headings.forEach((heading, index) => {
-      if (!heading.id) heading.id = `section-${index + 1}`;
-      const link = document.createElement('a');
-      link.className = `document-toc-link document-toc-level-${heading.tagName === 'H3' ? '3' : '2'}`;
-      link.href = `#${heading.id}`;
-      link.textContent = normalizeText(heading.innerText);
-      links.appendChild(link);
-    });
-
-    nav.appendChild(links);
-    body.before(nav);
-  }
-
-  function copyDocumentText() {
-    const article = document.querySelector('.document-article') || document.getElementById('mom-article') || document.getElementById('statement-article');
-    if (!article) return;
-
-    const text = buildPlainText(article);
-    const successMessage = '문서 전체 텍스트가 클립보드에 복사되었습니다.';
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert(successMessage);
-      }).catch(() => fallbackCopy(text, successMessage));
-      return;
-    }
-    fallbackCopy(text, successMessage);
-  }
-
-  function fallbackCopy(text, successMessage, failureMessage = '복사에 실패했습니다. 직접 복사해주세요.') {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'fixed';
-    textarea.style.left = '-9999px';
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      document.execCommand('copy');
-      alert(successMessage);
-    } catch (error) {
-      alert(failureMessage);
-    }
-    document.body.removeChild(textarea);
-  }
-
-  function copyPageLink() {
-    const url = window.location.href;
-    const successMessage = '웹페이지 링크가 클립보드에 복사되었습니다.';
-    const failureMessage = '링크 복사에 실패했습니다. 주소창의 링크를 직접 복사해주세요.';
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => {
-        alert(successMessage);
-      }).catch(() => fallbackCopy(url, successMessage, failureMessage));
-      return;
-    }
-    fallbackCopy(url, successMessage, failureMessage);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    buildDocumentToc();
-    document.getElementById('zoom-in-btn')?.addEventListener('click', () => changeTextSize('up'));
-    document.getElementById('zoom-out-btn')?.addEventListener('click', () => changeTextSize('down'));
-    document.getElementById('zoom-reset-btn')?.addEventListener('click', () => changeTextSize('reset'));
-    document.getElementById('copy-btn')?.addEventListener('click', copyDocumentText);
-    document.getElementById('copy-link-btn')?.addEventListener('click', copyPageLink);
-    document.getElementById('to-top-btn')?.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
-}());
-
-  </script>
+  <script src="../assets/document-tools.js?v=7886c749817c" defer></script>
 </body>
 
 </html>

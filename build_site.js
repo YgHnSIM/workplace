@@ -1,12 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 const {
+  absolutePublicUrl,
+  assertIsoDate,
   escapeAttr,
   escapeHtml,
-  escapeNoBreakHtml,
   readJson,
   relativeTo,
+  renderPageHead,
+  renderTime,
   toPosixPath,
+  versionedAssetHref,
   writeTextFile,
 } = require('./lib/site-utils');
 
@@ -14,7 +18,8 @@ const rootDir = __dirname;
 const catalogPath = path.join(rootDir, '_source', 'catalog.json');
 const momManifestPath = path.join(rootDir, '_source', 'generated', 'mom.json');
 const homeFilePath = path.join(rootDir, 'index.html');
-const assetVersion = '20260709-1';
+const sitemapPath = path.join(rootDir, 'sitemap.xml');
+const robotsPath = path.join(rootDir, 'robots.txt');
 
 const categoryLabels = {
   all: '전체',
@@ -39,12 +44,12 @@ function isHomeOutput(outputFile) {
   return outputFile === homeFilePath;
 }
 
-function assetPrefixFor(outputFile) {
-  return isHomeOutput(outputFile) ? '' : '../';
-}
-
 function renderBackLink(outputFile) {
-  return isHomeOutput(outputFile) ? '' : '    <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>\n';
+  return isHomeOutput(outputFile) ? '' : `    <a href="../index.html" class="back-link">
+      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      첫 페이지로 돌아가기
+    </a>
+`;
 }
 
 function normalizeHref(href) {
@@ -71,28 +76,54 @@ function pageHref(docHref, outputFile) {
   return relative || path.basename(target);
 }
 
+function validateDocument(doc, sourceLabel) {
+  ['category', 'href', 'title', 'date', 'excerpt'].forEach((field) => {
+    if (!String(doc[field] || '').trim()) {
+      throw new Error(`${sourceLabel} document is missing ${field}`);
+    }
+  });
+  return {
+    ...doc,
+    href: normalizeHref(doc.href),
+    date: assertIsoDate(doc.date, `${sourceLabel} date for ${doc.href}`),
+  };
+}
+
+function assertUniqueDocumentHrefs(docs) {
+  const seen = new Map();
+  docs.forEach((doc) => {
+    const key = doc.href.toLowerCase();
+    const previous = seen.get(key);
+    if (previous) {
+      throw new Error(`Duplicate public href in document manifests: ${previous.href} and ${doc.href}`);
+    }
+    seen.set(key, doc);
+  });
+}
+
 function readDocuments() {
   const catalog = readJson(catalogPath);
   const manualDocs = catalog.documents
-    .filter((doc) => !doc.draft)
-    .map((doc) => ({
-      ...doc,
-      href: normalizeHref(doc.href),
-    }));
+    .map((doc) => validateDocument(doc, '_source/catalog.json'));
 
-  const momDocs = readJson(momManifestPath).map((doc, index) => ({
+  const momDocs = readJson(momManifestPath).map((doc, index) => validateDocument({
     ...doc,
-    href: normalizeHref(doc.href),
     groupOrder: 20,
     order: index,
-  }));
+  }, '_source/generated/mom.json'));
 
-  return [...manualDocs, ...momDocs]
-    .sort((a, b) => (a.groupOrder - b.groupOrder) || (a.order - b.order));
+  const docs = [...manualDocs, ...momDocs];
+  assertUniqueDocumentHrefs(docs);
+  return docs.sort((a, b) => (
+    b.date.localeCompare(a.date)
+    || ((a.groupOrder || 0) - (b.groupOrder || 0))
+    || ((a.order || 0) - (b.order || 0))
+    || a.href.localeCompare(b.href, 'ko')
+  ));
 }
 
 function renderIconChevron() {
-  return `<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+  return `<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
             <polyline points="9 18 15 12 9 6"></polyline>
           </svg>`;
 }
@@ -104,10 +135,10 @@ function renderCard(doc, outputFile, index) {
   const titleId = `${idBase}-title`;
   const excerptId = `${idBase}-excerpt`;
   const actionId = `${idBase}-action`;
-  return `      <a href="${escapeAttr(pageHref(doc.href, outputFile))}" class="doc-card" data-category="${escapeAttr(doc.category)}" aria-labelledby="${titleId}" aria-describedby="${metaId} ${excerptId} ${actionId}">
+  return `      <a href="${escapeAttr(pageHref(doc.href, outputFile))}" class="doc-card" data-category="${escapeAttr(doc.category)}" aria-labelledby="${titleId}" aria-describedby="${metaId}">
         <div class="card-meta" id="${metaId}">
           <span class="badge-category">${escapeHtml(label)}</span>
-          <span class="doc-date">${escapeNoBreakHtml(doc.date)}</span>
+          ${renderTime(doc.date)}
         </div>
         <h2 class="doc-title" id="${titleId}">${escapeHtml(doc.title)}</h2>
         <p class="doc-excerpt" id="${excerptId}">${escapeHtml(doc.excerpt)}</p>
@@ -136,29 +167,33 @@ ${buttons}
 }
 
 function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false }) {
-  const assetPrefix = assetPrefixFor(outputFile);
   const cards = docs.map((doc, index) => renderCard(doc, outputFile, index)).join('\n\n');
   const listContent = cards || `      <div class="empty-state" role="status">
         <p>아직 공개된 ${escapeHtml(title)} 자료가 없습니다.</p>
       </div>`;
-  const script = includeFilter ? `\n  <script src="${assetPrefix}assets/archive-filter.js?v=${assetVersion}"></script>` : '';
+  const logo300 = versionedAssetHref(rootDir, outputFile, 'assets/logo-header-300.webp');
+  const logo600 = versionedAssetHref(rootDir, outputFile, 'assets/logo-header-600.webp');
+  const script = includeFilter
+    ? `\n  <script src="${escapeAttr(versionedAssetHref(rootDir, outputFile, 'assets/archive-filter.js'))}" defer></script>`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="ko">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${escapeHtml(title)} - 우체국물류지원단 물류노동조합</title>
-  <meta name="description" content="${escapeAttr(description)}">
-  <link rel="icon" href="${assetPrefix}logo_정사각형.png" type="image/png">
-  <link rel="stylesheet" href="${assetPrefix}assets/interface.css?v=${assetVersion}">
+${renderPageHead({
+    rootDir,
+    outputFile,
+    title,
+    description,
+    schemaType: 'CollectionPage',
+  })}
 </head>
 
 <body>
   <main class="archive-container">
 ${renderBackLink(outputFile)}    <header class="archive-header">
-      <img src="${assetPrefix}logo_직사각형.png" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
+      <img src="${escapeAttr(logo300)}" srcset="${escapeAttr(logo300)} 1x, ${escapeAttr(logo600)} 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
       <h1 class="archive-title">${escapeHtml(title)}</h1>
       <p class="archive-desc">${escapeHtml(description)}</p>
     </header>
@@ -175,6 +210,72 @@ ${listContent}
 
 </html>
 `;
+}
+
+function newestDate(docs) {
+  return docs.reduce((latest, doc) => (doc.date > latest ? doc.date : latest), '');
+}
+
+function buildSitemapXml(docs) {
+  const entries = [
+    { href: '', date: newestDate(docs) },
+    { href: 'MoM/', date: newestDate(docs.filter((doc) => doc.category === 'mom')) },
+    { href: 'knowledge/', date: newestDate(docs.filter((doc) => doc.category === 'knowledge')) },
+    { href: 'notice/', date: newestDate(docs.filter((doc) => doc.category === 'notice')) },
+    ...docs.map((doc) => ({ href: doc.href, date: doc.date })),
+  ];
+  const seen = new Set();
+  const urls = entries.map(({ href, date }) => {
+    const loc = absolutePublicUrl(href);
+    if (seen.has(loc)) throw new Error(`Duplicate URL in sitemap: ${loc}`);
+    seen.add(loc);
+    const lastmod = date ? `\n    <lastmod>${escapeHtml(assertIsoDate(date, `sitemap lastmod for ${href || '/'}`))}</lastmod>` : '';
+    return `  <url>\n    <loc>${escapeHtml(loc)}</loc>${lastmod}\n  </url>`;
+  }).join('\n');
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+${urls}
+</urlset>
+`;
+}
+
+function buildRobotsTxt() {
+  return `User-agent: *
+Allow: /
+Sitemap: ${absolutePublicUrl('sitemap.xml')}
+`;
+}
+
+function replaceVersionedAssetReference(html, assetPath, expectedHref) {
+  const escapedAssetPath = assetPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(
+    `(["'])(?:\\.\\.?/)*${escapedAssetPath}(?:\\?v=[^"'\\s>]*)?\\1`,
+    'g',
+  );
+  return html.replace(pattern, (_, quote) => `${quote}${expectedHref}${quote}`);
+}
+
+function syncManualAssetVersions(docs) {
+  const assetPaths = ['assets/interface.css', 'assets/document-tools.js', 'assets/video-embed.js'];
+  docs.filter((doc) => doc.category !== 'mom').forEach((doc) => {
+    const filePath = path.join(rootDir, ...doc.href.split('/'));
+    if (path.extname(filePath).toLowerCase() !== '.html') {
+      throw new Error(`Catalog document must point to an HTML file: ${doc.href}`);
+    }
+
+    const original = fs.readFileSync(filePath, 'utf8');
+    const updated = assetPaths.reduce((html, assetPath) => replaceVersionedAssetReference(
+      html,
+      assetPath,
+      versionedAssetHref(rootDir, filePath, assetPath),
+    ), original);
+
+    if (updated !== original) {
+      writeTextFile(filePath, updated);
+      console.log(`Updated asset versions in ${relativeTo(rootDir, filePath)}`);
+    }
+  });
 }
 
 function writeFile(filePath, html) {
@@ -203,11 +304,23 @@ function build() {
       outputFile,
     }));
   });
+
+  syncManualAssetVersions(docs);
+  writeFile(sitemapPath, buildSitemapXml(docs));
+  writeFile(robotsPath, buildRobotsTxt());
 }
 
-try {
-  build();
-} catch (error) {
-  console.error(error.message);
-  process.exit(1);
+module.exports = {
+  buildRobotsTxt,
+  buildSitemapXml,
+  replaceVersionedAssetReference,
+};
+
+if (require.main === module) {
+  try {
+    build();
+  } catch (error) {
+    console.error(error.message);
+    process.exit(1);
+  }
 }

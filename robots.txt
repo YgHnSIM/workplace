@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://yghnsim.github.io/workplace/sitemap.xml

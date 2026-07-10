@@ -5,1420 +5,62 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2026년 4월 운영위원회 회의록 - 우체국물류지원단 물류노동조합</title>
-  <meta name="description" content="2026년 4월 운영위원회 회의록 - 우체국물류지원단 물류노동조합 공식 회의록입니다.">
-  <link rel="icon" href="../logo_정사각형.png" type="image/png">
-  <link rel="stylesheet" href="../assets/interface.css?v=20260709-1">
-  <style>
-:root {
-  --font-scale: 1.0;
-  --font-size-base: calc(17px * var(--font-scale));
-  --font-size-title: calc(30px * var(--font-scale));
-  --font-size-section-title: calc(22px * var(--font-scale));
-  --font-size-subsection-title: calc(18px * var(--font-scale));
-  --font-size-meta: calc(14px * var(--font-scale));
-  --spacing-unit: 1.6rem;
-  --bg-page: #FFFFFF;
-  --bg-card: #FFFFFF;
-  --text-primary: #111111;
-  --text-secondary: #333333;
-  --text-muted: #666666;
-  --color-accent: #002FA7;
-  --color-accent-light: #F7F7F8;
-  --color-border: #111111;
-  --font-main: "Helvetica Neue", Arial, sans-serif;
-}
-
-* {
-  box-sizing: border-box;
-  letter-spacing: 0 !important;
-}
-
-html {
-  background: #FFFFFF;
-}
-
-body {
-  align-items: center !important;
-  display: flex !important;
-  font-family: var(--font-main) !important;
-  flex-direction: column !important;
-  justify-content: flex-start !important;
-  background: #FFFFFF !important;
-  color: #111111 !important;
-  margin: 0 !important;
-  padding: 44px 24px 96px !important;
-}
-
-a:focus-visible,
-button:focus-visible {
-  outline: 2px solid #002FA7;
-  outline-offset: 3px;
-}
-
-.archive-container,
-.back-link,
-.mom-container,
-.statement-container {
-  width: min(1120px, calc(100vw - 48px)) !important;
-}
-
-.archive-container {
-  max-width: none !important;
-}
-
-.archive-header {
-  position: relative;
-  display: grid !important;
-  grid-template-columns: 180px minmax(0, 1fr);
-  column-gap: 36px;
-  align-items: end !important;
-  text-align: left !important;
-  border-top: 1px solid #111111 !important;
-  border-bottom: 1px solid #111111 !important;
-  padding: 22px 0 30px !important;
-  margin: 0 0 28px !important;
-}
-
-.archive-header::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 84px;
-  height: 4px;
-  background: #002FA7;
-}
-
-.archive-header > .header-logo {
-  grid-row: 1 / span 2;
-  grid-column: 1;
-  height: 52px !important;
-  max-width: 160px;
-  object-fit: contain;
-  object-position: left center;
-  margin: 0 !important;
-  align-self: start;
-}
-
-.archive-title {
-  grid-column: 2;
-  max-width: 820px;
-  font-size: clamp(30px, 5vw, 64px) !important;
-  font-weight: 700 !important;
-  line-height: 1.02 !important;
-  color: #111111 !important;
-  word-break: keep-all;
-}
-
-.archive-desc {
-  grid-column: 2;
-  max-width: 720px;
-  margin-top: 16px !important;
-  color: #333333 !important;
-  font-size: 16px !important;
-  font-weight: 400 !important;
-  line-height: 1.55 !important;
-  word-break: keep-all;
-}
-
-.filter-bar {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fit, minmax(112px, 1fr));
-  gap: 0 !important;
-  margin: 0 0 0 !important;
-  padding-bottom: 28px;
-  border-bottom: 1px solid #111111;
-}
-
-.filter-btn {
-  min-height: 44px;
-  background: #FFFFFF !important;
-  border: 1px solid #111111 !important;
-  border-left: 0 !important;
-  border-radius: 0 !important;
-  color: #111111 !important;
-  padding: 8px 18px !important;
-  font-family: var(--font-main) !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  min-width: 0;
-  width: 100%;
-  text-transform: none !important;
-  box-shadow: none !important;
-}
-
-.filter-btn:first-child {
-  border-left: 1px solid #111111 !important;
-}
-
-.filter-btn.active,
-.filter-btn:hover {
-  background: #002FA7 !important;
-  border-color: #111111 !important;
-  color: #FFFFFF !important;
-}
-
-.doc-list {
-  gap: 0 !important;
-  border-top: 1px solid #111111;
-}
-
-.filter-bar + .doc-list {
-  border-top: 0;
-}
-
-.doc-list.is-empty {
-  border-top: 0;
-}
-
-.empty-state {
-  background: #F7F7F8;
-  border: 1px solid #111111;
-  color: #333333;
-  font-size: 16px;
-  line-height: 1.6;
-  padding: 24px 28px;
-}
-
-.empty-state p {
-  margin: 0;
-}
-
-.doc-card {
-  --category-color: #002FA7;
-  display: grid !important;
-  grid-template-columns: minmax(168px, 220px) minmax(0, 1fr);
-  column-gap: 34px;
-  background: #FFFFFF !important;
-  border: 0 !important;
-  border-bottom: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: #111111 !important;
-  overflow: hidden;
-  padding: 28px 0 28px 20px !important;
-  position: relative;
-  text-decoration: none !important;
-  transform: none !important;
-}
-
-.doc-card[data-category="statement"] {
-  --category-color: #E4002B;
-}
-
-.doc-card[data-category="mom"] {
-  --category-color: #002FA7;
-}
-
-.doc-card[data-category="knowledge"] {
-  --category-color: #FF4F00;
-}
-
-.doc-card[data-category="notice"] {
-  --category-color: #007A3D;
-}
-
-.doc-card[hidden] {
-  display: none !important;
-}
-
-.doc-card::before {
-  background: var(--category-color);
-  bottom: 28px;
-  content: "" !important;
-  left: 0;
-  position: absolute;
-  top: 28px;
-  width: 6px;
-}
-
-.doc-card:hover {
-  background: #F7F7F8 !important;
-  border-color: #111111 !important;
-  box-shadow: none !important;
-  transform: none !important;
-}
-
-.card-meta {
-  display: flex !important;
-  grid-column: 1;
-  grid-row: 1 / span 3;
-  align-items: flex-start !important;
-  flex-direction: column !important;
-  gap: 10px !important;
-  margin: 0 !important;
-  padding-right: 18px;
-  border-right: 1px solid #D9D9D9;
-  font-size: 13px !important;
-  line-height: 1.2;
-}
-
-.badge-category {
-  display: block;
-  order: 2;
-  background: transparent !important;
-  color: var(--category-color) !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-  font-size: 12px !important;
-  font-weight: 700 !important;
-  line-height: 1.2;
-  text-transform: none !important;
-  overflow-wrap: normal !important;
-  white-space: nowrap !important;
-}
-
-.doc-date {
-  display: block;
-  order: 1;
-  flex: 0 0 auto;
-  max-width: none;
-  color: #111111 !important;
-  font-size: 20px !important;
-  font-weight: 700 !important;
-  line-height: 1.15;
-  font-variant-numeric: tabular-nums;
-  overflow-wrap: normal !important;
-  word-break: keep-all !important;
-  white-space: nowrap !important;
-}
-
-.doc-title {
-  grid-column: 2;
-  color: #111111 !important;
-  font-size: clamp(20px, 2.4vw, 30px) !important;
-  font-weight: 700 !important;
-  line-height: 1.28 !important;
-  margin: 0 0 12px !important;
-  word-break: keep-all;
-}
-
-.doc-card:hover .doc-title {
-  color: var(--category-color) !important;
-}
-
-.doc-excerpt {
-  grid-column: 2;
-  max-width: 820px;
-  color: #333333 !important;
-  font-size: 15px !important;
-  font-weight: 400 !important;
-  line-height: 1.65 !important;
-  margin: 0 0 18px !important;
-  word-break: keep-all;
-}
-
-.card-footer {
-  grid-column: 2;
-  align-items: center !important;
-  display: flex !important;
-  justify-content: flex-start !important;
-  color: #111111 !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-  gap: 8px !important;
-}
-
-.card-footer::before {
-  content: "";
-  width: 28px;
-  height: 1px;
-  background: var(--category-color);
-}
-
-.card-footer svg {
-  color: var(--category-color);
-  fill: none !important;
-  flex: 0 0 auto;
-  height: 16px !important;
-  stroke: currentColor !important;
-  stroke-width: 2.5 !important;
-  width: 16px !important;
-}
-
-.doc-card:hover .card-footer svg {
-  transform: none !important;
-}
-
-.info-banner {
-  background: #F7F7F8 !important;
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  margin-top: 32px !important;
-}
-
-.info-banner svg {
-  stroke: #002FA7 !important;
-}
-
-.info-text,
-.archive-footer {
-  color: #333333 !important;
-  font-weight: 400 !important;
-}
-
-.archive-footer {
-  text-align: center !important;
-  border-top: 1px solid #111111 !important;
-  margin-top: 48px !important;
-  padding-top: 18px !important;
-}
-
-.back-link {
-  align-self: center !important;
-  color: #111111 !important;
-  text-decoration: none !important;
-  border-bottom: 1px solid #111111;
-  padding-bottom: 4px;
-  margin-bottom: 20px !important;
-  font-size: 14px !important;
-  font-weight: 700 !important;
-}
-
-.back-link:hover {
-  color: #002FA7 !important;
-}
-
-.back-link svg {
-  fill: none;
-  height: 16px;
-  stroke: currentColor;
-  stroke-width: 2.5;
-  width: 16px;
-}
-
-.statement-container,
-.mom-container {
-  max-width: none !important;
-  background: #FFFFFF !important;
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  padding: 0 !important;
-  overflow: visible !important;
-}
-
-.statement-container::before {
-  content: none !important;
-}
-
-.statement-header,
-.mom-header {
-  display: grid;
-  grid-template-columns: 180px minmax(0, 1fr);
-  column-gap: 36px;
-  border-bottom: 1px solid #111111 !important;
-  margin: 0 0 42px !important;
-  padding: 26px 28px 34px !important;
-}
-
-.header-top-row {
-  grid-column: 1;
-  grid-row: 1 / span 2;
-  align-items: flex-start !important;
-  border-right: 1px solid #D9D9D9;
-  display: flex !important;
-  flex-direction: column;
-  gap: 18px !important;
-  justify-content: flex-start !important;
-  margin: 0 !important;
-  padding-right: 20px;
-}
-
-.header-top-row .header-logo {
-  height: 48px !important;
-  max-width: 154px;
-  object-fit: contain;
-  object-position: left center;
-}
-
-.header-logo.logo-mark {
-  border-left: 8px solid #002FA7;
-  display: inline-flex !important;
-  flex-direction: column;
-  height: auto !important;
-  justify-content: center;
-  max-width: 160px;
-  min-height: 48px;
-  min-width: 150px;
-  object-fit: initial;
-  object-position: initial;
-  padding-left: 10px;
-  word-break: keep-all;
-}
-
-.header-logo.logo-mark span,
-.header-logo.logo-mark strong {
-  display: block;
-  font-family: var(--font-main);
-  letter-spacing: 0;
-  white-space: nowrap;
-}
-
-.header-logo.logo-mark span {
-  color: #4B6CB5;
-  font-size: 12px;
-  font-weight: 700;
-  line-height: 1.1;
-}
-
-.header-logo.logo-mark strong {
-  color: #111111;
-  font-size: 18px;
-  font-weight: 700;
-  line-height: 1.05;
-}
-
-.statement-category,
-.mom-category {
-  background: #002FA7 !important;
-  border-radius: 0 !important;
-  color: #FFFFFF !important;
-  display: inline-block;
-  font-size: var(--font-size-meta, 13px) !important;
-  font-weight: 700 !important;
-  line-height: 1.2;
-  padding: 5px 8px !important;
-}
-
-.statement-title {
-  grid-column: 2;
-  color: #111111 !important;
-  font-size: clamp(30px, 4.2vw, 48px) !important;
-  font-weight: 700 !important;
-  line-height: 1.08 !important;
-  margin: 0 !important;
-  max-width: 880px;
-  word-break: keep-all;
-}
-
-.statement-meta {
-  grid-column: 2;
-  color: #333333 !important;
-  font-size: var(--font-size-meta, 14px) !important;
-  font-weight: 700 !important;
-  margin-top: 18px !important;
-}
-
-.statement-body,
-.mom-body {
-  max-width: 820px;
-  margin: 0 auto;
-  padding: 0 28px 56px;
-}
-
-.document-toc {
-  max-width: 820px;
-  margin: 0 auto 36px;
-  padding: 0 28px;
-}
-
-.document-toc-title {
-  border-top: 1px solid #111111;
-  color: #111111;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 1.3;
-  margin: 0;
-  padding: 14px 0 12px;
-}
-
-.document-toc-links {
-  border: 1px solid #111111;
-  border-bottom: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-}
-
-.document-toc-link {
-  border-bottom: 1px solid #111111;
-  color: #111111;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
-  min-height: 44px;
-  padding: 11px 12px;
-  text-decoration: none;
-  word-break: keep-all;
-}
-
-.document-toc-link:hover {
-  background: #002FA7;
-  color: #FFFFFF;
-}
-
-.document-toc-level-3 {
-  color: #333333;
-  font-weight: 400;
-}
-
-.statement-body section {
-  margin-bottom: 44px !important;
-}
-
-.body-text {
-  color: #222222 !important;
-  font-size: var(--font-size-base, 17px) !important;
-  font-weight: 400 !important;
-  line-height: 1.82 !important;
-  margin-bottom: var(--spacing-unit, 1.6rem) !important;
-  text-align: left !important;
-  text-indent: 0 !important;
-  word-break: keep-all;
-}
-
-.section-title,
-.subsection-title,
-.subsubsection-title {
-  color: #111111 !important;
-  font-weight: 700 !important;
-  scroll-margin-top: 24px;
-  word-break: keep-all;
-}
-
-.section-title {
-  position: relative;
-  border: 0 !important;
-  border-top: 1px solid #111111 !important;
-  font-size: var(--font-size-section-title, 22px) !important;
-  line-height: 1.35 !important;
-  margin: 46px 0 20px !important;
-  padding: 16px 0 0 !important;
-}
-
-.section-title::before {
-  content: "";
-  position: absolute;
-  top: -1px;
-  left: 0;
-  width: 58px;
-  height: 3px;
-  background: #002FA7;
-}
-
-.subsection-title {
-  border: 0 !important;
-  border-top: 1px solid #D9D9D9 !important;
-  font-size: var(--font-size-subsection-title, 18px) !important;
-  margin: 30px 0 12px !important;
-  padding: 12px 0 0 !important;
-}
-
-.subsubsection-title {
-  font-size: calc(var(--font-size-base, 16px) * 1.06) !important;
-  margin: 24px 0 10px !important;
-}
-
-.mom-body .bullet-list {
-  list-style-position: outside;
-  margin: 0 0 34px 1.25rem;
-  padding: 0;
-}
-
-.mom-body .bullet-list li {
-  line-height: 1.78;
-  margin: 0;
-  padding: 0 0 14px;
-}
-
-.mom-body .bullet-list li + li {
-  border-top: 1px solid #D9D9D9;
-  padding-top: 14px;
-}
-
-.mom-body .bullet-list li:last-child {
-  padding-bottom: 0;
-}
-
-.mom-body .bullet-list li::marker {
-  color: #002FA7;
-}
-
-.mom-body .subsection-title + .bullet-list,
-.mom-body .subsubsection-title + .bullet-list {
-  margin-top: 14px;
-}
-
-.mom-body .bullet-list + .subsection-title {
-  margin-top: 42px !important;
-}
-
-.mom-body .bullet-list + .subsubsection-title {
-  margin-top: 30px !important;
-}
-
-.demands,
-.closing-block,
-.quote-block {
-  background: #F7F7F8 !important;
-  border: 1px solid #111111 !important;
-  border-left: 6px solid #002FA7 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-}
-
-.demands {
-  padding: 26px 28px !important;
-}
-
-.demands li,
-.bullet-list,
-.mom-table td {
-  color: #222222 !important;
-  font-weight: 400 !important;
-}
-
-.demands li strong,
-.mom-table td strong,
-.content-link {
-  color: #002FA7 !important;
-}
-
-.closing-block {
-  padding: 26px 28px !important;
-}
-
-.closing-highlight {
-  color: #111111 !important;
-  border-bottom: 1px solid #D9D9D9 !important;
-  font-weight: 700 !important;
-}
-
-.closing-text {
-  color: #111111 !important;
-  font-weight: 700 !important;
-  text-align: left !important;
-}
-
-.signature-block {
-  border-top: 1px solid #111111 !important;
-  margin-top: 52px !important;
-  padding-top: 28px !important;
-  text-align: left !important;
-}
-
-.signature-date {
-  color: #111111 !important;
-  font-weight: 700 !important;
-}
-
-.signature-org-row {
-  justify-content: flex-start !important;
-}
-
-.signature-org-logo {
-  width: min(320px, 100%) !important;
-}
-
-.public-note {
-  color: #333333 !important;
-  font-weight: 400 !important;
-}
-
-.table-container {
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  margin: 20px 0 30px;
-  overflow-x: auto;
-  width: 100%;
-}
-
-.mom-table {
-  border-collapse: collapse;
-  font-size: calc(var(--font-size-base, 16px) * .95);
-  text-align: left;
-  width: 100%;
-}
-
-.mom-table th,
-.mom-table td {
-  border-bottom: 1px solid #D9D9D9 !important;
-  padding: 12px 16px;
-  vertical-align: top;
-}
-
-.mom-table th {
-  background: #FFFFFF !important;
-  color: #111111 !important;
-  font-weight: 700 !important;
-  border-bottom: 1px solid #111111 !important;
-}
-
-.divider {
-  border-top: 1px solid #111111 !important;
-}
-
-.post-article {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0 28px 56px;
-}
-
-.post-figure {
-  border: 1px solid #111111;
-  margin: 0 0 24px;
-  padding: 16px;
-  background: #FFFFFF;
-}
-
-.post-image {
-  display: block;
-  height: auto;
-  width: 100%;
-}
-
-.post-caption {
-  border-top: 1px solid #D9D9D9;
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.5;
-  margin-top: 14px;
-  padding-top: 12px;
-}
-
-.post-video {
-  border: 1px solid #111111;
-  margin: 0 0 24px;
-  padding: 16px;
-  background: #FFFFFF;
-}
-
-.post-video-frame {
-  aspect-ratio: 16 / 9;
-  border: 0;
-  display: block;
-  width: 100%;
-}
-
-.post-summary {
-  border-top: 1px solid #111111;
-  margin-top: 32px;
-  padding-top: 18px;
-}
-
-.post-summary-title {
-  color: #111111;
-  font-size: 22px;
-  font-weight: 700;
-  line-height: 1.35;
-  margin: 0 0 14px;
-  word-break: keep-all;
-}
-
-.analysis-note {
-  border-left: 6px solid #FF4F00;
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.6;
-  margin: 18px 0 0;
-  padding: 0 0 0 14px;
-  word-break: keep-all;
-}
-
-.insight-grid {
-  display: grid;
-  gap: 0;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin: 24px 0 0;
-  border: 1px solid #111111;
-  border-bottom: 0;
-}
-
-.insight-card {
-  border-bottom: 1px solid #111111;
-  color: #222222;
-  min-height: 168px;
-  padding: 18px;
-}
-
-.insight-card:nth-child(odd) {
-  border-right: 1px solid #D9D9D9;
-}
-
-.insight-label {
-  color: #FF4F00;
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.2;
-  margin-bottom: 12px;
-}
-
-.insight-card strong {
-  color: #111111;
-  display: block;
-  font-size: 20px;
-  line-height: 1.35;
-  margin-bottom: 10px;
-  word-break: keep-all;
-}
-
-.insight-card p {
-  font-size: 15px;
-  line-height: 1.65;
-  margin: 0;
-  word-break: keep-all;
-}
-
-.double-cut-flow {
-  border: 1px solid #111111;
-  display: grid;
-  gap: 0;
-  grid-template-columns: 1fr 48px 1fr 48px 1fr;
-  margin: 24px 0 0;
-}
-
-.flow-step,
-.flow-arrow {
-  min-height: 168px;
-}
-
-.flow-step {
-  padding: 18px;
-}
-
-.flow-step:not(:last-child),
-.flow-arrow {
-  border-right: 1px solid #D9D9D9;
-}
-
-.flow-arrow {
-  align-items: center;
-  color: #FF4F00;
-  display: flex;
-  font-size: 28px;
-  font-weight: 700;
-  justify-content: center;
-}
-
-.flow-number {
-  color: #FF4F00;
-  display: block;
-  font-size: 13px;
-  font-weight: 700;
-  margin-bottom: 12px;
-}
-
-.flow-step strong {
-  color: #111111;
-  display: block;
-  font-size: 19px;
-  line-height: 1.35;
-  margin-bottom: 10px;
-  word-break: keep-all;
-}
-
-.flow-step p {
-  color: #333333;
-  font-size: 14px;
-  line-height: 1.65;
-  margin: 0;
-  word-break: keep-all;
-}
-
-.chapter-list {
-  border-top: 1px solid #111111;
-  list-style: none;
-  margin: 24px 0 0;
-  padding: 0;
-}
-
-.chapter-list li {
-  border-bottom: 1px solid #D9D9D9;
-  display: grid;
-  gap: 18px;
-  grid-template-columns: 104px minmax(0, 1fr);
-  padding: 16px 0;
-}
-
-.chapter-time {
-  color: #FF4F00;
-  font-size: 14px;
-  font-weight: 700;
-  line-height: 1.35;
-  white-space: nowrap;
-}
-
-.chapter-copy strong {
-  color: #111111;
-  display: block;
-  font-size: 16px;
-  line-height: 1.4;
-  margin-bottom: 6px;
-  word-break: keep-all;
-}
-
-.chapter-copy span {
-  color: #333333;
-  display: block;
-  font-size: 14px;
-  line-height: 1.6;
-  word-break: keep-all;
-}
-
-.formula-list {
-  border: 1px solid #111111;
-  list-style: none;
-  margin: 18px 0 24px;
-  padding: 0;
-}
-
-.formula-list li {
-  border-bottom: 1px solid #D9D9D9;
-  color: #222222;
-  font-size: 15px;
-  line-height: 1.6;
-  padding: 12px 14px;
-}
-
-.formula-list li:last-child {
-  border-bottom: 0;
-}
-
-.post-table {
-  border-collapse: collapse;
-  margin: 18px 0 24px;
-  width: 100%;
-}
-
-.post-table th,
-.post-table td {
-  border: 1px solid #111111;
-  color: #222222;
-  padding: 10px 12px;
-  text-align: left;
-  vertical-align: top;
-}
-
-.post-table th {
-  color: #111111;
-  font-weight: 700;
-}
-
-.utility-bar {
-  background: #FFFFFF !important;
-  backdrop-filter: none !important;
-  -webkit-backdrop-filter: none !important;
-  border: 1px solid #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  bottom: 24px !important;
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 0 !important;
-  padding: 0 !important;
-  position: fixed !important;
-  right: 24px !important;
-  z-index: 1000;
-}
-
-.utility-button-container {
-  display: flex;
-  position: relative;
-}
-
-.utility-bar button {
-  background: #FFFFFF !important;
-  border: 0 !important;
-  border-left: 0 !important;
-  border-top: 1px solid #D9D9D9 !important;
-  border-radius: 0 !important;
-  color: #111111 !important;
-  cursor: pointer;
-  height: 42px !important;
-  width: 42px !important;
-  transform: none !important;
-}
-
-.utility-bar button svg {
-  height: 20px;
-  stroke: currentColor;
-  stroke-width: 2;
-  width: 20px;
-}
-
-.utility-button-container:first-child button {
-  border-top: 0 !important;
-}
-
-.utility-bar button:hover {
-  background: #002FA7 !important;
-  color: #FFFFFF !important;
-  transform: none !important;
-}
-
-.utility-tooltip {
-  background: #111111 !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
-  color: #FFFFFF !important;
-  font-family: var(--font-main) !important;
-  bottom: auto !important;
-  left: auto !important;
-  opacity: 0;
-  padding: 6px 8px;
-  pointer-events: none;
-  position: absolute;
-  right: 52px !important;
-  top: 50%;
-  transform: translateY(-50%) !important;
-  transition: opacity 120ms ease;
-  visibility: hidden;
-  white-space: nowrap;
-  z-index: 1001;
-}
-
-.utility-button-container:hover .utility-tooltip,
-.utility-button-container:focus-within .utility-tooltip {
-  opacity: 1;
-  visibility: visible;
-}
-
-@media print {
-  body {
-    background: #FFFFFF !important;
-    padding: 0 !important;
-  }
-
-  .statement-container,
-  .mom-container {
-    border: 0 !important;
-    width: 100% !important;
-  }
-}
-
-@media (max-width: 720px) {
-  body {
-    padding: 24px 16px 136px !important;
-  }
-
-  .archive-container,
-  .back-link,
-  .mom-container,
-  .statement-container {
-    width: 100% !important;
-  }
-
-  .archive-header {
-    grid-template-columns: 1fr;
-    row-gap: 16px;
-    padding: 18px 0 22px !important;
-  }
-
-  .archive-header > .header-logo {
-    grid-column: 1;
-    grid-row: auto;
-    height: 42px !important;
-  }
-
-  .archive-title,
-  .archive-desc {
-    grid-column: 1;
-  }
-
-  .archive-title {
-    font-size: clamp(32px, 13vw, 46px) !important;
-  }
-
-  .filter-bar {
-    display: flex !important;
-    overflow-x: auto;
-    padding-bottom: 18px;
-    scrollbar-width: thin;
-  }
-
-  .filter-btn {
-    flex: 1 0 88px;
-    min-width: 0;
-    padding-left: 6px !important;
-    padding-right: 6px !important;
-    width: auto !important;
-  }
-
-  .doc-card {
-    grid-template-columns: 1fr;
-    column-gap: 0;
-    padding: 22px 0 22px 18px !important;
-  }
-
-  .doc-card::before {
-    bottom: 22px;
-    top: 22px;
-  }
-
-  .card-meta {
-    grid-column: 1;
-    grid-row: auto;
-    border-right: 0;
-    border-bottom: 1px solid #D9D9D9;
-    flex-direction: row !important;
-    flex-wrap: nowrap;
-    gap: 12px !important;
-    justify-content: space-between;
-    margin-bottom: 14px !important;
-    padding: 0 0 12px;
-  }
-
-  .doc-date {
-    font-size: 15px !important;
-    max-width: none;
-  }
-
-  .doc-title,
-  .doc-excerpt,
-  .card-footer {
-    grid-column: 1;
-  }
-
-  .statement-container,
-  .mom-container {
-    border-left: 0 !important;
-    border-right: 0 !important;
-  }
-
-  .statement-header,
-  .mom-header {
-    grid-template-columns: 1fr;
-    padding: 20px 16px 26px !important;
-  }
-
-  .header-top-row {
-    grid-column: 1;
-    grid-row: auto;
-    align-items: center !important;
-    border-right: 0;
-    border-bottom: 1px solid #D9D9D9;
-    flex-direction: row;
-    justify-content: space-between !important;
-    margin-bottom: 20px !important;
-    padding: 0 0 16px;
-  }
-
-  .header-top-row .header-logo {
-    height: 38px !important;
-  }
-
-  .header-logo.logo-mark {
-    min-height: 38px;
-    min-width: 138px;
-    padding-left: 8px;
-  }
-
-  .header-logo.logo-mark span {
-    font-size: 11px;
-  }
-
-  .header-logo.logo-mark strong {
-    font-size: 16px;
-  }
-
-  .statement-title,
-  .statement-meta {
-    grid-column: 1;
-  }
-
-  .statement-title {
-    font-size: clamp(24px, 8.5vw, 34px) !important;
-    line-height: 1.12 !important;
-  }
-
-  .statement-body,
-  .mom-body,
-  .post-article {
-    padding: 0 16px 48px;
-  }
-
-  .mom-body .bullet-list {
-    margin-bottom: 30px;
-    margin-left: 1.1rem;
-  }
-
-  .mom-body .bullet-list li {
-    padding-bottom: 13px;
-  }
-
-  .mom-body .bullet-list li + li {
-    padding-top: 13px;
-  }
-
-  .document-toc {
-    margin-bottom: 28px;
-    padding: 0 16px;
-  }
-
-  .document-toc-links {
-    display: grid;
-    grid-template-columns: 1fr;
-    max-height: 260px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-
-  .document-toc-link {
-    min-height: 42px;
-  }
-
-  .table-container {
-    border: 0 !important;
-    margin: 18px 0 28px;
-    overflow: visible;
-  }
-
-  .mom-table,
-  .mom-table tr,
-  .mom-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .mom-table tr:first-child {
-    display: none;
-  }
-
-  .mom-table tr {
-    border: 1px solid #111111;
-    margin-bottom: 12px;
-  }
-
-  .mom-table td {
-    border-bottom: 1px solid #D9D9D9 !important;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: minmax(76px, 32%) minmax(0, 1fr);
-    padding: 10px 12px !important;
-  }
-
-  .mom-table td::before {
-    color: #002FA7;
-    content: attr(data-label);
-    font-weight: 700;
-    word-break: keep-all;
-  }
-
-  .mom-table td:last-child {
-    border-bottom: 0 !important;
-  }
-
-  .post-figure {
-    padding: 10px;
-  }
-
-  .insight-grid,
-  .double-cut-flow {
-    grid-template-columns: 1fr;
-  }
-
-  .insight-card:nth-child(odd),
-  .flow-step:not(:last-child),
-  .flow-arrow {
-    border-right: 0;
-  }
-
-  .flow-step,
-  .flow-arrow {
-    min-height: 0;
-  }
-
-  .flow-arrow {
-    border-bottom: 1px solid #D9D9D9;
-    min-height: 44px;
-    transform: none;
-  }
-
-  .chapter-list li {
-    gap: 8px;
-    grid-template-columns: 1fr;
-  }
-
-  .post-table,
-  .post-table tr,
-  .post-table td {
-    display: block;
-    width: 100%;
-  }
-
-  .post-table tr:first-child {
-    display: none;
-  }
-
-  .post-table tr {
-    border: 1px solid #111111;
-    margin-bottom: 12px;
-  }
-
-  .post-table td {
-    border: 0;
-    border-bottom: 1px solid #D9D9D9;
-    display: grid;
-    gap: 12px;
-    grid-template-columns: minmax(76px, 32%) minmax(0, 1fr);
-  }
-
-  .post-table td::before {
-    color: #002FA7;
-    content: attr(data-label);
-    font-weight: 700;
-    word-break: keep-all;
-  }
-
-  .post-table td:last-child {
-    border-bottom: 0;
-  }
-
-  .body-text {
-    font-size: var(--font-size-base, 15px) !important;
-  }
-
-  .demands,
-  .closing-block {
-    padding: 20px 16px !important;
-  }
-
-  .utility-bar {
-    bottom: max(16px, env(safe-area-inset-bottom)) !important;
-    flex-direction: row !important;
-    justify-content: space-between !important;
-    left: 50% !important;
-    margin: 0 !important;
-    position: fixed !important;
-    right: auto !important;
-    transform: translateX(-50%) !important;
-    width: min(calc(100% - 32px), 360px) !important;
-  }
-
-  .utility-button-container {
-    flex: 1 1 0;
-  }
-
-  .utility-bar button {
-    border-left: 1px solid #D9D9D9 !important;
-    border-top: 0 !important;
-    flex: 1 1 0;
-    min-width: 0;
-    width: 100% !important;
-  }
-
-  .utility-button-container:first-child button {
-    border-left: 0 !important;
-  }
-
-  .utility-tooltip {
-    display: none !important;
-  }
-}
-
-  </style>
+  <meta name="description" content="현장 인력 충원과 병가 제도, 차별 시정 신청, 작업 환경 개선과 고용 안정 대응 계획을 논의했습니다.">
+  <link rel="canonical" href="https://yghnsim.github.io/workplace/MoM/202604.html">
+  <meta property="og:locale" content="ko_KR">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="우체국물류지원단 물류노동조합">
+  <meta property="og:title" content="2026년 4월 운영위원회 회의록 - 우체국물류지원단 물류노동조합">
+  <meta property="og:description" content="현장 인력 충원과 병가 제도, 차별 시정 신청, 작업 환경 개선과 고용 안정 대응 계획을 논의했습니다.">
+  <meta property="og:url" content="https://yghnsim.github.io/workplace/MoM/202604.html">
+  <meta property="og:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="article:published_time" content="2026-04-03">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="2026년 4월 운영위원회 회의록 - 우체국물류지원단 물류노동조합">
+  <meta name="twitter:description" content="현장 인력 충원과 병가 제도, 차별 시정 신청, 작업 환경 개선과 고용 안정 대응 계획을 논의했습니다.">
+  <meta name="twitter:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
+  <link rel="icon" href="../assets/favicon-32.png?v=2b7f670c1bde" sizes="32x32" type="image/png">
+  <link rel="icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192">
+  <link rel="stylesheet" href="../assets/interface.css?v=fd3a3ba27b94">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Article",
+  "name": "2026년 4월 운영위원회 회의록",
+  "headline": "2026년 4월 운영위원회 회의록",
+  "description": "현장 인력 충원과 병가 제도, 차별 시정 신청, 작업 환경 개선과 고용 안정 대응 계획을 논의했습니다.",
+  "url": "https://yghnsim.github.io/workplace/MoM/202604.html",
+  "image": "https://yghnsim.github.io/workplace/assets/social-card.png",
+  "inLanguage": "ko-KR",
+  "isPartOf": {
+    "@type": "WebSite",
+    "name": "우체국물류지원단 물류노동조합",
+    "url": "https://yghnsim.github.io/workplace/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "우체국물류지원단 물류노동조합",
+    "url": "https://yghnsim.github.io/workplace/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://yghnsim.github.io/workplace/assets/favicon-192.png"
+    }
+  },
+  "datePublished": "2026-04-03"
+}
+  </script>
 </head>
 
 <body>
   <a href="../index.html" class="back-link">
-    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
     첫 페이지로 돌아가기
   </a>
 
-  <article class="mom-container document-article" id="mom-article" data-document-category="회의록">
+  <main class="mom-container document-article" id="mom-article" data-document-category="회의록">
     <header class="mom-header">
       <div class="header-top-row">
         <div class="header-logo logo-mark" role="img" aria-label="우체국물류지원단 물류노동조합 로고">
@@ -1428,6 +70,7 @@ button:focus-visible {
         <div class="mom-category">회의록</div>
       </div>
       <h1 class="statement-title">2026년 4월 운영위원회 회의록</h1>
+      <p class="document-date"><time class="doc-date" datetime="2026-04-03">2026년&nbsp;4월&nbsp;3일</time></p>
     </header>
 
     <nav class="document-toc" aria-label="문서 목차">
@@ -1451,26 +94,30 @@ button:focus-visible {
     </nav>
 
 
-    <main class="mom-body" data-copy-body>
+    <div class="mom-body" data-copy-body>
 <h2 id="section-1" class="section-title">I. 회의 개요</h2>
-<div class="table-container">
+<div class="table-container" tabindex="0" role="region" aria-label="회의록 표">
 <table class="mom-table">
-  <tr>
-    <th>구분</th>
-    <th>내용</th>
-  </tr>
-  <tr>
-    <td data-label="구분">일시</td>
-    <td data-label="내용">2026년 4월 3일 (금) 15:30</td>
-  </tr>
-  <tr>
-    <td data-label="구분">장소</td>
-    <td data-label="내용">경인지사(안양물류사업소) 소회의실</td>
-  </tr>
-  <tr>
-    <td data-label="구분">참석</td>
-    <td data-label="내용">김영문(위원장), 이용석(사무국장), 박희덕, 성소옥, 송현동, 신성훈, 심영훈, 양한솔, 윤효종, 이도희, 이현준, 추교섭, 장택상(소통간사), 배정필(감사)</td>
-  </tr>
+<thead>
+<tr>
+<th scope="col">구분</th>
+<th scope="col">내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="구분">일시</td>
+<td data-label="내용">2026년 4월 3일 (금) 15:30</td>
+</tr>
+<tr>
+<td data-label="구분">장소</td>
+<td data-label="내용">경인지사(안양물류사업소) 소회의실</td>
+</tr>
+<tr>
+<td data-label="구분">참석</td>
+<td data-label="내용">김영문(위원장), 이용석(사무국장), 박희덕, 성소옥, 송현동, 신성훈, 심영훈, 양한솔, 윤효종, 이도희, 이현준, 추교섭, 장택상(소통간사), 배정필(감사)</td>
+</tr>
+</tbody>
 </table>
 </div>
 <hr class="divider">
@@ -1478,44 +125,82 @@ button:focus-visible {
 <h3 id="section-3" class="subsection-title">보고1. 위원장-경인지사장 면담 결과 보고</h3>
 <h4 id="section-4" class="subsubsection-title">1.1. 단기간 기간제 채용 및 현장 인력 부족 문제</h4>
 <ul class="bullet-list">
-  <li>노조는 기간제 노동자들이 요일제 또는 격달 형태로 운용되면서 소속감이 저하되고 다양한 현장 문제가 야기되고 있음을 강하게 지적했습니다. </li>
-  <li>경인지사장 역시 안양·부평 현장의 심각한 인력 부족 실태에 공감하며, 퇴사로 인한 자연 감소분에 상응하는 필수 인력 충원이 이루어져야 한다는 데 뜻을 같이했습니다. </li>
-  <li>다만 지사장이 지난 3월 중순 본사에 인력 채용 기안을 제출하고 매달 충원을 요청하고 있음에도 불구하고, <strong>최종 결정권은 전적으로 물류지원단 본사에 귀속되어 있어 지사장 권한만으로는 해결에 명확한 한계가 있는 상황</strong>입니다.</li>
+<li>
+<p class="body-text">노조는 기간제 노동자들이 요일제 또는 격달 형태로 운용되면서 소속감이 저하되고 다양한 현장 문제가 야기되고 있음을 강하게 지적했습니다.</p>
+</li>
+<li>
+<p class="body-text">경인지사장 역시 안양·부평 현장의 심각한 인력 부족 실태에 공감하며, 퇴사로 인한 자연 감소분에 상응하는 필수 인력 충원이 이루어져야 한다는 데 뜻을 같이했습니다.</p>
+</li>
+<li>
+<p class="body-text">다만 지사장이 지난 3월 중순 본사에 인력 채용 기안을 제출하고 매달 충원을 요청하고 있음에도 불구하고, <strong>최종 결정권은 전적으로 물류지원단 본사에 귀속되어 있어 지사장 권한만으로는 해결에 명확한 한계가 있는 상황</strong>입니다.</p>
+</li>
 </ul>
 <h4 id="section-5" class="subsubsection-title">1.2. 병가 제도 남용에 대한 본사와의 시각차</h4>
 <ul class="bullet-list">
-  <li>본사와 경인지사는 현장 노동자들의 병가 사용 빈도가 과도하며, 단순 감기나 비용 회피를 목적으로 제도를 남용하는 사례가 있어 개선이 필요하다는 부정적 입장을 보였습니다. </li>
-  <li>이에 대해 노조는 <strong>현장과 동떨어진 탁상행정과 달리, 물류 현장 노동은 육체적 피로도가 극심하여 상시적인 건강 문제가 발생할 수밖에 없으며, 인력 충원을 통해 노동 강도를 낮추는 것이 병가 감소의 근본적인 해법</strong>임을 정면으로 반박했습니다. </li>
-  <li>지사장은 양측의 시각차를 인정하며 노조의 입장을 본사에 지속적으로 건의하겠다고 답했습니다.</li>
+<li>
+<p class="body-text">본사와 경인지사는 현장 노동자들의 병가 사용 빈도가 과도하며, 단순 감기나 비용 회피를 목적으로 제도를 남용하는 사례가 있어 개선이 필요하다는 부정적 입장을 보였습니다.</p>
+</li>
+<li>
+<p class="body-text">이에 대해 노조는 <strong>현장과 동떨어진 탁상행정과 달리, 물류 현장 노동은 육체적 피로도가 극심하여 상시적인 건강 문제가 발생할 수밖에 없으며, 인력 충원을 통해 노동 강도를 낮추는 것이 병가 감소의 근본적인 해법</strong>임을 정면으로 반박했습니다.</p>
+</li>
+<li>
+<p class="body-text">지사장은 양측의 시각차를 인정하며 노조의 입장을 본사에 지속적으로 건의하겠다고 답했습니다.</p>
+</li>
 </ul>
 <h4 id="section-6" class="subsubsection-title">1.3. 물류지원단 본사 지방 이전 진행 현황</h4>
 <ul class="bullet-list">
-  <li>외부 언론을 통해 거론되는 본사 지방 이전 문제와 관련하여, 지사장은 현재까지 내부적으로 공식 확정된 사항은 없다고 선을 그었습니다. </li>
-  <li>다만 <strong>올해 연말에 현 청사의 임대 계약이 만료되는 만큼, 내년 중 정부의 구체적인 발표나 지시가 있을 경우 지방 이전을 피하기 어려운 상황이 될 수 있다</strong>고 설명했습니다.</li>
+<li>
+<p class="body-text">외부 언론을 통해 거론되는 본사 지방 이전 문제와 관련하여, 지사장은 현재까지 내부적으로 공식 확정된 사항은 없다고 선을 그었습니다.</p>
+</li>
+<li>
+<p class="body-text">다만 <strong>올해 연말에 현 청사의 임대 계약이 만료되는 만큼, 내년 중 정부의 구체적인 발표나 지시가 있을 경우 지방 이전을 피하기 어려운 상황이 될 수 있다</strong>고 설명했습니다.</p>
+</li>
 </ul>
 <h4 id="section-7" class="subsubsection-title">1.4. 명절 상여금 인상의 한계 및 향후 과제</h4>
 <ul class="bullet-list">
-  <li>명절 상여금을 120% 수준으로 인상하는 방안에 대해서는, 올해 예산에 사전 반영이 이루어지지 않아 즉각적인 실현은 어려울 것으로 전망되었습니다. </li>
-  <li>이 사안은 물류 현장 공무직에 국한되지 않고 운송직과 사무 공무원 전 직군에 걸쳐 있어 소요 예산 규모가 방대하다는 점에서, **추후 예산이 편성되더라도 목표치를 일시에 달성하기보다는 단계적·부분적 인상에 그칠 가능성이 높습니다. </li>
-  <li>이에 내년도 예산에 인상안이 반영될 수 있도록 선제적이고 지속적인 요구를 이어가야 할 것으로 판단되며 교섭대표노동조합이 우정사업본부와 직접 교섭하도록 지속적으로 촉구해야 합니다.</li>
+<li>
+<p class="body-text">명절 상여금을 120% 수준으로 인상하는 방안에 대해서는, 올해 예산에 사전 반영이 이루어지지 않아 즉각적인 실현은 어려울 것으로 전망되었습니다.</p>
+</li>
+<li>
+<p class="body-text">이 사안은 물류 현장 공무직에 국한되지 않고 운송직과 사무 공무원 전 직군에 걸쳐 있어 소요 예산 규모가 방대하다는 점에서, <strong>추후 예산이 편성되더라도 목표치를 일시에 달성하기보다는 단계적·부분적 인상에 그칠 가능성이 높습니다.</strong></p>
+</li>
+<li>
+<p class="body-text">이에 내년도 예산에 인상안이 반영될 수 있도록 선제적이고 지속적인 요구를 이어가야 할 것으로 판단되며 교섭대표노동조합이 우정사업본부와 직접 교섭하도록 지속적으로 촉구해야 합니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h3 id="section-8" class="subsection-title">보고2. 노동위원회 차별 시정 신청 경과 (단시간 병가 차별)</h3>
 <ul class="bullet-list">
-  <li>인천지방노동위원회 접수가 완료되었으며, 현재 사측의 답변서를 기다리는 중입니다.</li>
-  <li>사측은 &#39;노사 합의 사항&#39;임을 주된 논거로 내세울 것으로 예상됩니다. 이에 노조는 이를 &#39;차별적 제도&#39;로 규정하고, 조합원·비조합원 연대 서명을 통해 대응 논리를 강화할 방침입니다.</li>
-  <li>안양지부는 비조합원을 포함한 단시간 근로자 전원의 연대 서명을 완료하였으며, 부평지부 역시 타 노조 조합원을 포함해 최대한 폭넓은 서명을 확보하여 사측 논리에 정면으로 맞서기로 하였습니다.</li>
+<li>
+<p class="body-text">인천지방노동위원회 접수가 완료되었으며, 현재 사측의 답변서를 기다리는 중입니다.</p>
+</li>
+<li>
+<p class="body-text">사측은 '노사 합의 사항'임을 주된 논거로 내세울 것으로 예상됩니다. 이에 노조는 이를 '차별적 제도'로 규정하고, 조합원·비조합원 연대 서명을 통해 대응 논리를 강화할 방침입니다.</p>
+</li>
+<li>
+<p class="body-text">안양지부는 비조합원을 포함한 단시간 근로자 전원의 연대 서명을 완료하였으며, 부평지부 역시 타 노조 조합원을 포함해 최대한 폭넓은 서명을 확보하여 사측 논리에 정면으로 맞서기로 하였습니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h3 id="section-9" class="subsection-title">보고3. 조합원 변동 및 재정 현황</h3>
 <ul class="bullet-list">
-  <li><strong>조합원 현황</strong>: 4월 현재 총 60명(안양 32명, 부평 28명)이며, 퇴직 및 계약 만료로 인해 인원이 다소 감소하였습니다.</li>
-  <li><strong>퇴직 예정 조합원 파악</strong></li>
-  <li class="list-level-2">부평지부: 상반기 2명(김영재, 홍석민), 하반기 1명</li>
-  <li class="list-level-2">안양지부: 상반기 퇴직 예정 없음, 하반기 1명</li>
-  <li class="list-level-2">퇴직 조합원에 대한 감사 표시 방안은 추후 협의하기로 하였습니다.</li>
-  <li><strong>재정 현황</strong>: 기간제 조합비 입금 누락 문제와 지부 교부금 조정 필요성이 논의되었습니다. 행사 추진 시 예산 부족분은 각 지부와 협의하여 충당하기로 하였습니다.</li>
-  <li><strong>회계 투명성 제고:</strong> 회의 시 수취하는 식사 회비도 수입(찬조금)으로 명시하여 투명하게 관리하기로 하였습니다.</li>
+<li>
+<p class="body-text"><strong>조합원 현황</strong>: 4월 현재 총 60명(안양 32명, 부평 28명)이며, 퇴직 및 계약 만료로 인해 인원이 다소 감소하였습니다.</p>
+</li>
+<li>
+<p class="body-text"><strong>퇴직 예정 조합원 파악</strong></p>
+<ul class="bullet-list">
+<li class="list-level-1">부평지부: 상반기 2명(김영재, 홍석민), 하반기 1명</li>
+<li class="list-level-1">안양지부: 상반기 퇴직 예정 없음, 하반기 1명</li>
+<li class="list-level-1">퇴직 조합원에 대한 감사 표시 방안은 추후 협의하기로 하였습니다.</li>
+</ul>
+</li>
+<li>
+<p class="body-text"><strong>재정 현황</strong>: 기간제 조합비 입금 누락 문제와 지부 교부금 조정 필요성이 논의되었습니다. 행사 추진 시 예산 부족분은 각 지부와 협의하여 충당하기로 하였습니다.</p>
+</li>
+<li>
+<p class="body-text"><strong>회계 투명성 제고:</strong> 회의 시 수취하는 식사 회비도 수입(찬조금)으로 명시하여 투명하게 관리하기로 하였습니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h3 id="section-10" class="subsection-title">보고4. 지부별 주요 현안 보고</h3>
@@ -1523,90 +208,121 @@ button:focus-visible {
 <p class="body-text">최근 발생한 직원 간 폭행·갈등 사건이 벌금형(50만 원)으로 일단락되었으나, 가해자와 피해자의 분리 배치 등 사후 관리 방안에 대한 논의가 이어졌습니다.</p>
 <h4 id="section-12" class="subsubsection-title">부평지부</h4>
 <ul class="bullet-list">
-  <li>에어컨 설치 위치가 실효성이 낮은 곳에 배치되어 있다는 점을 지적하며, 전기 증설을 통한 원형 작업장 내 에어컨 추가 설치 또는 이동식 에어컨 배치를 사측에 요구하기로 했습니다.</li>
-  <li>3월 10일 감사실 담당 과장과의 통화를 통해 업무 적체로 처리가 지연되고 있음을 확인하였습니다. 두 달 이내에 징계 결과가 나오지 않을 경우 노조 차원의 별도 조치를 취할 것임을 공식 통보하고, 4월 내 처리 현황을 재확인하기로 하였습니다.</li>
+<li>
+<p class="body-text">에어컨 설치 위치가 실효성이 낮은 곳에 배치되어 있다는 점을 지적하며, 전기 증설을 통한 원형 작업장 내 에어컨 추가 설치 또는 이동식 에어컨 배치를 사측에 요구하기로 했습니다.</p>
+</li>
+<li>
+<p class="body-text">3월 10일 감사실 담당 과장과의 통화를 통해 업무 적체로 처리가 지연되고 있음을 확인하였습니다. 두 달 이내에 징계 결과가 나오지 않을 경우 노조 차원의 별도 조치를 취할 것임을 공식 통보하고, 4월 내 처리 현황을 재확인하기로 하였습니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h3 id="section-13" class="subsection-title">보고5. 하반기 의류 및 안전화 지급</h3>
 <ul class="bullet-list">
-  <li>하계 작업복(GNF 업체 선정)은 5월 29일, 안전화는 4월 28일(공장 사정에 따라 지연 가능)에 지급될 예정임이 공유되었습니다.</li>
-  <li>품평회를 통해 불필요한 주머니 축소, 쿨링 메쉬 소재 적용 등 노조의 요구사항이 의류 디자인에 반영되었습니다.</li>
+<li>
+<p class="body-text">하계 작업복(GNF 업체 선정)은 5월 29일, 안전화는 4월 28일(공장 사정에 따라 지연 가능)에 지급될 예정임이 공유되었습니다.</p>
+</li>
+<li>
+<p class="body-text">품평회를 통해 불필요한 주머니 축소, 쿨링 메쉬 소재 적용 등 노조의 요구사항이 의류 디자인에 반영되었습니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h3 id="section-14" class="subsection-title">보고6. 연대 노동조합 활동</h3>
 <p class="body-text"><strong>공무직 노조: 고용 승계 및 근속 인정 소송</strong></p>
 <ul class="bullet-list">
-  <li><strong>(현황)</strong> 서서울물류센터 위탁 해지 시 공무직의 고용 승계를 보장하지 않은 건에 대하여, 신임 우정사업본부장 간담회를 통해 현장의 반대 입장이 명확히 전달되었습니다.</li>
-  <li><strong>(쟁점)</strong> 사측은 이를 자발적 사직으로 포장하고 있으나, 노조가 확보한 사측 공문 등 증거 자료에 따르면 이는 단순 위탁 해지가 아닌 부천 집중국으로의 기능 &#39;이관&#39;이며, 인력만을 배제한 악의적 구조조정에 해당하는 것으로 판단됩니다.</li>
-  <li><strong>(의미)</strong> <strong>수도권 통합 물류센터 설립 시 동일한 고용 승계 문제가 재발</strong>할 가능성이 높습니다. 지금부터 체계적인 대응 기반을 구축하고, 확보된 이관 증거 자료를 재판부에 제출하여 고용 승계의 법적 당위성을 인정받도록 요구하기로 하였습니다.</li>
+<li>
+<p class="body-text"><strong>(현황)</strong> 서서울물류센터 위탁 해지 시 공무직의 고용 승계를 보장하지 않은 건에 대하여, 신임 우정사업본부장 간담회를 통해 현장의 반대 입장이 명확히 전달되었습니다.</p>
+</li>
+<li>
+<p class="body-text"><strong>(쟁점)</strong> 사측은 이를 자발적 사직으로 포장하고 있으나, 노조가 확보한 사측 공문 등 증거 자료에 따르면 이는 단순 위탁 해지가 아닌 부천 집중국으로의 기능 '이관'이며, 인력만을 배제한 악의적 구조조정에 해당하는 것으로 판단됩니다.</p>
+</li>
+<li>
+<p class="body-text"><strong>(의미)</strong> <strong>수도권 통합 물류센터 설립 시 동일한 고용 승계 문제가 재발</strong>할 가능성이 높습니다. 지금부터 체계적인 대응 기반을 구축하고, 확보된 이관 증거 자료를 재판부에 제출하여 고용 승계의 법적 당위성을 인정받도록 요구하기로 하였습니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h2 id="section-15" class="section-title">III. 심의 및 결정 안건</h2>
 <h3 id="section-16" class="subsection-title">1. 2026년 워크숍 추진 계획</h3>
 <ul class="bullet-list">
-  <li><strong>방식 변경</strong>: 1박 2일 펜션 형태의 워크숍 대신, 예산 절감과 참여율 제고를 위해 <strong>&#39;당일치기 도심형 워크숍&#39;</strong> 또는 <strong>&#39;산행&#39;</strong> 중심으로 운영하기로 하였습니다.</li>
-  <li><strong>일시</strong>: 2026년 6월 12일(금)로 잠정 확정</li>
-  <li><strong>장소</strong>: 서울 시내 또는 부천 인근을 검토하며, 다음 회의에서 최종 확정할 예정입니다.</li>
+<li>
+<p class="body-text"><strong>방식 변경</strong>: 1박 2일 펜션 형태의 워크숍 대신, 예산 절감과 참여율 제고를 위해 <strong>'당일치기 도심형 워크숍'</strong> 또는 <strong>'산행'</strong> 중심으로 운영하기로 하였습니다.</p>
+</li>
+<li>
+<p class="body-text"><strong>일시</strong>: 2026년 6월 12일(금)로 잠정 확정</p>
+</li>
+<li>
+<p class="body-text"><strong>장소</strong>: 서울 시내 또는 부천 인근을 검토하며, 다음 회의에서 최종 확정할 예정입니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h3 id="section-17" class="subsection-title">2. 고용 안정 및 조직 확대 전략 수정</h3>
 <p class="body-text"><strong>① 고용 안정 보장 기자회견 유보</strong></p>
 <ul class="bullet-list">
-  <li>3월 말 예정했던 기자회견은 현장 노동자들과의 충분한 공감대 형성 및 조직적 준비가 미흡하다는 판단에 따라 유보하였습니다.</li>
-  <li><strong>전략적 접근</strong>: 기간제 노동자들에게 &#39;공무직 전환&#39; 및 &#39;고용 안정&#39; 투쟁의 필요성을 먼저 설득하고 조합 가입의 계기를 마련하는 <strong>&#39;선(先) 조직-후(後) 투쟁&#39;</strong> 전략을 논의했습니다.</li>
-  <li class="list-level-2"><strong>성과 가로채기 방지</strong>: 노조가 선제적으로 투쟁하여 고용 안정을 쟁취하더라도, 그 성과가 타 노조로 귀속되는 상황을 방지하기 위한 구조적 대비가 필요합니다.</li>
-  <li class="list-level-2"><strong>투쟁의 실효성 제고</strong>: 단순한 목소리 내기에 머무르지 않고, 투쟁의 성과가 우리 조합의 실질적인 세력 확장으로 직결될 수 있는 기반 마련이 필요하다는 점에 공감했습니다.</li>
+<li>3월 말 예정했던 기자회견은 현장 노동자들과의 충분한 공감대 형성 및 조직적 준비가 미흡하다는 판단에 따라 유보하였습니다.</li>
+<li><strong>전략적 접근</strong>: 기간제 노동자들에게 '공무직 전환' 및 '고용 안정' 투쟁의 필요성을 먼저 설득하고 조합 가입의 계기를 마련하는 <strong>'선(先) 조직-후(後) 투쟁'</strong> 전략을 논의했습니다.
+<ul class="bullet-list">
+<li class="list-level-1"><strong>성과 가로채기 방지</strong>: 노조가 선제적으로 투쟁하여 고용 안정을 쟁취하더라도, 그 성과가 타 노조로 귀속되는 상황을 방지하기 위한 구조적 대비가 필요합니다.</li>
+<li class="list-level-1"><strong>투쟁의 실효성 제고</strong>: 단순한 목소리 내기에 머무르지 않고, 투쟁의 성과가 우리 조합의 실질적인 세력 확장으로 직결될 수 있는 기반 마련이 필요하다는 점에 공감했습니다.</li>
+</ul>
+</li>
 </ul>
 <p class="body-text"><strong>② 동서울물류센터 방문 활동 강화</strong></p>
 <ul class="bullet-list">
-  <li>홍보물 전달에 머무르지 않고 직접 명함을 배부하며 현장 노동자들과의 대면 접촉을 적극 확대하는 방식으로 조직 활동을 강화하기로 하였습니다.</li>
+<li>홍보물 전달에 머무르지 않고 직접 명함을 배부하며 현장 노동자들과의 대면 접촉을 적극 확대하는 방식으로 조직 활동을 강화하기로 하였습니다.</li>
 </ul>
 <hr class="divider">
 <h3 id="section-18" class="subsection-title">3. 기타 결정 사항</h3>
 <ul class="bullet-list">
-  <li><strong>근로자의 날 표창</strong>: 작년 안양지부 수혜에 이어, 올해는 부평지부 조합원을 추천하기로 하였습니다.</li>
-  <li><strong>간식 자판기 설치</strong>: 음료 자판기 외에 과자 등 간식류 자판기 추가 설치를 사측에 건의하기로 하였습니다.</li>
+<li>
+<p class="body-text"><strong>근로자의 날 표창</strong>: 작년 안양지부 수혜에 이어, 올해는 부평지부 조합원을 추천하기로 하였습니다.</p>
+</li>
+<li>
+<p class="body-text"><strong>간식 자판기 설치</strong>: 음료 자판기 외에 과자 등 간식류 자판기 추가 설치를 사측에 건의하기로 하였습니다.</p>
+</li>
 </ul>
 <hr class="divider">
 <h2 id="section-19" class="section-title">IV. 주요 결정사항 요약</h2>
-<div class="table-container">
+<div class="table-container" tabindex="0" role="region" aria-label="회의록 표">
 <table class="mom-table">
-  <tr>
-    <th><strong>번호</strong></th>
-    <th><strong>구분</strong></th>
-    <th><strong>결정 내용</strong></th>
-  </tr>
-  <tr>
-    <td data-label="번호">1</td>
-    <td data-label="구분">워크숍</td>
-    <td data-label="결정 내용">2026년 6월 12일(금) 당일 코스로 진행 확정</td>
-  </tr>
-  <tr>
-    <td data-label="번호">2</td>
-    <td data-label="구분">병가 차별</td>
-    <td data-label="결정 내용">노동위원회 심판 절차에 따라 지속 대응, 연대 서명 제출</td>
-  </tr>
-  <tr>
-    <td data-label="번호">3</td>
-    <td data-label="구분">현장 환경</td>
-    <td data-label="결정 내용">에어컨 위치 조정 요구 및 하계 의류·안전화 지급 일정 공지</td>
-  </tr>
-  <tr>
-    <td data-label="번호">4</td>
-    <td data-label="구분">고용 안정</td>
-    <td data-label="결정 내용">본사 실무자 면담 추진, 기간제 채용·TO 문제 강력 항의 예정</td>
-  </tr>
+<thead>
+<tr>
+<th scope="col"><strong>번호</strong></th>
+<th scope="col"><strong>구분</strong></th>
+<th scope="col"><strong>결정 내용</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td data-label="번호">1</td>
+<td data-label="구분">워크숍</td>
+<td data-label="결정 내용">2026년 6월 12일(금) 당일 코스로 진행 확정</td>
+</tr>
+<tr>
+<td data-label="번호">2</td>
+<td data-label="구분">병가 차별</td>
+<td data-label="결정 내용">노동위원회 심판 절차에 따라 지속 대응, 연대 서명 제출</td>
+</tr>
+<tr>
+<td data-label="번호">3</td>
+<td data-label="구분">현장 환경</td>
+<td data-label="결정 내용">에어컨 위치 조정 요구 및 하계 의류·안전화 지급 일정 공지</td>
+</tr>
+<tr>
+<td data-label="번호">4</td>
+<td data-label="구분">고용 안정</td>
+<td data-label="결정 내용">본사 실무자 면담 추진, 기간제 채용·TO 문제 강력 항의 예정</td>
+</tr>
+</tbody>
 </table>
 </div>
 <hr class="divider">
 <h2 id="section-20" class="section-title">V. 차기 회의 안내</h2>
 <ul class="bullet-list">
-  <li><strong>일시</strong>: 2026년 5월 8일(금) 15:30 _(근로자의 날 공휴일로 인해 일주일 연기)_</li>
-  <li><strong>장소</strong>: 부천 우편집중국 예정</li>
+<li><strong>일시</strong>: 2026년 5월 8일(금) 15:30 <em>(근로자의 날 공휴일로 인해 일주일 연기)</em></li>
+<li><strong>장소</strong>: 부천 우편집중국 예정</li>
 </ul>
 
-    </main>
-  </article>
+    </div>
+  </main>
 
   <div class="utility-bar" id="utility-bar">
     <div class="utility-button-container">
@@ -1646,202 +362,7 @@ button:focus-visible {
       <span class="utility-tooltip">맨 위로</span>
     </div>
   </div>
-  <script>
-(function () {
-  const scaleStep = 0.1;
-  const minScale = 0.8;
-  const maxScale = 1.5;
-  let currentScale = 1.0;
-
-  function changeTextSize(direction) {
-    if (direction === 'up') currentScale = Math.min(currentScale + scaleStep, maxScale);
-    if (direction === 'down') currentScale = Math.max(currentScale - scaleStep, minScale);
-    if (direction === 'reset') currentScale = 1.0;
-    document.documentElement.style.setProperty('--font-scale', currentScale.toFixed(1));
-  }
-
-  function normalizeText(value) {
-    return String(value || '').replace(/\s+/g, ' ').trim();
-  }
-
-  function collectTable(table) {
-    return Array.from(table.querySelectorAll('tr'))
-      .map((row) => {
-        const cells = Array.from(row.querySelectorAll('th, td')).map((cell) => normalizeText(cell.innerText));
-        return cells.length ? `| ${cells.join(' | ')} |` : '';
-      })
-      .filter(Boolean)
-      .join('\n');
-  }
-
-  function collectNode(node, lines) {
-    if (!node || node.nodeType !== Node.ELEMENT_NODE) return;
-    const tag = node.tagName;
-
-    if (/^H[1-6]$/.test(tag)) {
-      lines.push('', normalizeText(node.innerText), '');
-      return;
-    }
-
-    if (tag === 'P' || tag === 'BLOCKQUOTE') {
-      const text = normalizeText(node.innerText);
-      if (text) lines.push(text, '');
-      return;
-    }
-
-    if (tag === 'UL' || tag === 'OL') {
-      const ordered = tag === 'OL';
-      Array.from(node.children).forEach((child, index) => {
-        if (child.tagName !== 'LI') return;
-        const prefix = ordered ? `${index + 1}.` : '-';
-        lines.push(`${prefix} ${normalizeText(child.innerText)}`);
-      });
-      lines.push('');
-      return;
-    }
-
-    if (tag === 'TABLE') {
-      const tableText = collectTable(node);
-      if (tableText) lines.push(tableText, '');
-      return;
-    }
-
-    if (tag === 'IMG') {
-      const alt = normalizeText(node.getAttribute('alt'));
-      if (alt) lines.push(alt, '');
-      return;
-    }
-
-    if (node.classList.contains('table-container')) {
-      const table = node.querySelector('table');
-      if (table) {
-        const tableText = collectTable(table);
-        if (tableText) lines.push(tableText, '');
-      }
-      return;
-    }
-
-    Array.from(node.children).forEach((child) => collectNode(child, lines));
-  }
-
-  function buildPlainText(article) {
-    const lines = [];
-    const category = article.dataset.documentCategory
-      || normalizeText(article.querySelector('.mom-category, .statement-category')?.innerText)
-      || '문서';
-    const title = normalizeText(article.querySelector('.statement-title, h1')?.innerText);
-    const meta = normalizeText(article.querySelector('.statement-meta')?.innerText);
-    const body = article.querySelector('[data-copy-body]') || article.querySelector('.mom-body, .statement-body') || article;
-
-    lines.push(`[${category}]`, '');
-    if (title) lines.push(title, '');
-    if (meta) lines.push(meta, '');
-    lines.push('==================================================', '');
-    Array.from(body.children).forEach((child) => collectNode(child, lines));
-
-    return lines
-      .join('\n')
-      .replace(/\n{3,}/g, '\n\n')
-      .trim();
-  }
-
-  function buildDocumentToc() {
-    const article = document.querySelector('.document-article');
-    if (!article || article.querySelector('.document-toc') || article.querySelector('.history-nav')) return;
-
-    const body = article.querySelector('[data-copy-body]');
-    if (!body) return;
-
-    const headings = Array.from(body.querySelectorAll('h2, h3'))
-      .filter((heading) => normalizeText(heading.innerText));
-    if (headings.length < 2) return;
-
-    const nav = document.createElement('nav');
-    nav.className = 'document-toc';
-    nav.setAttribute('aria-label', '문서 목차');
-
-    const title = document.createElement('h2');
-    title.className = 'document-toc-title';
-    title.textContent = '문서 목차';
-    nav.appendChild(title);
-
-    const links = document.createElement('div');
-    links.className = 'document-toc-links';
-
-    headings.forEach((heading, index) => {
-      if (!heading.id) heading.id = `section-${index + 1}`;
-      const link = document.createElement('a');
-      link.className = `document-toc-link document-toc-level-${heading.tagName === 'H3' ? '3' : '2'}`;
-      link.href = `#${heading.id}`;
-      link.textContent = normalizeText(heading.innerText);
-      links.appendChild(link);
-    });
-
-    nav.appendChild(links);
-    body.before(nav);
-  }
-
-  function copyDocumentText() {
-    const article = document.querySelector('.document-article') || document.getElementById('mom-article') || document.getElementById('statement-article');
-    if (!article) return;
-
-    const text = buildPlainText(article);
-    const successMessage = '문서 전체 텍스트가 클립보드에 복사되었습니다.';
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(text).then(() => {
-        alert(successMessage);
-      }).catch(() => fallbackCopy(text, successMessage));
-      return;
-    }
-    fallbackCopy(text, successMessage);
-  }
-
-  function fallbackCopy(text, successMessage, failureMessage = '복사에 실패했습니다. 직접 복사해주세요.') {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.setAttribute('readonly', '');
-    textarea.style.position = 'fixed';
-    textarea.style.left = '-9999px';
-    document.body.appendChild(textarea);
-    textarea.select();
-    try {
-      document.execCommand('copy');
-      alert(successMessage);
-    } catch (error) {
-      alert(failureMessage);
-    }
-    document.body.removeChild(textarea);
-  }
-
-  function copyPageLink() {
-    const url = window.location.href;
-    const successMessage = '웹페이지 링크가 클립보드에 복사되었습니다.';
-    const failureMessage = '링크 복사에 실패했습니다. 주소창의 링크를 직접 복사해주세요.';
-
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(url).then(() => {
-        alert(successMessage);
-      }).catch(() => fallbackCopy(url, successMessage, failureMessage));
-      return;
-    }
-    fallbackCopy(url, successMessage, failureMessage);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    buildDocumentToc();
-    document.getElementById('zoom-in-btn')?.addEventListener('click', () => changeTextSize('up'));
-    document.getElementById('zoom-out-btn')?.addEventListener('click', () => changeTextSize('down'));
-    document.getElementById('zoom-reset-btn')?.addEventListener('click', () => changeTextSize('reset'));
-    document.getElementById('copy-btn')?.addEventListener('click', copyDocumentText);
-    document.getElementById('copy-link-btn')?.addEventListener('click', copyPageLink);
-    document.getElementById('to-top-btn')?.addEventListener('click', () => {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
-  });
-}());
-
-  </script>
+  <script src="../assets/document-tools.js?v=7886c749817c" defer></script>
 </body>
 
 </html>

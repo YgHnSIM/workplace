@@ -1,23 +1,19 @@
-name: Deploy static site to Pages
+name: Validate and deploy static site
 
 on:
+  pull_request:
   push:
     branches:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
+permissions: {}
 
 jobs:
-  build:
+  validate:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
       - name: Checkout
@@ -27,30 +23,48 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+          cache: npm
 
-      - name: Configure Pages
-        uses: actions/configure-pages@v5
+      - name: Install dependencies
+        run: npm ci
 
-      - name: Check and build site
-        run: npm run check
+      - name: Check JavaScript syntax
+        run: npm run check:syntax
 
-      - name: Prepare public site
-        run: |
-          rm -rf _site
-          mkdir -p _site
-          cp index.html _site/
-          cp logo_*.png _site/
-          cp -R assets MoM statement knowledge notice _site/
-          touch _site/.nojekyll
+      - name: Build public files
+        run: npm run build
 
-      - name: Upload artifact
+      - name: Verify committed generated files
+        run: npm run verify:generated
+
+      - name: Run regression tests
+        run: npm test
+
+      - name: Prepare clean Pages artifact
+        run: npm run stage
+
+      - name: Validate the exact Pages artifact
+        run: npm run validate
+        env:
+          SITE_ROOT: _site
+          PAGES_BASE_PATH: /${{ github.event.repository.name }}/
+
+      - name: Upload Pages artifact
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: _site
 
   deploy:
-    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: validate
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    concurrency:
+      group: pages
+      cancel-in-progress: false
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
