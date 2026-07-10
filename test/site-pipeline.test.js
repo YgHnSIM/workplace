@@ -246,6 +246,39 @@ test('generated-file drift check passes clean commits and rejects rebuilt change
   );
 });
 
+test('document TOC keeps a continuous bottom rule without expanding links', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const css = fs.readFileSync(path.join(projectRoot, 'assets', 'interface.css'), 'utf8');
+  const commonRule = css.match(/\.document-toc-links\s*\{([^}]*)\}/);
+
+  assert.ok(commonRule, 'common document TOC rule should exist');
+  assert.match(commonRule[1], /border-bottom:\s*0;/);
+  assert.match(commonRule[1], /box-shadow:\s*inset 0 -1px 0 #111111;/);
+  assert.match(
+    commonRule[1],
+    /grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(180px,\s*1fr\)\);/,
+  );
+  assert.doesNotMatch(
+    css,
+    /\.document-toc-link[^\{]*:last-child\s*\{[^}]*grid-column:/s,
+    'the visual rule must not enlarge a link into empty grid columns',
+  );
+
+  [
+    ['principal-employer-bargaining-video-analysis.html', '190px'],
+    ['retirement-benefit-db-dc-guide.html', '180px'],
+  ].forEach(([name, minimumWidth]) => {
+    const html = fs.readFileSync(path.join(projectRoot, 'knowledge', name), 'utf8');
+    const inlineRule = html.match(/\.document-toc-links\s*\{([^}]*)\}/);
+
+    assert.ok(inlineRule, `${name} should define its TOC grid`);
+    assert.match(
+      inlineRule[1],
+      new RegExp(`grid-template-columns:\\s*repeat\\(auto-fit,\\s*minmax\\(${minimumWidth},\\s*1fr\\)\\);`),
+    );
+  });
+});
+
 test('MoM builder regression fixtures reject known Markdown residue', () => {
   markdownResidueFixtures.forEach((fixture) => {
     const issues = findMarkdownSyntaxResidues(fixture.markdown);
