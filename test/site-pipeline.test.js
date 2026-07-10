@@ -295,6 +295,22 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   assert.match(signatureRowRule[1], /justify-content:\s*center\s*!important;/);
 });
 
+test('statement category opts out of automatic document TOC generation', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const script = fs.readFileSync(path.join(projectRoot, 'assets', 'document-tools.js'), 'utf8');
+  const statement = fs.readFileSync(
+    path.join(projectRoot, 'statement', '성명서_202607.html'),
+    'utf8',
+  );
+
+  assert.match(script, /article\.dataset\.documentCategory === '성명서'/);
+  assert.match(script, /article\.dataset\.documentToc === 'false'/);
+  assert.match(
+    statement,
+    /<main\b[^>]*class="[^"]*\bdocument-article\b[^"]*"[^>]*data-document-toc="false"/,
+  );
+});
+
 test('MoM builder regression fixtures reject known Markdown residue', () => {
   markdownResidueFixtures.forEach((fixture) => {
     const issues = findMarkdownSyntaxResidues(fixture.markdown);

@@ -309,7 +309,13 @@
 
   function buildDocumentToc() {
     const article = document.querySelector('.document-article');
-    if (!article || article.querySelector('.document-toc') || article.querySelector('.history-nav')) return;
+    if (
+      !article
+      || article.dataset.documentCategory === '성명서'
+      || article.dataset.documentToc === 'false'
+      || article.querySelector('.document-toc')
+      || article.querySelector('.history-nav')
+    ) return;
 
     const body = article.querySelector('[data-copy-body]');
     if (!body) return;
