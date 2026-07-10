@@ -15,6 +15,13 @@ const {
   parseFrontMatter,
   parseMarkdown,
 } = require('../build_mom');
+const {
+  renderStatementHtml,
+  scoreStatementContent,
+  selectPrintDensity,
+  validateStatementFragment,
+} = require('../build_statement');
+const { versionedAssetHref } = require('../lib/site-utils');
 const { stageSite } = require('../scripts/stage-site');
 const { verifyGeneratedFiles } = require('../scripts/verify-generated');
 
@@ -185,6 +192,22 @@ test('manifest comparison rejects stale MoM HTML', () => {
   assert.ok(result.errors.some((error) => error.includes('MoM/orphan.html is stale or orphaned')));
 });
 
+test('statement validation rejects orphan public output and orphan source fragments', () => {
+  const root = createFixture();
+  write(path.join(root, 'statement', 'orphan.html'), html());
+  write(path.join(root, 'statement', 'nested', 'orphan.html'), html());
+  write(path.join(root, '_source', 'statement', 'orphan.body.html'), '<section></section>');
+  write(path.join(root, '_source', 'statement', 'nested', 'orphan.body.html'), '<section></section>');
+  stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
+
+  const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
+
+  assert.ok(result.errors.some((error) => error.includes('statement/orphan.html is stale or orphaned')));
+  assert.ok(result.errors.some((error) => error.includes('statement/nested/orphan.html is stale or orphaned')));
+  assert.ok(result.errors.some((error) => error.includes('orphan.body.html has no matching statement catalog entry')));
+  assert.ok(result.errors.some((error) => error.includes('nested/orphan.body.html has no matching statement catalog entry')));
+});
+
 test('catalog schema rejects invalid dates and duplicate public hrefs', () => {
   const root = createFixture();
   write(path.join(root, 'knowledge', 'duplicate.html'), html('<h1>Duplicate</h1>'));
@@ -312,22 +335,53 @@ test('statement demand list and signature keep their reading rhythm and alignmen
 test('statement print layout uses the A2 page width with controlled page breaks', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
-  const statementFile = fs.readdirSync(path.join(projectRoot, 'statement'))
-    .find((name) => name.endsWith('.html'));
-  const statementHtml = fs.readFileSync(path.join(projectRoot, 'statement', statementFile), 'utf8');
+  const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
+  const statementDocuments = catalog.documents.filter((document) => document.category === 'statement');
 
-  assert.doesNotMatch(statementHtml, /class="header-top-row"/);
-  assert.doesNotMatch(statementHtml, /class="statement-category"/);
-  assert.doesNotMatch(statementHtml, /class="statement-meta"/);
-  assert.match(statementHtml, /class="statement-identity"[^>]*>[\s\S]*차별 없는 일터[\s\S]*병들지 않는 노동[\s\S]*<\/p>/);
-  assert.match(css, /\.statement-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s);
+  assert.ok(statementDocuments.length > 0, 'at least one statement should be registered');
+  statementDocuments.forEach((document) => {
+    const statementHtml = fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8');
+    assert.doesNotMatch(statementHtml, /class="header-top-row"/);
+    assert.doesNotMatch(statementHtml, /class="statement-category"/);
+    assert.doesNotMatch(statementHtml, /class="statement-meta"/);
+    assert.match(statementHtml, /class="statement-identity"[^>]*>[\s\S]*차별 없는 일터[\s\S]*병들지 않는 노동[\s\S]*<\/p>/);
+    assert.match(statementHtml, /data-print-density="(?:short|standard|long)"/);
+  });
+  const currentStatement = fs.readFileSync(
+    path.join(projectRoot, 'statement', '성명서_202607.html'),
+    'utf8',
+  );
+  assert.match(currentStatement, /data-print-density="long"/);
+  assert.match(css, /\.statement-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\) var\(--statement-brand-mark-size\);/s);
   assert.match(css, /\.statement-identity\s*\{[^}]*font-size:\s*calc\(14px \* var\(--font-scale\)\);[^}]*letter-spacing:\s*0\.035em;/s);
   assert.match(css, /\.statement-identity::before\s*\{[^}]*linear-gradient\(to right, #002FA7 0 72px, #D9D9D9 72px 100%\);/s);
-  assert.match(css, /\.statement-title\s*\{[^}]*grid-column:\s*1;[^}]*color:\s*#002FA7\s*!important;/s);
+  assert.match(css, /\.statement-brand-mark\s*\{[^}]*grid-column:\s*2;[^}]*height:\s*var\(--statement-brand-mark-size\);[^}]*overflow:\s*hidden;/s);
+  assert.match(css, /\.statement-brand-mark img\s*\{[^}]*height:\s*100%;[^}]*max-width:\s*none;[^}]*width:\s*auto;/s);
+  assert.match(css, /\.statement-title\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*color:\s*#002FA7\s*!important;/s);
+  assert.match(css, /\.statement-header\s*\{[^}]*padding-top:\s*38px\s*!important;/s);
+  assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-header-top:\s*24mm;/s);
+  assert.match(css, /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--statement-print-header-top:\s*27mm;/s);
+  assert.match(css, /\.statement-container\[data-print-density="short"\]\s*\{[^}]*--statement-print-header-top:\s*30mm;/s);
+  assert.match(css, /@media \(max-width:\s*768px\)[\s\S]*\.statement-header\s*\{[^}]*--statement-brand-mark-size:\s*56px;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) var\(--statement-brand-mark-size\);/s);
+  assert.match(css, /@media \(max-width:\s*768px\)[\s\S]*\.statement-header\s*\{[^}]*padding-top:\s*30px\s*!important;/s);
+  assert.match(css, /@media \(max-width:\s*768px\)[\s\S]*\.statement-header \.statement-title\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*grid-row:\s*2;/s);
 
   assert.match(
     css,
-    /\.statement-container\s*\{[^}]*--font-scale:\s*1\.5\s*!important;[^}]*--font-size-base:\s*calc\(17px \* var\(--font-scale\)\);[^}]*--font-size-section-title:\s*calc\(22px \* var\(--font-scale\)\);/s,
+    /\.statement-container\s*\{[^}]*--font-scale:\s*1\.54\s*!important;[^}]*--font-size-base:\s*calc\(17px \* var\(--font-scale\)\);[^}]*--font-size-section-title:\s*calc\(22px \* var\(--font-scale\)\);/s,
+  );
+  assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-body-leading:\s*1\.76;[^}]*--statement-print-demand-leading:\s*1\.68;[^}]*--statement-print-paragraph-gap:\s*34px;[^}]*--statement-print-section-gap:\s*48px;/s);
+  assert.match(
+    css,
+    /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--font-scale:\s*1\.62\s*!important;[^}]*--statement-print-title-size:\s*52px;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--statement-print-closing-padding:\s*13px 34px;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-container\[data-print-density="short"\]\s*\{[^}]*--font-scale:\s*1\.88\s*!important;[^}]*--statement-print-title-size:\s*60px;/s,
   );
   assert.match(
     css,
@@ -335,11 +389,11 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   );
   assert.match(
     css,
-    /\.statement-header\s*\{[^}]*padding:\s*56px 15mm 30px\s*!important;/s,
+    /\.statement-header\s*\{[^}]*padding:\s*var\(--statement-print-header-top\) 15mm 30px\s*!important;/s,
   );
   assert.match(
     css,
-    /\.statement-body section\s*\{[^}]*margin-bottom:\s*42px\s*!important;/s,
+    /\.statement-body section\s*\{[^}]*margin-bottom:\s*var\(--statement-print-section-gap\)\s*!important;/s,
   );
   assert.match(
     css,
@@ -347,7 +401,7 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   );
   assert.match(
     css,
-    /\.statement-body \.body-text\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*1\.68\s*!important;/s,
+    /\.statement-body \.body-text\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*var\(--statement-print-body-leading\)\s*!important;[^}]*margin-bottom:\s*var\(--statement-print-paragraph-gap\)\s*!important;/s,
   );
   assert.match(
     css,
@@ -355,40 +409,181 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   );
   assert.match(
     css,
-    /\.statement-title\s*\{[^}]*font-size:\s*48px\s*!important;[^}]*letter-spacing:\s*-0\.035em\s*!important;[^}]*line-height:\s*1\.06\s*!important;[^}]*text-wrap:\s*balance;/s,
+    /\.statement-title\s*\{[^}]*font-size:\s*var\(--statement-print-title-size\)\s*!important;[^}]*letter-spacing:\s*-0\.035em\s*!important;[^}]*line-height:\s*1\.06\s*!important;[^}]*text-wrap:\s*balance;/s,
   );
   assert.match(
     css,
-    /\.statement-body \.demands,[^}]*\.statement-body \.closing-block\s*\{[^}]*break-inside:\s*avoid;[^}]*font-size:\s*22px\s*!important;/s,
+    /\.statement-body \.demands,[^}]*\.statement-body \.closing-block\s*\{[^}]*break-inside:\s*avoid;[^}]*font-size:\s*var\(--statement-print-box-size\)\s*!important;/s,
   );
   assert.match(
     css,
-    /\.statement-body \.closing-block\s*\{[^}]*break-after:\s*avoid;[^}]*padding:\s*12px 32px\s*!important;/s,
+    /\.statement-body \.closing-block\s*\{[^}]*break-after:\s*avoid;[^}]*padding:\s*var\(--statement-print-closing-padding\)\s*!important;/s,
   );
   assert.match(
     css,
-    /\.statement-body \.demands li\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*1\.6\s*!important;/s,
+    /\.statement-body \.demands li\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*var\(--statement-print-demand-leading\)\s*!important;/s,
   );
+  assert.match(css, /\.statement-body \.closing-block > p\s*\{[^}]*line-height:\s*var\(--statement-print-closing-leading\)\s*!important;/s);
   assert.match(
     css,
-    /\.statement-body \.signature-date\s*\{[^}]*margin-bottom:\s*36px\s*!important;/s,
+    /\.statement-body \.signature-date\s*\{[^}]*margin-bottom:\s*var\(--statement-print-signature-gap\)\s*!important;/s,
   );
+});
+
+test('statement builder reuses the template and selects the one-page print density', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const bodyPath = path.join(projectRoot, 'test', 'fixtures', 'statement', 'sample-one-page.body.html');
+  const documentPath = path.join(projectRoot, 'test', 'fixtures', 'statement', 'sample-one-page.json');
+  const body = fs.readFileSync(bodyPath, 'utf8');
+  const outputPath = path.join(projectRoot, 'statement', 'sample-one-page.html');
+  const document = JSON.parse(fs.readFileSync(documentPath, 'utf8'));
+  const rendered = renderStatementHtml(document, body, {
+    rootDir: projectRoot,
+    outputPath,
+    sourcePath: bodyPath,
+  });
+
+  assert.equal(rendered.density, 'short');
+  assert.ok(rendered.score <= 1400);
+  assert.ok(rendered.score > scoreStatementContent(rendered.metrics));
+  assert.match(rendered.html, /data-document-category="성명서"/);
+  assert.match(rendered.html, /data-document-toc="false"/);
+  assert.match(rendered.html, /data-print-density="short"/);
+  assert.match(rendered.html, /@page\s*\{\s*margin:\s*0;\s*size:\s*420mm 594mm;\s*\}/);
+  assert.match(rendered.html, /class="statement-brand-mark"[^>]*>[\s\S]*?<img[^>]*width="300" height="84"[^>]*loading="eager"[^>]*alt="">/);
+  const brandMark = rendered.html.match(/<span class="statement-brand-mark"[^>]*>([\s\S]*?)<\/span>/);
+  assert.ok(brandMark, 'statement header should contain the square brand mark');
+  assert.match(
+    brandMark[1],
+    new RegExp(versionedAssetHref(projectRoot, outputPath, 'assets/logo-header-300.webp').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+  );
+  assert.match(
+    brandMark[1],
+    new RegExp(versionedAssetHref(projectRoot, outputPath, 'assets/logo-header-600.webp').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+  );
+  assert.match(rendered.html, /<img[^>]*loading="eager"[^>]*decoding="sync"[^>]*fetchpriority="high"[^>]*class="signature-org-logo">/);
+  assert.match(rendered.html, /class="statement-identity"/);
+  assert.equal((rendered.html.match(/class="section-title"/g) || []).length, 2);
+  assert.equal((rendered.html.match(/<li>/g) || []).length, 3);
+  assert.equal((rendered.html.match(/class="closing-(?:highlight|text)"/g) || []).length, 3);
+  assert.doesNotMatch(rendered.html, /class="document-toc"/);
+  assert.match(rendered.html, /<time datetime="2026-07-11">2026년 7월 11일<\/time>/);
+  assert.match(
+    rendered.html,
+    new RegExp(versionedAssetHref(projectRoot, outputPath, 'assets/interface.css').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+  );
+  assert.match(
+    rendered.html,
+    new RegExp(versionedAssetHref(projectRoot, outputPath, 'assets/document-tools.js').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')),
+  );
+
+  const overridden = renderStatementHtml({ ...document, printDensity: 'standard' }, body, {
+    rootDir: projectRoot,
+    outputPath,
+    sourcePath: bodyPath,
+  });
+  assert.equal(overridden.automaticDensity, 'short');
+  assert.equal(overridden.density, 'standard');
+  assert.match(overridden.html, /data-print-density="standard"/);
+  assert.throws(
+    () => renderStatementHtml({ ...document, printDensity: 'oversized' }, body, {
+      rootDir: projectRoot,
+      outputPath,
+      sourcePath: bodyPath,
+    }),
+    /printDensity must be short, standard, or long/,
+  );
+});
+
+test('statement print density responds to both body volume and title length', () => {
+  const metrics = {
+    characterCount: 500,
+    paragraphCount: 0,
+    lineBreakCount: 0,
+    sectionTitleCount: 1,
+    demandCount: 1,
+    closingRowCount: 2,
+  };
+  const shortDocument = { title: '짧은 제목' };
+  const longTitleDocument = { title: '긴'.repeat(100) };
+
+  assert.equal(selectPrintDensity(metrics, shortDocument).density, 'short');
+  assert.equal(selectPrintDensity(metrics, longTitleDocument).density, 'standard');
+  assert.equal(
+    selectPrintDensity({ ...metrics, characterCount: 2000 }, shortDocument).density,
+    'standard',
+  );
+  assert.equal(
+    selectPrintDensity({ ...metrics, characterCount: 3000 }, shortDocument).density,
+    'long',
+  );
+
+  const boundaryMetrics = {
+    ...metrics,
+    characterCount: 1075,
+  };
+  assert.equal(scoreStatementContent(boundaryMetrics), 1400);
+  assert.equal(selectPrintDensity(boundaryMetrics).density, 'short');
+  assert.equal(selectPrintDensity({ ...boundaryMetrics, characterCount: 1076 }).density, 'standard');
+  assert.equal(scoreStatementContent({ ...boundaryMetrics, characterCount: 2475 }), 2800);
+  assert.equal(selectPrintDensity({ ...boundaryMetrics, characterCount: 2475 }).density, 'standard');
+  assert.equal(selectPrintDensity({ ...boundaryMetrics, characterCount: 2476 }).density, 'long');
+  assert.equal(
+    scoreStatementContent({ ...boundaryMetrics, paragraphCount: 2, lineBreakCount: 1 }),
+    1525,
+  );
+});
+
+test('statement builder rejects unsafe or structurally incomplete fragments', () => {
+  const samplePath = path.join(process.cwd(), 'test', 'fixtures', 'statement', 'invalid.body.html');
+  assert.throws(
+    () => validateStatementFragment('<section><h2 class="section-title">제목</h2><p class="body-text">본문</p></section><script>alert(1)</script>', samplePath),
+    /unsupported <script>/,
+  );
+  assert.throws(
+    () => validateStatementFragment('<section><h2 class="section-title">제목</h2><p class="body-text">본문</p></section>', samplePath),
+    /must contain one closing block/,
+  );
+  assert.throws(
+    () => validateStatementFragment('<section><h2 class="section-title">제목</h2><p class="body-text">본문</p></section><!-- 숨은 주석 -->', samplePath),
+    /unsupported comment or doctype/,
+  );
+});
+
+test('statement renderer inserts only the validated normalized fragment', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const bodyPath = path.join(projectRoot, 'test', 'fixtures', 'statement', 'sample-one-page.body.html');
+  const documentPath = path.join(projectRoot, 'test', 'fixtures', 'statement', 'sample-one-page.json');
+  const body = `${fs.readFileSync(bodyPath, 'utf8')}\n</div></main>`;
+  const document = JSON.parse(fs.readFileSync(documentPath, 'utf8'));
+  const outputPath = path.join(projectRoot, 'statement', 'sample-one-page.html');
+  const rendered = renderStatementHtml(document, body, {
+    rootDir: projectRoot,
+    outputPath,
+    sourcePath: bodyPath,
+  });
+
+  assert.equal((rendered.html.match(/<main\b/g) || []).length, 1);
+  assert.equal((rendered.html.match(/<\/main>/g) || []).length, 1);
+  assert.ok(rendered.html.indexOf('class="signature-block"') < rendered.html.indexOf('</main>'));
 });
 
 test('statement category opts out of automatic document TOC generation', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const script = fs.readFileSync(path.join(projectRoot, 'assets', 'document-tools.js'), 'utf8');
-  const statement = fs.readFileSync(
-    path.join(projectRoot, 'statement', '성명서_202607.html'),
-    'utf8',
-  );
+  const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
+  const statements = catalog.documents
+    .filter((document) => document.category === 'statement')
+    .map((document) => fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8'));
 
   assert.match(script, /article\.dataset\.documentCategory === '성명서'/);
   assert.match(script, /article\.dataset\.documentToc === 'false'/);
-  assert.match(
-    statement,
-    /<main\b[^>]*class="[^"]*\bdocument-article\b[^"]*"[^>]*data-document-toc="false"/,
-  );
+  statements.forEach((statement) => {
+    assert.match(
+      statement,
+      /<main\b[^>]*class="[^"]*\bdocument-article\b[^"]*"[^>]*data-document-toc="false"/,
+    );
+  });
 });
 
 test('MoM builder regression fixtures reject known Markdown residue', () => {

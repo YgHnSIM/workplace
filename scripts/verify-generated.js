@@ -3,6 +3,7 @@ const { spawnSync } = require('child_process');
 const generatedPaths = [
   'index.html',
   'MoM',
+  'statement',
   'knowledge/index.html',
   'notice/index.html',
   'robots.txt',

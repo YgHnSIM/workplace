@@ -685,6 +685,51 @@ function validateMomOutputs(sourceRoot, siteRoot, momDocs, errors) {
   });
 }
 
+function validateStatementOutputs(sourceRoot, siteRoot, manualDocs, errors) {
+  const statementDocs = manualDocs.filter((doc) => doc.category === 'statement');
+  const expectedHrefs = new Set(statementDocs.map((doc) => doc.normalizedHref));
+  const expectedKeys = new Set([...expectedHrefs].map((href) => href.toLocaleLowerCase('en')));
+  const publicStatementDir = path.join(siteRoot, 'statement');
+
+  if (fs.existsSync(publicStatementDir)) {
+    walkSiteFiles(publicStatementDir, errors, siteRoot)
+      .filter((filePath) => path.extname(filePath).toLowerCase() === '.html')
+      .forEach((filePath) => {
+        const href = toPosixPath(path.relative(siteRoot, filePath));
+        if (!expectedKeys.has(href.toLocaleLowerCase('en'))) {
+          errors.push(`${href} is stale or orphaned (not present in _source/catalog.json)`);
+        }
+      });
+  }
+
+  const sourceStatementDir = path.join(sourceRoot, '_source', 'statement');
+  const sourceHrefs = new Set();
+  if (fs.existsSync(sourceStatementDir)) {
+    walkSiteFiles(sourceStatementDir, errors, sourceRoot)
+      .filter((filePath) => filePath.endsWith('.body.html'))
+      .forEach((filePath) => {
+        const relativeSource = toPosixPath(path.relative(sourceStatementDir, filePath));
+        const outputName = relativeSource.slice(0, -'.body.html'.length);
+        const href = `statement/${outputName}.html`;
+        const key = href.toLocaleLowerCase('en');
+        if (sourceHrefs.has(key)) {
+          errors.push(`Duplicate statement source output: ${href}`);
+        }
+        sourceHrefs.add(key);
+        if (!expectedKeys.has(key)) {
+          errors.push(`_source/statement/${relativeSource} has no matching statement catalog entry`);
+        }
+      });
+  }
+
+  expectedHrefs.forEach((href) => {
+    if (!sourceHrefs.has(href.toLocaleLowerCase('en'))) {
+      const outputName = path.posix.basename(href, '.html');
+      errors.push(`Statement catalog entry ${href} is missing _source/statement/${outputName}.body.html`);
+    }
+  });
+}
+
 function publicPathForReference(ref, record, context) {
   const result = resolveReference(ref, {
     ...context,
@@ -795,6 +840,7 @@ function validateSite(options = {}) {
   validateArtifactParity(siteRoot, sourceRoot, errors);
   const content = readContentDocuments(sourceRoot, siteRoot, errors);
   validateMomOutputs(sourceRoot, siteRoot, content.momDocs, errors);
+  validateStatementOutputs(sourceRoot, siteRoot, content.manualDocs, errors);
   validateContentIndexes(content, context, errors);
 
   return { errors, siteRoot, pagesBasePath };

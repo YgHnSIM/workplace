@@ -10,11 +10,14 @@
 | --- | --- |
 | `index.html` | 전체 자료를 최신순으로 보여주는 아카이브 첫 화면입니다. |
 | `_source/MoM/` | 회의록과 결산 자료의 Markdown 원본입니다. |
+| `_source/statement/` | 공통 인쇄 템플릿으로 생성할 성명서 본문 원본입니다. |
 | `_source/catalog.json` | 성명서, 지식, 알림 문서의 목록 메타데이터입니다. |
 | `MoM/` | Markdown에서 생성된 회의록·결산 HTML과 목록입니다. |
-| `statement/`, `knowledge/`, `notice/` | 직접 관리하는 공개 상세 문서입니다. |
+| `statement/` | 성명서 원본과 공통 템플릿에서 생성된 공개 HTML입니다. |
+| `knowledge/`, `notice/` | 직접 관리하는 공개 상세 문서입니다. |
 | `assets/` | 공통 CSS·JavaScript, 최적화 로고, favicon, 공유 이미지입니다. |
 | `build_mom.js` | frontmatter와 Markdown을 검증하고 회의록 HTML·manifest를 생성합니다. |
+| `build_statement.js` | 카탈로그와 성명서 본문을 검증하고 분량별 인쇄 밀도를 적용한 HTML을 생성합니다. |
 | `build_site.js` | 목록, SEO 메타데이터, 자산 해시, sitemap, robots 파일을 생성합니다. |
 | `validate_site.js` | 실제 배포물의 HTML·링크·메타데이터·콘텐츠 규칙을 검사합니다. |
 | `scripts/stage-site.js` | GitHub Pages에 올릴 깨끗한 `_site/` 디렉터리를 만듭니다. |
@@ -73,7 +76,13 @@ slug: 202608
 
 수정 후 `npm run check`를 실행하고 변경된 원본과 생성 HTML을 함께 커밋합니다. `_source/generated/mom.json`은 빌드 중 생성되는 임시 manifest이므로 Git에서 추적하지 않습니다.
 
-## 성명서·지식·알림 문서 추가·수정
+## 성명서 추가·수정
+
+성명서는 `_source/catalog.json`의 메타데이터와 `_source/statement/*.body.html` 본문을 사용합니다. 공통 헤더, 노조 슬로건, 하단 날짜·로고, 인쇄 크기, 도구막대는 `build_statement.js`가 자동으로 적용합니다.
+
+본문 분량에 따라 `short`, `standard`, `long` 인쇄 밀도가 자동 선택되므로 1페이지와 2페이지 성명서에서 제목과 본문 크기가 각각 조정됩니다. 자세한 구조와 예시는 [`_source/statement/README.md`](_source/statement/README.md)를 참고합니다.
+
+## 지식·알림 문서 추가·수정
 
 1. 해당 공개 HTML을 추가하거나 수정합니다.
 2. `_source/catalog.json`에 `category`, `href`, `title`, ISO 형식 `date`, `excerpt`, `action`을 기록합니다.
