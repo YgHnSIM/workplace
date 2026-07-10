@@ -550,8 +550,6 @@ button:focus-visible {
 }
 
 .statement-title {
-  grid-column: 1 / -1;
-  grid-row: 2;
   color: #002FA7 !important;
   font-size: clamp(calc(30px * var(--font-scale)), 4.2vw, calc(48px * var(--font-scale))) !important;
   font-weight: 700 !important;
@@ -559,6 +557,17 @@ button:focus-visible {
   margin: 0 !important;
   max-width: 880px;
   word-break: keep-all;
+}
+
+.statement-header > .statement-title {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+
+.mom-header > .statement-title {
+  grid-column: 2;
+  grid-row: 2;
+  max-width: none;
 }
 
 .statement-meta {
@@ -1624,6 +1633,11 @@ button:focus-visible {
   .statement-header .statement-title {
     grid-column: 1 / -1;
     grid-row: 2;
+  }
+
+  .mom-header > .statement-title {
+    grid-column: 1;
+    grid-row: auto;
   }
 
   .statement-title {

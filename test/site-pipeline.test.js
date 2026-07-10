@@ -365,7 +365,8 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   assert.match(css, /\.statement-identity::before\s*\{[^}]*linear-gradient\(to right, #002FA7 0 72px, #D9D9D9 72px 100%\);/s);
   assert.match(css, /\.statement-brand-mark\s*\{[^}]*grid-column:\s*2;[^}]*height:\s*var\(--statement-brand-mark-size\);[^}]*overflow:\s*hidden;/s);
   assert.match(css, /\.statement-brand-mark img\s*\{[^}]*height:\s*100%;[^}]*max-width:\s*none;[^}]*width:\s*auto;/s);
-  assert.match(css, /\.statement-title\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*color:\s*#002FA7\s*!important;/s);
+  assert.match(css, /\.statement-title\s*\{[^}]*color:\s*#002FA7\s*!important;/s);
+  assert.match(css, /\.statement-header > \.statement-title\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*grid-row:\s*2;/s);
   assert.match(css, /\.statement-header\s*\{[^}]*padding-top:\s*38px\s*!important;/s);
   assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-header-top:\s*24mm;/s);
   assert.match(css, /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--statement-print-header-top:\s*27mm;/s);
@@ -435,6 +436,19 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   assert.match(
     css,
     /\.statement-body \.signature-date\s*\{[^}]*margin-bottom:\s*var\(--statement-print-signature-gap\)\s*!important;/s,
+  );
+});
+
+test('meeting document header keeps its title outside the logo and category column', () => {
+  const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
+
+  assert.match(
+    css,
+    /\.mom-header > \.statement-title\s*\{[^}]*grid-column:\s*2;[^}]*grid-row:\s*2;[^}]*max-width:\s*none;/s,
+  );
+  assert.match(
+    css,
+    /@media \(max-width:\s*768px\)[\s\S]*\.mom-header > \.statement-title\s*\{[^}]*grid-column:\s*1;[^}]*grid-row:\s*auto;/s,
   );
 });
 
