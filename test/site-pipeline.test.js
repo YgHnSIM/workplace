@@ -345,7 +345,15 @@ test('statement print layout uses the A2 page width with controlled page breaks'
     assert.doesNotMatch(statementHtml, /class="statement-category"/);
     assert.doesNotMatch(statementHtml, /class="statement-meta"/);
     assert.match(statementHtml, /class="statement-identity"[^>]*>[\s\S]*차별 없는 일터[\s\S]*병들지 않는 노동[\s\S]*<\/p>/);
+    assert.match(statementHtml, /class="statement-brand-mark"/);
+    assert.match(statementHtml, /<h1 class="statement-title">/);
+    assert.match(statementHtml, /@page\s*\{\s*margin:\s*18mm 0;\s*size:\s*420mm 594mm;\s*\}/);
+    assert.match(statementHtml, /@page :first\s*\{\s*margin-top:\s*0;\s*\}/);
+    assert.match(statementHtml, /data-document-toc="false"/);
     assert.match(statementHtml, /data-print-density="(?:short|standard|long)"/);
+    assert.match(statementHtml, /class="signature-date"[\s\S]*<time datetime="\d{4}-\d{2}-\d{2}">/);
+    assert.match(statementHtml, /class="signature-org-logo"/);
+    assert.doesNotMatch(statementHtml, /class="document-toc"/);
   });
   const currentStatement = fs.readFileSync(
     path.join(projectRoot, 'statement', '성명서_202607.html'),
@@ -449,7 +457,8 @@ test('statement builder reuses the template and selects the one-page print densi
   assert.match(rendered.html, /data-document-category="성명서"/);
   assert.match(rendered.html, /data-document-toc="false"/);
   assert.match(rendered.html, /data-print-density="short"/);
-  assert.match(rendered.html, /@page\s*\{\s*margin:\s*0;\s*size:\s*420mm 594mm;\s*\}/);
+  assert.match(rendered.html, /@page\s*\{\s*margin:\s*18mm 0;\s*size:\s*420mm 594mm;\s*\}/);
+  assert.match(rendered.html, /@page :first\s*\{\s*margin-top:\s*0;\s*\}/);
   assert.match(rendered.html, /class="statement-brand-mark"[^>]*>[\s\S]*?<img[^>]*width="300" height="84"[^>]*loading="eager"[^>]*alt="">/);
   const brandMark = rendered.html.match(/<span class="statement-brand-mark"[^>]*>([\s\S]*?)<\/span>/);
   assert.ok(brandMark, 'statement header should contain the square brand mark');

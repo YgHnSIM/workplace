@@ -298,7 +298,8 @@ ${renderPageHead({
     datePublished: document.date,
   })}
   <style>
-    @page { margin: 0; size: 420mm 594mm; }
+    @page { margin: 18mm 0; size: 420mm 594mm; }
+    @page :first { margin-top: 0; }
   </style>
 </head>
 
