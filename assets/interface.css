@@ -664,6 +664,21 @@ button:focus-visible {
   padding: 26px 28px !important;
 }
 
+.demands ol {
+  margin: 0;
+  padding-left: 1.6rem;
+}
+
+.demands li {
+  line-height: 1.8 !important;
+  margin: 0;
+  padding: 0 0 16px 4px;
+}
+
+.demands li:last-child {
+  padding-bottom: 0;
+}
+
 .demands li,
 .bullet-list,
 .mom-table td {
@@ -697,19 +712,26 @@ button:focus-visible {
   border-top: 1px solid #111111 !important;
   margin-top: 52px !important;
   padding-top: 28px !important;
-  text-align: left !important;
+  text-align: center !important;
 }
 
 .signature-date {
   color: #111111 !important;
   font-weight: 700 !important;
+  margin: 0 0 18px !important;
+  text-align: center !important;
 }
 
 .signature-org-row {
-  justify-content: flex-start !important;
+  display: flex !important;
+  justify-content: center !important;
+  width: 100%;
 }
 
 .signature-org-logo {
+  display: block;
+  height: auto;
+  margin: 0 auto;
   width: min(320px, 100%) !important;
 }
 

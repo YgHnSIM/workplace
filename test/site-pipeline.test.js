@@ -279,6 +279,22 @@ test('document TOC keeps a continuous bottom rule without expanding links', () =
   });
 });
 
+test('statement demand list and signature keep their reading rhythm and alignment', () => {
+  const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
+  const demandRule = css.match(/\.demands li\s*\{([^}]*)\}/);
+  const signatureRule = css.match(/\.signature-block\s*\{([^}]*)\}/);
+  const signatureRowRule = css.match(/\.signature-org-row\s*\{([^}]*)\}/);
+
+  assert.ok(demandRule, 'statement demand item rule should exist');
+  assert.match(demandRule[1], /line-height:\s*1\.8\s*!important;/);
+  assert.match(demandRule[1], /padding:\s*0 0 16px 4px;/);
+  assert.ok(signatureRule, 'statement signature rule should exist');
+  assert.match(signatureRule[1], /text-align:\s*center\s*!important;/);
+  assert.ok(signatureRowRule, 'statement signature organization row should exist');
+  assert.match(signatureRowRule[1], /display:\s*flex\s*!important;/);
+  assert.match(signatureRowRule[1], /justify-content:\s*center\s*!important;/);
+});
+
 test('MoM builder regression fixtures reject known Markdown residue', () => {
   markdownResidueFixtures.forEach((fixture) => {
     const issues = findMarkdownSyntaxResidues(fixture.markdown);
