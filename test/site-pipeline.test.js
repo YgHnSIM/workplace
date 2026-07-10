@@ -283,6 +283,7 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
   const demandRule = css.match(/\.demands li\s*\{([^}]*)\}/);
   const signatureRule = css.match(/\.signature-block\s*\{([^}]*)\}/);
+  const signatureDateRule = css.match(/\.signature-date\s*\{([^}]*)\}/);
   const signatureRowRule = css.match(/\.signature-org-row\s*\{([^}]*)\}/);
 
   assert.ok(demandRule, 'statement demand item rule should exist');
@@ -290,9 +291,73 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   assert.match(demandRule[1], /padding:\s*0 0 16px 4px;/);
   assert.ok(signatureRule, 'statement signature rule should exist');
   assert.match(signatureRule[1], /text-align:\s*center\s*!important;/);
+  assert.ok(signatureDateRule, 'statement signature date rule should exist');
+  assert.match(signatureDateRule[1], /font-size:\s*calc\(20px \* var\(--font-scale\)\)\s*!important;/);
   assert.ok(signatureRowRule, 'statement signature organization row should exist');
   assert.match(signatureRowRule[1], /display:\s*flex\s*!important;/);
   assert.match(signatureRowRule[1], /justify-content:\s*center\s*!important;/);
+});
+
+test('statement print layout uses the A2 page width with controlled page breaks', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
+  const statementFile = fs.readdirSync(path.join(projectRoot, 'statement'))
+    .find((name) => name.endsWith('.html'));
+  const statementHtml = fs.readFileSync(path.join(projectRoot, 'statement', statementFile), 'utf8');
+
+  assert.doesNotMatch(statementHtml, /class="header-top-row"/);
+  assert.doesNotMatch(statementHtml, /class="statement-category"/);
+  assert.doesNotMatch(statementHtml, /class="statement-meta"/);
+  assert.match(statementHtml, /class="statement-identity"[^>]*>[\s\S]*차별 없는 일터[\s\S]*병들지 않는 노동[\s\S]*<\/p>/);
+  assert.match(css, /\.statement-header\s*\{[^}]*grid-template-columns:\s*minmax\(0, 1fr\);/s);
+  assert.match(css, /\.statement-identity\s*\{[^}]*font-size:\s*calc\(14px \* var\(--font-scale\)\);[^}]*letter-spacing:\s*0\.035em;/s);
+  assert.match(css, /\.statement-identity::before\s*\{[^}]*linear-gradient\(to right, #002FA7 0 72px, #D9D9D9 72px 100%\);/s);
+  assert.match(css, /\.statement-title\s*\{[^}]*grid-column:\s*1;[^}]*color:\s*#002FA7\s*!important;/s);
+
+  assert.match(
+    css,
+    /\.statement-container\s*\{[^}]*--font-scale:\s*1\.5\s*!important;[^}]*--font-size-base:\s*calc\(17px \* var\(--font-scale\)\);[^}]*--font-size-section-title:\s*calc\(22px \* var\(--font-scale\)\);/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body\s*\{[^}]*max-width:\s*none\s*!important;[^}]*padding:\s*0 15mm 20mm\s*!important;[^}]*width:\s*100%\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-header\s*\{[^}]*padding:\s*56px 15mm 30px\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body section\s*\{[^}]*margin-bottom:\s*42px\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.section-title\s*\{[^}]*break-after:\s*avoid;[^}]*color:\s*#002FA7\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.body-text\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*1\.68\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.closing-block\s*\{[^}]*break-after:\s*avoid;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-title\s*\{[^}]*font-size:\s*48px\s*!important;[^}]*letter-spacing:\s*-0\.035em\s*!important;[^}]*line-height:\s*1\.06\s*!important;[^}]*text-wrap:\s*balance;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.demands,[^}]*\.statement-body \.closing-block\s*\{[^}]*break-inside:\s*avoid;[^}]*font-size:\s*22px\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.demands li\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*1\.6\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.signature-date\s*\{[^}]*margin-bottom:\s*36px\s*!important;/s,
+  );
 });
 
 test('statement category opts out of automatic document TOC generation', () => {
