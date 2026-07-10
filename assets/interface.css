@@ -730,12 +730,22 @@ button:focus-visible {
 }
 
 .closing-block {
-  padding: 26px 28px !important;
+  padding: 12px 28px !important;
+}
+
+.closing-block > p {
+  line-height: 1.55 !important;
+  margin: 0 !important;
+  padding: 14px 0 !important;
+}
+
+.closing-block > p + p {
+  border-top: 1px solid #D9D9D9 !important;
 }
 
 .closing-highlight {
   color: #111111 !important;
-  border-bottom: 1px solid #D9D9D9 !important;
+  border-bottom: 0 !important;
   font-weight: 700 !important;
 }
 
@@ -1283,11 +1293,15 @@ button:focus-visible {
   .statement-body .closing-block {
     break-inside: avoid;
     font-size: 22px !important;
+  }
+
+  .statement-body .demands {
     padding: 28px 32px !important;
   }
 
   .statement-body .closing-block {
     break-after: avoid;
+    padding: 12px 32px !important;
   }
 
   .statement-body .signature-block {

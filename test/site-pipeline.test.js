@@ -282,6 +282,9 @@ test('document TOC keeps a continuous bottom rule without expanding links', () =
 test('statement demand list and signature keep their reading rhythm and alignment', () => {
   const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
   const demandRule = css.match(/\.demands li\s*\{([^}]*)\}/);
+  const closingRule = css.match(/\.closing-block\s*\{([^}]*)\}/);
+  const closingParagraphRule = css.match(/\.closing-block > p\s*\{([^}]*)\}/);
+  const closingDividerRule = css.match(/\.closing-block > p \+ p\s*\{([^}]*)\}/);
   const signatureRule = css.match(/\.signature-block\s*\{([^}]*)\}/);
   const signatureDateRule = css.match(/\.signature-date\s*\{([^}]*)\}/);
   const signatureRowRule = css.match(/\.signature-org-row\s*\{([^}]*)\}/);
@@ -289,6 +292,14 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   assert.ok(demandRule, 'statement demand item rule should exist');
   assert.match(demandRule[1], /line-height:\s*1\.8\s*!important;/);
   assert.match(demandRule[1], /padding:\s*0 0 16px 4px;/);
+  assert.ok(closingRule, 'statement closing block rule should exist');
+  assert.match(closingRule[1], /padding:\s*12px 28px\s*!important;/);
+  assert.ok(closingParagraphRule, 'statement closing row rule should exist');
+  assert.match(closingParagraphRule[1], /line-height:\s*1\.55\s*!important;/);
+  assert.match(closingParagraphRule[1], /margin:\s*0\s*!important;/);
+  assert.match(closingParagraphRule[1], /padding:\s*14px 0\s*!important;/);
+  assert.ok(closingDividerRule, 'statement closing row divider should exist');
+  assert.match(closingDividerRule[1], /border-top:\s*1px solid #D9D9D9\s*!important;/);
   assert.ok(signatureRule, 'statement signature rule should exist');
   assert.match(signatureRule[1], /text-align:\s*center\s*!important;/);
   assert.ok(signatureDateRule, 'statement signature date rule should exist');
@@ -349,6 +360,10 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   assert.match(
     css,
     /\.statement-body \.demands,[^}]*\.statement-body \.closing-block\s*\{[^}]*break-inside:\s*avoid;[^}]*font-size:\s*22px\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /\.statement-body \.closing-block\s*\{[^}]*break-after:\s*avoid;[^}]*padding:\s*12px 32px\s*!important;/s,
   );
   assert.match(
     css,
