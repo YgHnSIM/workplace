@@ -1927,7 +1927,7 @@ select:focus-visible {
 
 @media (max-width: 768px) {
   body {
-    padding: 24px 16px 164px !important;
+    padding: 24px 16px 176px !important;
   }
 
   .archive-container,
@@ -2269,6 +2269,7 @@ select:focus-visible {
     justify-content: space-between !important;
     left: 50% !important;
     margin: 0 !important;
+    padding: 12px 0 0 !important;
     position: fixed !important;
     right: auto !important;
     transform: translateX(-50%) !important;
@@ -2317,7 +2318,7 @@ select:focus-visible {
   }
 
   .document-status {
-    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 76px);
+    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 88px);
     left: 50%;
     max-width: min(calc(100% - 32px), 360px);
     right: auto;
