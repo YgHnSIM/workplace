@@ -1,6 +1,16 @@
 {
   "documents": [
     {
+      "category": "knowledge",
+      "href": "knowledge/performance-bonus-average-wage-analysis.html",
+      "title": "내 성과급은 임금일까, 회사가 주는 용돈일까",
+      "date": "2026-07-13",
+      "excerpt": "성과급이 평균임금에 포함되는지를 가르는 지급의무, 근로 대가성, 평가기준과 외부 변수, 재직자 조건을 2026년 대법원 판례와 함께 살펴봅니다.",
+      "action": "영상 해설 보기",
+      "groupOrder": 30,
+      "order": 1
+    },
+    {
       "category": "statement",
       "href": "statement/성명서_202607.html",
       "title": "교섭대표노조와 우체국물류지원단, 우정사업본부는 물류노동자의 노동강도 증가와 차별 문제 해결에 즉각 나서라",
