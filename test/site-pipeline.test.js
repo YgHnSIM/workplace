@@ -314,6 +314,7 @@ test('archive cards, search controls, and content governance metadata stay seman
   assert.match(index, /<article class="doc-card"/);
   assert.match(index, /<a class="doc-card-link"/);
   assert.doesNotMatch(index, /<a\b[^>]*class="doc-card"/);
+  assert.doesNotMatch(index, /쟁점별 기록 원장/);
   catalog.documents.forEach((document) => {
     assert.match(document.dateModified, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(['draft', 'reviewed', 'final'].includes(document.status));

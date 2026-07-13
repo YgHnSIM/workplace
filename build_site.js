@@ -294,7 +294,7 @@ function collectionSchema(docs) {
   };
 }
 
-function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false }) {
+function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false, includeKicker = true }) {
   const cards = docs.map((doc, index) => renderCard(doc, outputFile, index)).join('\n\n');
   const noResults = docs.length ? `
       <div class="empty-state archive-no-results" role="status" hidden>
@@ -307,6 +307,9 @@ function buildArchiveHtml({ title, description, docs, outputFile, includeFilter 
   const logo600 = versionedAssetHref(rootDir, outputFile, 'assets/logo-header-600.webp');
   const script = includeFilter
     ? `\n  <script src="${escapeAttr(versionedAssetHref(rootDir, outputFile, 'assets/archive-filter.js'))}" defer></script>`
+    : '';
+  const kicker = includeKicker
+    ? `\n        <p class="archive-kicker">쟁점별 기록 원장</p>`
     : '';
 
   return `<!DOCTYPE html>
@@ -329,8 +332,7 @@ ${renderPageHead({
   <main class="archive-container">
 ${renderBackLink(outputFile)}    <header class="archive-header">
       <img src="${escapeAttr(logo300)}" srcset="${escapeAttr(logo300)} 1x, ${escapeAttr(logo600)} 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <div class="archive-heading">
-        <p class="archive-kicker">쟁점별 기록 원장</p>
+      <div class="archive-heading">${kicker}
         <h1 class="archive-title">${escapeHtml(title)}</h1>
       </div>
       <p class="archive-desc">${escapeHtml(description)}</p>
@@ -548,6 +550,7 @@ function build() {
     docs,
     outputFile: homeFilePath,
     includeFilter: true,
+    includeKicker: false,
   }));
 
   ['mom', 'knowledge', 'notice'].forEach((category) => {
