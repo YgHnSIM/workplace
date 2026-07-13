@@ -5,8 +5,18 @@
       "href": "knowledge/performance-bonus-average-wage-analysis.html",
       "title": "내 성과급은 임금일까, 회사가 주는 용돈일까",
       "date": "2026-07-13",
+      "dateModified": "2026-07-14",
       "excerpt": "성과급이 평균임금에 포함되는지를 가르는 지급의무, 근로 대가성, 평가기준과 외부 변수, 재직자 조건을 2026년 대법원 판례와 함께 살펴봅니다.",
       "action": "영상 해설 보기",
+      "status": "reviewed",
+      "topics": ["성과급", "평균임금", "퇴직금"],
+      "sourceCount": 5,
+      "provenance": "영상 자막과 대법원 공개 판결을 대조해 작성",
+      "relatedDocuments": [
+        "notice/2025-performance-pay.html",
+        "knowledge/retirement-benefit-db-dc-guide.html",
+        "MoM/202607.html"
+      ],
       "groupOrder": 30,
       "order": 1
     },
@@ -19,8 +29,18 @@
         "물류노동자의 노동강도 증가와 차별 문제 해결에 즉각 나서라"
       ],
       "date": "2026-07-06",
+      "dateModified": "2026-07-14",
       "excerpt": "소포·수하물 구분 노동자 노동강도 증가 대책 수립, 10년째 동결된 직무수당 현실화, 명절상여금 차별 철폐, 그리고 퇴직으로 인한 자연감소 인력에 대한 안정적 인력 충원을 촉구하는 노동조합 성명서입니다.",
       "action": "성명서 보기",
+      "status": "final",
+      "topics": ["노동강도", "직무수당", "인력충원"],
+      "sourceCount": 1,
+      "provenance": "노동조합 공식 성명서",
+      "relatedDocuments": [
+        "notice/logistics-union-9-years.html",
+        "notice/2025-performance-pay.html",
+        "MoM/202607.html"
+      ],
       "groupOrder": 10,
       "order": 10
     },
@@ -29,8 +49,18 @@
       "href": "knowledge/retirement-benefit-db-dc-guide.html",
       "title": "퇴직금·퇴직연금 DB/DC 선택 안내 v1",
       "date": "2026-07-08",
+      "dateModified": "2026-07-14",
       "excerpt": "퇴직금 제도의 기원, 고용보험·국민연금·퇴직연금으로의 기능 분화, 사내·사외 적립 차이, DB와 DC 선택 기준을 정리한 조합원 안내 초안입니다.",
       "action": "지식 자료 보기",
+      "status": "draft",
+      "topics": ["퇴직금", "퇴직연금", "DB·DC"],
+      "sourceCount": 15,
+      "provenance": "법령과 공공기관 공개 자료를 검토해 작성",
+      "relatedDocuments": [
+        "knowledge/performance-bonus-average-wage-analysis.html",
+        "notice/2025-performance-pay.html",
+        "MoM/202607.html"
+      ],
       "groupOrder": 30,
       "order": 5
     },
@@ -39,8 +69,18 @@
       "href": "knowledge/principal-employer-bargaining-video-analysis.html",
       "title": "원청 사용자성·교섭단위 분리 영상 해설",
       "date": "2026-07-09",
+      "dateModified": "2026-07-14",
       "excerpt": "원청 사용자성, 교섭창구 단일화, 공정대표의무, 교섭단위 분리를 다룬 두 YouTube 영상의 스크립트와 슬라이드 흐름을 해설한 자료입니다.",
       "action": "지식 자료 보기",
+      "status": "reviewed",
+      "topics": ["원청 사용자성", "단체교섭", "교섭단위"],
+      "sourceCount": 7,
+      "provenance": "영상 2편과 관련 법령·판례 자료를 대조해 작성",
+      "relatedDocuments": [
+        "statement/성명서_202607.html",
+        "MoM/202607.html",
+        "notice/logistics-union-9-years.html"
+      ],
       "groupOrder": 30,
       "order": 7
     },
@@ -49,8 +89,18 @@
       "href": "knowledge/sick-leave-double-reduction.html",
       "title": "병가 일수까지 반토막 낸 이중삭감의 모순",
       "date": "2026-07-07",
+      "dateModified": "2026-07-14",
       "excerpt": "병가 일수까지 반토막 낸 이중삭감 문제를 다룬 YouTube 영상 자료입니다.",
       "action": "영상 자료 보기",
+      "status": "draft",
+      "topics": ["병가", "차별", "건강권"],
+      "sourceCount": 1,
+      "provenance": "영상 1편의 공개 설명과 논점 흐름을 바탕으로 작성",
+      "relatedDocuments": [
+        "statement/성명서_202607.html",
+        "notice/logistics-union-9-years.html",
+        "MoM/202607.html"
+      ],
       "groupOrder": 30,
       "order": 10
     },
@@ -59,8 +109,18 @@
       "href": "notice/logistics-union-9-years.html",
       "title": "우체국물류지원단 물류노동조합 9년의 투쟁과 역사",
       "date": "2026-07-06",
+      "dateModified": "2026-07-14",
       "excerpt": "서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다.",
       "action": "알림 보기",
+      "status": "final",
+      "topics": ["노조 역사", "고용안정", "차별 철폐"],
+      "sourceCount": 1,
+      "provenance": "노동조합 내부 활동 기록을 바탕으로 정리",
+      "relatedDocuments": [
+        "statement/성명서_202607.html",
+        "MoM/202607.html",
+        "knowledge/principal-employer-bargaining-video-analysis.html"
+      ],
       "groupOrder": 40,
       "order": 10
     },
@@ -69,8 +129,18 @@
       "href": "notice/2025-performance-pay.html",
       "title": "2025년 성과급 계산 방식",
       "date": "2026-07-06",
-      "excerpt": "직무수당 10,000원, 내부평가 B등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내 이미지입니다.",
+      "dateModified": "2026-07-14",
+      "excerpt": "직무수당 100,000원, 내부평가 B등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내입니다.",
       "action": "알림 보기",
+      "status": "final",
+      "topics": ["성과급", "직무수당", "임금"],
+      "sourceCount": 1,
+      "provenance": "안내 이미지의 상세 산식과 기준월봉 합계를 확인해 정정",
+      "relatedDocuments": [
+        "knowledge/performance-bonus-average-wage-analysis.html",
+        "statement/성명서_202607.html",
+        "knowledge/retirement-benefit-db-dc-guide.html"
+      ],
       "groupOrder": 40,
       "order": 20
     }

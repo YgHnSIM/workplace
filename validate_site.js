@@ -559,6 +559,35 @@ function validateDocumentSchema(doc, label, options, errors) {
   if (doc.action !== undefined && (typeof doc.action !== 'string' || !doc.action.trim())) {
     errors.push(`${label}.action must be a non-empty string when present`);
   }
+  if (typeof doc.dateModified !== 'string') {
+    errors.push(`${label}.dateModified must be an ISO date string`);
+  } else {
+    const parsedModifiedDate = new Date(`${doc.dateModified}T00:00:00Z`);
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(doc.dateModified)
+      || Number.isNaN(parsedModifiedDate.getTime())
+      || parsedModifiedDate.toISOString().slice(0, 10) !== doc.dateModified) {
+      errors.push(`${label}.dateModified must be a valid ISO date (YYYY-MM-DD)`);
+    } else if (typeof doc.date === 'string' && doc.dateModified < doc.date) {
+      errors.push(`${label}.dateModified cannot precede date`);
+    }
+  }
+  if (!['draft', 'reviewed', 'final'].includes(doc.status)) {
+    errors.push(`${label}.status must be draft, reviewed, or final`);
+  }
+  if (!Array.isArray(doc.topics) || !doc.topics.length
+    || doc.topics.some((topic) => typeof topic !== 'string' || !topic.trim())) {
+    errors.push(`${label}.topics must be a non-empty array of strings`);
+  }
+  if (!Number.isInteger(doc.sourceCount) || doc.sourceCount < 1) {
+    errors.push(`${label}.sourceCount must be a positive integer`);
+  }
+  if (typeof doc.provenance !== 'string' || !doc.provenance.trim()) {
+    errors.push(`${label}.provenance must be a non-empty string`);
+  }
+  if (!Array.isArray(doc.relatedDocuments)
+    || doc.relatedDocuments.some((href) => typeof href !== 'string' || !href.trim())) {
+    errors.push(`${label}.relatedDocuments must be an array of href strings`);
+  }
   if (options.manual) {
     const hasNumericOrder = Number.isFinite(doc.groupOrder) && Number.isFinite(doc.order);
     const hasSortKey = typeof doc.sortKey === 'string' && doc.sortKey.trim();
@@ -577,7 +606,14 @@ function validateDocumentSchema(doc, label, options, errors) {
   if (options.category && doc.category !== options.category) {
     errors.push(`${label}.category must be ${options.category}`);
   }
-  return href ? { ...doc, normalizedHref: href } : undefined;
+  const normalizedRelatedDocuments = Array.isArray(doc.relatedDocuments)
+    ? doc.relatedDocuments.map((relatedHref, index) => normalizeDocumentHref(
+      relatedHref,
+      `${label}.relatedDocuments[${index}]`,
+      errors,
+    )).filter(Boolean)
+    : [];
+  return href ? { ...doc, normalizedHref: href, normalizedRelatedDocuments } : undefined;
 }
 
 function readContentDocuments(sourceRoot, siteRoot, errors) {
@@ -616,6 +652,17 @@ function readContentDocuments(sourceRoot, siteRoot, errors) {
     }
     const target = path.join(siteRoot, ...doc.normalizedHref.split('/'));
     if (!fs.existsSync(target)) errors.push(`Document target is missing from the artifact: ${doc.normalizedHref}`);
+  });
+
+  const publicHrefs = new Set(allDocs.map((doc) => doc.normalizedHref));
+  allDocs.forEach((doc) => {
+    doc.normalizedRelatedDocuments.forEach((relatedHref) => {
+      if (relatedHref === doc.normalizedHref) {
+        errors.push(`${doc.normalizedHref} cannot relate to itself`);
+      } else if (!publicHrefs.has(relatedHref)) {
+        errors.push(`${doc.normalizedHref} relates to missing document: ${relatedHref}`);
+      }
+    });
   });
 
   return { allDocs, manualDocs, momDocs };
@@ -748,10 +795,15 @@ function validateIndexCards(relativeIndex, expectedDocs, context, errors) {
     return;
   }
 
-  const cards = findElements(record.document, (node) => node.tagName === 'a' && hasClass(node, 'doc-card'));
+  const cards = findElements(record.document, (node) => node.tagName === 'article' && hasClass(node, 'doc-card'));
   const cardsByHref = new Map();
   cards.forEach((card) => {
-    const href = getAttr(card, 'href');
+    const link = findFirstDescendant(card, (node) => node.tagName === 'a' && hasClass(node, 'doc-card-link'));
+    if (!link) {
+      nodeError(errors, context.siteRoot, indexPath, card, 'document card is missing its title link');
+      return;
+    }
+    const href = getAttr(link, 'href');
     const publicPath = publicPathForReference(href, record, context);
     if (!publicPath) return;
     if (cardsByHref.has(publicPath)) {

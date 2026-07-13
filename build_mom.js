@@ -405,6 +405,8 @@ ${renderPageHead({
     schemaType: 'Article',
     openGraphType: 'article',
     datePublished: date,
+    dateModified: date,
+    keywords: type === 'report' ? ['운영위원회', '결산'] : ['운영위원회', '회의록'],
   })}
 </head>
 
@@ -441,18 +443,20 @@ ${buildUtilityBar()}
 function buildIndexHtml(docs, outputPath) {
   const cards = docs.map((doc, index) => {
     const idBase = `mom-doc-${index + 1}`;
-    return `      <a href="${escapeAttr(doc.outputFileName)}" class="doc-card" data-category="mom" aria-labelledby="${idBase}-title" aria-describedby="${idBase}-meta">
+    return `      <article class="doc-card" data-category="mom" data-status="final" data-topics="${escapeAttr(doc.topics.join('|'))}">
         <div class="card-meta" id="${idBase}-meta">
           <span class="badge-category">${escapeHtml(doc.typeMeta.label)}</span>
           ${renderTime(doc.date)}
+          <span class="card-status" data-status="final">확정</span>
         </div>
-        <h2 class="doc-title" id="${idBase}-title">${escapeHtml(doc.title)}</h2>
+        <h2 class="doc-title" id="${idBase}-title"><a class="doc-card-link" href="${escapeAttr(doc.outputFileName)}" aria-describedby="${idBase}-meta ${idBase}-excerpt">${escapeHtml(doc.title)}</a></h2>
         <p class="doc-excerpt" id="${idBase}-excerpt">${escapeHtml(doc.excerpt)}</p>
-        <div class="card-footer" id="${idBase}-action">
+        <div class="card-topics" aria-label="주제">${doc.topics.map((topic) => `<span class="card-topic">${escapeHtml(topic)}</span>`).join('')}</div>
+        <div class="card-footer" aria-hidden="true">
           ${escapeHtml(doc.typeMeta.action)}
           <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </div>
-      </a>`;
+      </article>`;
   }).join('\n\n');
 
   return `<!DOCTYPE html>
@@ -465,6 +469,8 @@ ${renderPageHead({
     title: '운영위원회 회의록 아카이브',
     description: '우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.',
     schemaType: 'CollectionPage',
+    dateModified: docs.reduce((latest, doc) => (doc.date > latest ? doc.date : latest), ''),
+    keywords: ['운영위원회', '회의록', '결산'],
   })}
 </head>
 
@@ -513,6 +519,7 @@ function createMomDocument(file) {
   const parsed = parseMarkdown(body, metadata.title);
   const outputFileName = `${metadata.slug}.html`;
   const outputPath = path.join(outputDir, outputFileName);
+  const topics = metadata.type === 'report' ? ['운영위원회', '결산'] : ['운영위원회', '회의록'];
 
   return {
     sourcePath,
@@ -524,6 +531,10 @@ function createMomDocument(file) {
     type: metadata.type,
     typeMeta,
     slug: metadata.slug,
+    status: 'final',
+    topics,
+    sourceCount: 1,
+    provenance: '노동조합 운영위원회 공식 기록',
     html: buildDetailHtml({
       title: metadata.title,
       description: metadata.excerpt,
@@ -568,11 +579,17 @@ function toManifestDocument(doc) {
     href: `MoM/${doc.outputFileName}`,
     title: doc.title,
     date: doc.date,
+    dateModified: doc.date,
     excerpt: doc.excerpt,
     action: doc.typeMeta.action,
     type: doc.type,
     slug: doc.slug,
     sortKey: doc.date,
+    status: doc.status,
+    topics: doc.topics,
+    sourceCount: doc.sourceCount,
+    provenance: doc.provenance,
+    relatedDocuments: [],
   };
 }
 

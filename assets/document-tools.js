@@ -349,6 +349,45 @@
     body.before(nav);
   }
 
+  function prepareDocumentTocs() {
+    const mobileQuery = window.matchMedia('(max-width: 768px)');
+    Array.from(document.querySelectorAll('.document-toc')).forEach((toc, index) => {
+      if (toc.classList.contains('is-collapsible')) return;
+      const title = toc.querySelector('.document-toc-title');
+      const links = toc.querySelector('.document-toc-links');
+      if (!title || !links) return;
+
+      const heading = document.createElement('div');
+      heading.className = 'document-toc-heading';
+      title.before(heading);
+      heading.appendChild(title);
+
+      const button = document.createElement('button');
+      const linksId = links.id || `document-toc-links-${index + 1}`;
+      links.id = linksId;
+      button.className = 'document-toc-toggle';
+      button.type = 'button';
+      button.setAttribute('aria-controls', linksId);
+      heading.appendChild(button);
+      toc.classList.add('is-collapsible');
+
+      const setCollapsed = (collapsed) => {
+        toc.dataset.collapsed = String(collapsed);
+        button.setAttribute('aria-expanded', String(!collapsed));
+        button.textContent = collapsed ? '목차 펼치기' : '목차 접기';
+      };
+
+      setCollapsed(mobileQuery.matches);
+      button.addEventListener('click', () => {
+        setCollapsed(toc.dataset.collapsed !== 'true');
+      });
+      links.addEventListener('click', (event) => {
+        if (mobileQuery.matches && event.target.closest('a')) setCollapsed(true);
+      });
+      mobileQuery.addEventListener('change', (event) => setCollapsed(event.matches));
+    });
+  }
+
   function fallbackCopy(text) {
     const textarea = document.createElement('textarea');
     const activeElement = document.activeElement;
@@ -433,6 +472,7 @@
     applyTextScale();
     prepareResponsiveTables();
     buildDocumentToc();
+    prepareDocumentTocs();
     addClickListener('zoom-in-btn', () => changeTextSize('up'));
     addClickListener('zoom-out-btn', () => changeTextSize('down'));
     addClickListener('zoom-reset-btn', () => changeTextSize('reset'));

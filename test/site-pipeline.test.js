@@ -288,18 +288,51 @@ test('document TOC keeps a continuous bottom rule without expanding links', () =
   );
 
   [
-    ['principal-employer-bargaining-video-analysis.html', '190px'],
-    ['retirement-benefit-db-dc-guide.html', '180px'],
-  ].forEach(([name, minimumWidth]) => {
+    'principal-employer-bargaining-video-analysis.html',
+    'retirement-benefit-db-dc-guide.html',
+  ].forEach((name) => {
     const html = fs.readFileSync(path.join(projectRoot, 'knowledge', name), 'utf8');
-    const inlineRule = html.match(/\.document-toc-links\s*\{([^}]*)\}/);
-
-    assert.ok(inlineRule, `${name} should define its TOC grid`);
-    assert.match(
-      inlineRule[1],
-      new RegExp(`grid-template-columns:\\s*repeat\\(auto-fit,\\s*minmax\\(${minimumWidth},\\s*1fr\\)\\);`),
+    assert.doesNotMatch(
+      html,
+      /<style>[\s\S]*?\.document-toc-links\s*\{/,
+      `${name} should reuse the shared TOC component instead of duplicating it inline`,
     );
   });
+
+  assert.doesNotMatch(css, /max-height:\s*260px/);
+  assert.match(css, /\.document-toc-toggle\s*\{/);
+  assert.match(css, /\.document-toc\.is-collapsible\[data-collapsed="true"\] \.document-toc-links/);
+});
+
+test('archive cards, search controls, and content governance metadata stay semantic', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const index = fs.readFileSync(path.join(projectRoot, 'index.html'), 'utf8');
+  const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
+
+  assert.match(index, /<form class="archive-search" role="search"/);
+  assert.match(index, /id="archive-topic-select"/);
+  assert.match(index, /<article class="doc-card"/);
+  assert.match(index, /<a class="doc-card-link"/);
+  assert.doesNotMatch(index, /<a\b[^>]*class="doc-card"/);
+  catalog.documents.forEach((document) => {
+    assert.match(document.dateModified, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(['draft', 'reviewed', 'final'].includes(document.status));
+    assert.ok(Array.isArray(document.topics) && document.topics.length > 0);
+    assert.ok(Number.isInteger(document.sourceCount) && document.sourceCount > 0);
+    assert.ok(typeof document.provenance === 'string' && document.provenance.length > 0);
+    assert.ok(Array.isArray(document.relatedDocuments));
+  });
+});
+
+test('performance pay uses the confirmed 100,000 won job allowance and shows the source correction', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const catalog = fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8');
+  const page = fs.readFileSync(path.join(projectRoot, 'notice', '2025-performance-pay.html'), 'utf8');
+
+  assert.match(catalog, /직무수당 100,000원/);
+  assert.match(page, /직무수당 100,000원/);
+  assert.match(page, /원본 이미지 상단의 직무수당 10,000원 표기는 오기/);
+  assert.doesNotMatch(page, /content="직무수당 10,000원/);
 });
 
 test('statement demand list and signature keep their reading rhythm and alignment', () => {
