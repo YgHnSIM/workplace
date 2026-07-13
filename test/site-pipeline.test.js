@@ -315,6 +315,11 @@ test('archive cards, search controls, and content governance metadata stay seman
   assert.match(index, /<a class="doc-card-link"/);
   assert.doesNotMatch(index, /<a\b[^>]*class="doc-card"/);
   assert.doesNotMatch(index, /쟁점별 기록 원장/);
+  const topics = catalog.documents.flatMap((document) => document.topics);
+  assert.ok(topics.includes('차별'));
+  assert.ok(!topics.includes('차별 철폐'));
+  assert.match(index, /<option value="차별">차별<\/option>/);
+  assert.doesNotMatch(index, /<option value="차별 철폐">/);
   catalog.documents.forEach((document) => {
     assert.match(document.dateModified, /^\d{4}-\d{2}-\d{2}$/);
     assert.ok(['draft', 'reviewed', 'final'].includes(document.status));
