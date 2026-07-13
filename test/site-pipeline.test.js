@@ -320,11 +320,12 @@ test('archive cards, search controls, and content governance metadata stay seman
     assert.ok(Array.isArray(document.topics) && document.topics.length > 0);
     assert.ok(Number.isInteger(document.sourceCount) && document.sourceCount > 0);
     assert.ok(typeof document.provenance === 'string' && document.provenance.length > 0);
+    assert.ok(document.showProvenance === undefined || typeof document.showProvenance === 'boolean');
     assert.ok(Array.isArray(document.relatedDocuments));
   });
 });
 
-test('performance pay distinguishes the 100,000 won job allowance from the 10,000 won longevity allowance', () => {
+test('performance pay distinguishes the two allowances without correction callouts', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const catalog = fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8');
   const page = fs.readFileSync(path.join(projectRoot, 'notice', '2025-performance-pay.html'), 'utf8');
@@ -333,8 +334,11 @@ test('performance pay distinguishes the 100,000 won job allowance from the 10,00
   assert.match(catalog, /근속수당 10,000원/);
   assert.match(page, /직무수당 100,000원/);
   assert.match(page, /근속수당 10,000원/);
-  assert.match(page, /이미지 상단의 수당 표기를 상세 산식에 맞춰/);
-  assert.doesNotMatch(page, /원본 이미지 상단의 직무수당 10,000원 표기는 오기/);
+  assert.match(catalog, /"showProvenance": false/);
+  assert.doesNotMatch(page, /노동조합 성과급 계산 안내 이미지/);
+  assert.doesNotMatch(page, /class="correction-note"/);
+  assert.doesNotMatch(page, /정정 안내/);
+  assert.doesNotMatch(page, /근속수당 표기를 상세 산식과 일치하도록 정정/);
   assert.doesNotMatch(page, /content="직무수당 10,000원/);
 });
 

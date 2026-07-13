@@ -131,6 +131,10 @@ function validateDocument(doc, sourceLabel) {
   const relatedDocuments = Array.isArray(doc.relatedDocuments)
     ? [...new Set(doc.relatedDocuments.map((href) => normalizeHref(href)))]
     : [];
+  const showProvenance = doc.showProvenance === undefined ? true : doc.showProvenance;
+  if (typeof showProvenance !== 'boolean') {
+    throw new Error(`${sourceLabel} showProvenance must be a boolean for ${doc.href}`);
+  }
 
   return {
     ...doc,
@@ -141,6 +145,7 @@ function validateDocument(doc, sourceLabel) {
     topics,
     sourceCount,
     provenance: String(doc.provenance || '노동조합 공개 기록').trim(),
+    showProvenance,
     relatedDocuments,
   };
 }
@@ -397,6 +402,9 @@ function renderDocumentFacts(doc, outputFile) {
   const topics = doc.topics.map((topic) => (
     `<a href="${escapeAttr(`${homeHref}?topic=${encodeURIComponent(topic)}`)}">${escapeHtml(topic)}</a>`
   )).join('');
+  const provenance = doc.showProvenance
+    ? `\n      <p>${escapeHtml(doc.provenance)}</p>`
+    : '';
 
   return `    <aside class="document-facts" aria-label="문서 정보">
       <dl>
@@ -416,8 +424,7 @@ function renderDocumentFacts(doc, outputFile) {
           <dt>쟁점</dt>
           <dd>${topics}</dd>
         </div>
-      </dl>
-      <p>${escapeHtml(doc.provenance)}</p>
+      </dl>${provenance}
     </aside>`;
 }
 

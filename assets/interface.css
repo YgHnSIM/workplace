@@ -1349,30 +1349,6 @@ select:focus-visible {
   word-break: keep-all;
 }
 
-.correction-note {
-  background: #F7F7F8;
-  border: 1px solid #111111;
-  border-left: 8px solid #002FA7;
-  color: #111111;
-  margin: 0 0 24px;
-  padding: 16px 18px;
-}
-
-.correction-note > strong {
-  color: #002FA7;
-  display: block;
-  font-size: calc(14px * var(--font-scale));
-  line-height: 1.35;
-  margin-bottom: 8px;
-}
-
-.correction-note p {
-  font-size: calc(15px * var(--font-scale));
-  line-height: 1.65;
-  margin: 0;
-  word-break: keep-all;
-}
-
 .insight-grid {
   display: grid;
   gap: 0;
@@ -1927,7 +1903,7 @@ select:focus-visible {
 
 @media (max-width: 768px) {
   body {
-    padding: 24px 16px 176px !important;
+    padding: 24px 16px 172px !important;
   }
 
   .archive-container,
@@ -2269,7 +2245,7 @@ select:focus-visible {
     justify-content: space-between !important;
     left: 50% !important;
     margin: 0 !important;
-    padding: 12px 0 0 !important;
+    padding: 10px 0 0 !important;
     position: fixed !important;
     right: auto !important;
     transform: translateX(-50%) !important;
@@ -2305,9 +2281,9 @@ select:focus-visible {
     justify-content: center;
     left: auto !important;
     line-height: 1.1;
-    min-height: 24px;
+    min-height: 22px;
     opacity: 1;
-    padding: 3px 2px;
+    padding: 2px;
     position: static;
     right: auto !important;
     text-align: center;
@@ -2318,7 +2294,7 @@ select:focus-visible {
   }
 
   .document-status {
-    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 88px);
+    bottom: calc(max(8px, env(safe-area-inset-bottom)) + 84px);
     left: 50%;
     max-width: min(calc(100% - 32px), 360px);
     right: auto;
