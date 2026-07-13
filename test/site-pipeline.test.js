@@ -324,14 +324,17 @@ test('archive cards, search controls, and content governance metadata stay seman
   });
 });
 
-test('performance pay uses the confirmed 100,000 won job allowance and shows the source correction', () => {
+test('performance pay distinguishes the 100,000 won job allowance from the 10,000 won longevity allowance', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const catalog = fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8');
   const page = fs.readFileSync(path.join(projectRoot, 'notice', '2025-performance-pay.html'), 'utf8');
 
   assert.match(catalog, /직무수당 100,000원/);
+  assert.match(catalog, /근속수당 10,000원/);
   assert.match(page, /직무수당 100,000원/);
-  assert.match(page, /원본 이미지 상단의 직무수당 10,000원 표기는 오기/);
+  assert.match(page, /근속수당 10,000원/);
+  assert.match(page, /이미지 상단의 수당 표기를 상세 산식에 맞춰/);
+  assert.doesNotMatch(page, /원본 이미지 상단의 직무수당 10,000원 표기는 오기/);
   assert.doesNotMatch(page, /content="직무수당 10,000원/);
 });
 
