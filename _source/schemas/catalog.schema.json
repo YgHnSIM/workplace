@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yghnsim.github.io/workplace/schema/catalog.schema.json",
+  "title": "Workplace content catalog v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["$schema", "schemaVersion", "documents"],
+  "properties": {
+    "$schema": { "type": "string", "minLength": 1 },
+    "schemaVersion": { "const": 2 },
+    "documents": {
+      "type": "array",
+      "minItems": 0,
+      "items": { "$ref": "https://yghnsim.github.io/workplace/schema/document.schema.json" }
+    }
+  }
+}

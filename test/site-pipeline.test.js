@@ -70,8 +70,16 @@ function createFixture() {
   ['MoM', 'statement', 'knowledge', 'notice'].forEach((directory) => {
     write(path.join(root, directory, 'index.html'), html());
   });
-  write(path.join(root, '_source', 'catalog.json'), '{"documents":[]}\n');
-  write(path.join(root, '_source', 'generated', 'mom.json'), '[]\n');
+  write(
+    path.join(root, '_source', 'catalog.json'),
+    JSON.stringify({
+      $schema: 'https://yghnsim.github.io/workplace/schema/catalog.schema.json',
+      schemaVersion: 2,
+      documents: [],
+    }) + '\n',
+  );
+  write(path.join(root, '_source', 'topics.json'), JSON.stringify({ topics: [{ id: 'fixture-topic', label: 'Fixture' }] }) + '\n');
+  write(path.join(root, '_source', 'sources.json'), '{"sources":[]}\n');
   fs.mkdirSync(path.join(root, '_source', 'MoM'), { recursive: true });
   return root;
 }
@@ -223,38 +231,67 @@ test('catalog schema rejects invalid dates and duplicate public hrefs', () => {
   const root = createFixture();
   write(path.join(root, 'knowledge', 'duplicate.html'), html('<h1>Duplicate</h1>'));
   const document = {
+    id: 'knowledge:duplicate',
     category: 'knowledge',
-    href: 'knowledge/duplicate.html',
+    route: 'knowledge/duplicate.html',
     title: 'Duplicate',
-    date: '2026-02-30',
-    excerpt: 'Duplicate fixture',
-    groupOrder: 1,
-    order: 1,
+    summary: 'Duplicate fixture',
+    dates: { publishedOn: '2026-02-30', modifiedOn: '2026-02-30', reviewedOn: '2026-02-30' },
+    workflow: { status: 'final', visibility: 'public' },
+    topicIds: ['fixture-topic'],
+    evidence: { count: 1, note: 'Fixture', noteVisibility: 'public', sourceIds: [], complete: false },
+    relatedDocumentIds: [],
+    displayOrder: 1,
+    presentation: { print: {} },
   };
   write(
     path.join(root, '_source', 'catalog.json'),
-    `${JSON.stringify({ documents: [document, { ...document, order: 2 }] })}\n`,
+    `${JSON.stringify({
+      $schema: 'https://yghnsim.github.io/workplace/schema/catalog.schema.json',
+      schemaVersion: 2,
+      documents: [document, { ...document, id: 'knowledge:duplicate-two', displayOrder: 2 }],
+    })}\n`,
   );
   stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
 
   const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
 
-  assert.ok(result.errors.some((error) => error.includes('valid ISO date')));
-  assert.ok(result.errors.some((error) => error.includes('Duplicate document output path')));
+  assert.ok(result.errors.some((error) => error.includes('format "date"')));
+  assert.ok(result.errors.some((error) => error.includes('duplicate route')));
 });
 
 test('frontmatter slug collisions are rejected before stale output can deploy', () => {
   const root = createFixture();
-  const source = (title) => `---
+  const source = (title, id) => `---
+id: "${id}"
+category: mom
+route: "MoM/same-output.html"
 title: "${title}"
-date: 2026-07-10
-excerpt: "Fixture"
+summary: "Fixture"
+dates:
+  publishedOn: 2026-07-10
+  modifiedOn: 2026-07-10
+  reviewedOn: 2026-07-10
+  eventOn: 2026-07-10
+workflow:
+  status: final
+  visibility: public
+topicIds: [fixture-topic]
+evidence:
+  count: 1
+  note: "Fixture"
+  noteVisibility: public
+  sourceIds: []
+  complete: false
+relatedDocumentIds: []
+displayOrder: 10
 type: minutes
-slug: same-output
+presentation:
+  print: {}
 ---
 `;
-  write(path.join(root, '_source', 'MoM', 'one.md'), source('One'));
-  write(path.join(root, '_source', 'MoM', 'two.md'), source('Two'));
+  write(path.join(root, '_source', 'MoM', 'one.md'), source('One', 'mom:one'));
+  write(path.join(root, '_source', 'MoM', 'two.md'), source('Two', 'mom:two'));
   stageSite({ projectRoot: root, outputDir: path.join(root, '_site') });
 
   const result = validateSite({ projectRoot: root, siteRoot: path.join(root, '_site') });
@@ -319,32 +356,36 @@ test('archive cards, search controls, and content governance metadata stay seman
     assert.match(categoryIndex, /class="archive-category-nav"/);
     assert.match(categoryIndex, /class="archive-search"/);
   });
-  const topics = catalog.documents.flatMap((document) => document.topics);
+  const topics = fs.readFileSync(path.join(projectRoot, '_source', 'topics.json'), 'utf8');
   assert.ok(topics.includes('차별'));
   assert.ok(!topics.includes('차별 철폐'));
   assert.match(index, /<option value="차별">차별<\/option>/);
   assert.doesNotMatch(index, /<option value="차별 철폐">/);
   catalog.documents.forEach((document) => {
-    assert.match(document.dateModified, /^\d{4}-\d{2}-\d{2}$/);
-    assert.ok(['draft', 'reviewed', 'final'].includes(document.status));
-    assert.ok(Array.isArray(document.topics) && document.topics.length > 0);
-    assert.ok(Number.isInteger(document.sourceCount) && document.sourceCount > 0);
-    assert.ok(typeof document.provenance === 'string' && document.provenance.length > 0);
-    assert.ok(document.showProvenance === undefined || typeof document.showProvenance === 'boolean');
-    assert.ok(Array.isArray(document.relatedDocuments));
+    assert.match(document.dates.modifiedOn, /^\d{4}-\d{2}-\d{2}$/);
+    assert.ok(['draft', 'reviewed', 'final'].includes(document.workflow.status));
+    assert.ok(Array.isArray(document.topicIds) && document.topicIds.length > 0);
+    assert.ok(Number.isInteger(document.evidence.count) && document.evidence.count > 0);
+    assert.ok(typeof document.evidence.note === 'string' && document.evidence.note.length > 0);
+    assert.ok(['public', 'private'].includes(document.evidence.noteVisibility));
+    assert.ok(Array.isArray(document.relatedDocumentIds));
   });
 });
 
 test('shared document chrome and explicit mobile table layouts remain free of legacy controls', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
-  const momDocuments = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'generated', 'mom.json'), 'utf8'));
-  const documents = [...catalog.documents, ...momDocuments];
+  const momDocuments = fs.readdirSync(path.join(projectRoot, '_source', 'MoM'))
+    .filter((file) => file.endsWith('.md'));
+  const documents = [
+    ...catalog.documents.map((document) => ({ ...document, route: document.route })),
+    ...momDocuments.map((file) => ({ route: `MoM/${file.slice(0, 6)}.html` })),
+  ];
 
   documents.forEach((document) => {
-    const page = fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8');
-    assert.equal((page.match(/<!-- site-masthead:start -->/g) || []).length, 1, document.href);
-    assert.equal((page.match(/class="document-tools"/g) || []).length, 1, document.href);
+    const page = fs.readFileSync(path.join(projectRoot, ...document.route.split('/')), 'utf8');
+    assert.equal((page.match(/<!-- site-masthead:start -->/g) || []).length, 1, document.route);
+    assert.equal((page.match(/class="document-tools"/g) || []).length, 1, document.route);
     assert.doesNotMatch(page, /class="(?:utility-bar|back-link|history-nav|card-footer|archive-kicker)\b/);
   });
 
@@ -366,7 +407,7 @@ test('performance pay distinguishes the two allowances without correction callou
   assert.match(catalog, /근속수당 10,000원/);
   assert.match(page, /직무수당 100,000원/);
   assert.match(page, /근속수당 10,000원/);
-  assert.match(catalog, /"showProvenance": false/);
+  assert.match(catalog, /"noteVisibility": "private"/);
   assert.doesNotMatch(page, /노동조합 성과급 계산 안내 이미지/);
   assert.doesNotMatch(page, /class="correction-note"/);
   assert.doesNotMatch(page, /정정 안내/);
@@ -412,7 +453,7 @@ test('statement print layout uses the A2 page width with controlled page breaks'
 
   assert.ok(statementDocuments.length > 0, 'at least one statement should be registered');
   statementDocuments.forEach((document) => {
-    const statementHtml = fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8');
+    const statementHtml = fs.readFileSync(path.join(projectRoot, ...document.route.split('/')), 'utf8');
     assert.doesNotMatch(statementHtml, /class="header-top-row"/);
     assert.doesNotMatch(statementHtml, /class="statement-category"/);
     assert.doesNotMatch(statementHtml, /class="statement-meta"/);
@@ -677,7 +718,7 @@ test('statement category participates in the common runtime TOC generation', () 
   const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
   const statements = catalog.documents
     .filter((document) => document.category === 'statement')
-    .map((document) => fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8'));
+    .map((document) => fs.readFileSync(path.join(projectRoot, ...document.route.split('/')), 'utf8'));
 
   assert.match(script, /function tocGroups/);
   assert.match(script, /function makeToc/);

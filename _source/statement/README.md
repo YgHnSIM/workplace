@@ -1,29 +1,43 @@
 # 성명서 원본 작성 규칙
 
-성명서는 `_source/catalog.json`의 메타데이터와 이 폴더의 `*.body.html` 본문 조각으로 생성합니다. `npm run build`를 실행하면 `statement/*.html`에 공통 헤더, 슬로건, 서명, 도구막대와 자산 해시가 포함된 공개 문서가 만들어집니다.
+성명서는 `_source/catalog.json`의 v2 `DocumentRecord`와 이 폴더의 `*.body.html` 본문 조각으로 생성합니다. `npm run validate:sources`가 catalog, 경로, 관계, fragment 구조를 먼저 검사한 뒤 `npm run build`가 `statement/*.html`을 만듭니다.
 
 ## 새 성명서 추가
 
-1. `_source/catalog.json`에 `category: "statement"` 문서를 추가합니다.
+1. `_source/catalog.json`에 v2 `category: "statement"` 문서를 추가합니다.
 2. 공개 주소가 `statement/example.html`이면 `_source/statement/example.body.html`을 만듭니다.
 3. 아래 허용 구조로 본문을 작성합니다.
 4. `npm run check`를 실행하고 원본과 생성 HTML을 함께 커밋합니다.
 
-`printTitleLines`는 선택 사항입니다. 인쇄에서만 정확한 제목 줄바꿈이 필요할 때 사용하며, 각 줄을 공백으로 합친 값이 `title`과 같아야 합니다.
+`presentation.print.titleLines`는 선택 사항입니다. 인쇄에서만 정확한 제목 줄바꿈이 필요할 때 사용하며, 각 줄을 공백으로 합친 값이 `title`과 같아야 합니다.
 
-자동 선택 결과가 실제 인쇄물과 맞지 않는 예외 문서는 `printDensity`를 `short`, `standard`, `long` 중 하나로 지정해 수동 보정할 수 있습니다. 기본값은 항상 본문 분량에 따른 자동 선택입니다.
+인쇄 밀도는 제목과 본문 분량에서 자동으로 계산합니다. v2 원본에는 인쇄 밀도 override를 두지 않으며, 예외가 생기면 공통 빌더와 회귀 테스트를 함께 조정합니다.
 
 ```json
 {
+  "id": "statement:example",
   "category": "statement",
-  "href": "statement/example.html",
+  "route": "statement/example.html",
   "title": "성명서 제목",
-  "printTitleLines": ["성명서", "제목"],
-  "date": "2026-07-11",
-  "excerpt": "목록과 공유 메타데이터에 사용할 설명입니다.",
-  "action": "성명서 보기",
-  "groupOrder": 10,
-  "order": 20
+  "summary": "목록과 공유 메타데이터에 사용할 설명입니다.",
+  "dates": {
+    "publishedOn": "2026-07-11",
+    "modifiedOn": "2026-07-11",
+    "reviewedOn": "2026-07-11",
+    "eventOn": "2026-07-11"
+  },
+  "workflow": { "status": "draft", "visibility": "unlisted" },
+  "topicIds": ["labor-intensity"],
+  "evidence": {
+    "count": 0,
+    "note": "확인 중",
+    "noteVisibility": "private",
+    "sourceIds": [],
+    "complete": false
+  },
+  "relatedDocumentIds": [],
+  "displayOrder": 10,
+  "presentation": { "print": { "titleLines": ["성명서", "제목"] } }
 }
 ```
 

@@ -2,9 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const parse5 = require('parse5');
 const {
+  absolutePublicUrl,
   relativeTo,
   toPosixPath,
 } = require('./lib/site-utils');
+const { CATEGORY_REGISTRY, parseYamlFrontMatter, validateSourceTree } = require('./lib/content-model');
 const {
   PUBLIC_DIRECTORIES,
   isAllowedRootFile,
@@ -28,13 +30,6 @@ const PUBLIC_EXTENSIONS = new Set([
   '.mp4', '.otf', '.png', '.svg', '.ttf', '.txt', '.vtt', '.webm', '.webp',
   '.woff', '.woff2', '.xml',
 ]);
-const CATEGORY_DIRECTORIES = Object.freeze({
-  knowledge: 'knowledge',
-  mom: 'MoM',
-  notice: 'notice',
-  statement: 'statement',
-});
-
 function normalizePagesBasePath(value = '/') {
   let basePath = String(value || '/').trim().replace(/\\/g, '/');
   if (!basePath.startsWith('/')) basePath = `/${basePath}`;
@@ -496,205 +491,59 @@ function validateArtifactParity(siteRoot, sourceRoot, errors) {
   });
 }
 
-function readJson(filePath, label, errors) {
-  if (!fs.existsSync(filePath)) {
-    errors.push(`${label} is missing`);
-    return undefined;
-  }
-  try {
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
-  } catch (error) {
-    errors.push(`${label} is not valid JSON: ${error.message}`);
-    return undefined;
-  }
-}
-
-function normalizeDocumentHref(value, label, errors) {
-  const href = String(value || '').trim();
-  if (!href) {
-    errors.push(`${label}.href must be a non-empty string`);
-    return undefined;
-  }
-  if (href.includes('\\') || href.startsWith('/') || href.startsWith('//')
-    || href.includes('?') || href.includes('#') || /^[a-z][a-z0-9+.-]*:/i.test(href)) {
-    errors.push(`${label}.href must be a clean site-relative path: ${href}`);
-    return undefined;
-  }
-
-  let decoded;
-  try {
-    decoded = decodeURIComponent(href);
-  } catch {
-    errors.push(`${label}.href has invalid percent-encoding: ${href}`);
-    return undefined;
-  }
-  const normalized = path.posix.normalize(decoded);
-  if (decoded.startsWith('/') || decoded.includes('\\')
-    || normalized === '..' || normalized.startsWith('../')
-    || path.posix.extname(normalized).toLowerCase() !== '.html') {
-    errors.push(`${label}.href must point to an HTML file inside the site: ${href}`);
-    return undefined;
-  }
-  return normalized;
-}
-
-function validateDocumentSchema(doc, label, options, errors) {
-  if (!doc || typeof doc !== 'object' || Array.isArray(doc)) {
-    errors.push(`${label} must be an object`);
-    return undefined;
-  }
-  ['category', 'href', 'title', 'date', 'excerpt'].forEach((field) => {
-    if (typeof doc[field] !== 'string' || !doc[field].trim()) {
-      errors.push(`${label}.${field} must be a non-empty string`);
-    }
-  });
-  if (typeof doc.date === 'string') {
-    const parsedDate = new Date(`${doc.date}T00:00:00Z`);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(doc.date)
-      || Number.isNaN(parsedDate.getTime())
-      || parsedDate.toISOString().slice(0, 10) !== doc.date) {
-      errors.push(`${label}.date must be a valid ISO date (YYYY-MM-DD)`);
-    }
-  }
-  if (doc.action !== undefined && (typeof doc.action !== 'string' || !doc.action.trim())) {
-    errors.push(`${label}.action must be a non-empty string when present`);
-  }
-  if (typeof doc.dateModified !== 'string') {
-    errors.push(`${label}.dateModified must be an ISO date string`);
-  } else {
-    const parsedModifiedDate = new Date(`${doc.dateModified}T00:00:00Z`);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(doc.dateModified)
-      || Number.isNaN(parsedModifiedDate.getTime())
-      || parsedModifiedDate.toISOString().slice(0, 10) !== doc.dateModified) {
-      errors.push(`${label}.dateModified must be a valid ISO date (YYYY-MM-DD)`);
-    } else if (typeof doc.date === 'string' && doc.dateModified < doc.date) {
-      errors.push(`${label}.dateModified cannot precede date`);
-    }
-  }
-  if (!['draft', 'reviewed', 'final'].includes(doc.status)) {
-    errors.push(`${label}.status must be draft, reviewed, or final`);
-  }
-  if (!Array.isArray(doc.topics) || !doc.topics.length
-    || doc.topics.some((topic) => typeof topic !== 'string' || !topic.trim())) {
-    errors.push(`${label}.topics must be a non-empty array of strings`);
-  }
-  if (!Number.isInteger(doc.sourceCount) || doc.sourceCount < 1) {
-    errors.push(`${label}.sourceCount must be a positive integer`);
-  }
-  if (typeof doc.provenance !== 'string' || !doc.provenance.trim()) {
-    errors.push(`${label}.provenance must be a non-empty string`);
-  }
-  if (!Array.isArray(doc.relatedDocuments)
-    || doc.relatedDocuments.some((href) => typeof href !== 'string' || !href.trim())) {
-    errors.push(`${label}.relatedDocuments must be an array of href strings`);
-  }
-  if (options.manual) {
-    const hasNumericOrder = Number.isFinite(doc.groupOrder) && Number.isFinite(doc.order);
-    const hasSortKey = typeof doc.sortKey === 'string' && doc.sortKey.trim();
-    if (!hasNumericOrder && !hasSortKey) {
-      errors.push(`${label} must define numeric groupOrder/order or a non-empty sortKey`);
-    }
-  }
-
-  const href = normalizeDocumentHref(doc.href, label, errors);
-  const expectedDirectory = CATEGORY_DIRECTORIES[doc.category];
-  if (!expectedDirectory) {
-    errors.push(`${label}.category is unsupported: ${doc.category}`);
-  } else if (href && href.split('/')[0] !== expectedDirectory) {
-    errors.push(`${label}.href must be inside ${expectedDirectory}/ for category ${doc.category}`);
-  }
-  if (options.category && doc.category !== options.category) {
-    errors.push(`${label}.category must be ${options.category}`);
-  }
-  const normalizedRelatedDocuments = Array.isArray(doc.relatedDocuments)
-    ? doc.relatedDocuments.map((relatedHref, index) => normalizeDocumentHref(
-      relatedHref,
-      `${label}.relatedDocuments[${index}]`,
-      errors,
-    )).filter(Boolean)
-    : [];
-  return href ? { ...doc, normalizedHref: href, normalizedRelatedDocuments } : undefined;
-}
-
 function readContentDocuments(sourceRoot, siteRoot, errors) {
-  const catalogPath = path.join(sourceRoot, '_source', 'catalog.json');
-  const catalog = readJson(catalogPath, '_source/catalog.json', errors);
-  const manualDocs = [];
-  if (!catalog || typeof catalog !== 'object' || !Array.isArray(catalog.documents)) {
-    errors.push('_source/catalog.json must contain a documents array');
-  } else {
-    catalog.documents.forEach((doc, index) => {
-      const validated = validateDocumentSchema(doc, `catalog.documents[${index}]`, { manual: true }, errors);
-      if (validated) manualDocs.push(validated);
-    });
+  const catalogProbe = path.join(sourceRoot, '_source', 'catalog.json');
+  let parsedCatalog;
+  if (fs.existsSync(catalogProbe)) {
+    try { parsedCatalog = JSON.parse(fs.readFileSync(catalogProbe, 'utf8')); } catch { parsedCatalog = undefined; }
   }
-
-  const manifestPath = path.join(sourceRoot, '_source', 'generated', 'mom.json');
-  const manifest = readJson(manifestPath, '_source/generated/mom.json', errors);
-  const momDocs = [];
-  if (!Array.isArray(manifest)) {
-    errors.push('_source/generated/mom.json must contain an array');
-  } else {
-    manifest.forEach((doc, index) => {
-      const validated = validateDocumentSchema(doc, `mom[${index}]`, { category: 'mom' }, errors);
-      if (validated) momDocs.push(validated);
-    });
-  }
-
-  const allDocs = [...manualDocs, ...momDocs];
-  const hrefs = new Map();
-  allDocs.forEach((doc) => {
-    const key = doc.normalizedHref.toLocaleLowerCase('en');
-    if (hrefs.has(key)) {
-      errors.push(`Duplicate document output path: ${doc.normalizedHref} (${hrefs.get(key)} and ${doc.title})`);
-    } else {
-      hrefs.set(key, doc.title);
+  if (parsedCatalog && parsedCatalog.schemaVersion === 2) {
+    const sourceResult = validateSourceTree({ projectRoot: sourceRoot, allowLegacy: false });
+    sourceResult.errors.forEach((error) => errors.push(error));
+    const graph = sourceResult.data;
+    if (!sourceResult.success || !graph) {
+      return { allDocs: [], listedDocs: [], manualDocs: [], momDocs: [] };
     }
-    const target = path.join(siteRoot, ...doc.normalizedHref.split('/'));
-    if (!fs.existsSync(target)) errors.push(`Document target is missing from the artifact: ${doc.normalizedHref}`);
-  });
-
-  const publicHrefs = new Set(allDocs.map((doc) => doc.normalizedHref));
-  allDocs.forEach((doc) => {
-    doc.normalizedRelatedDocuments.forEach((relatedHref) => {
-      if (relatedHref === doc.normalizedHref) {
-        errors.push(`${doc.normalizedHref} cannot relate to itself`);
-      } else if (!publicHrefs.has(relatedHref)) {
-        errors.push(`${doc.normalizedHref} relates to missing document: ${relatedHref}`);
-      }
+    const toLegacy = (record) => ({
+      ...record,
+      href: record.route,
+      normalizedHref: record.route,
+      date: record.dates.publishedOn,
+      dateModified: record.dates.modifiedOn,
+      excerpt: record.summary,
+      status: record.workflow.status,
+      visibility: record.workflow.visibility,
+      topics: record.topicIds.map((topicId) => graph.topicsById.get(topicId)?.label || topicId),
+      sourceCount: record.evidence.count,
+      provenance: record.evidence.note,
+      showProvenance: record.evidence.noteVisibility === 'public',
+      relatedDocuments: record.relatedDocumentIds.map((id) => graph.documentsById.get(id)?.route).filter(Boolean),
+      normalizedRelatedDocuments: record.relatedDocumentIds.map((id) => graph.documentsById.get(id)?.route).filter(Boolean),
     });
-  });
-
-  return { allDocs, manualDocs, momDocs };
-}
-
-function parseSimpleFrontmatter(markdown) {
-  const lines = String(markdown).replace(/^\uFEFF/, '').split(/\r?\n/);
-  if (lines[0] !== '---') return {};
-  const values = {};
-  for (let index = 1; index < lines.length; index += 1) {
-    if (lines[index] === '---') break;
-    const match = lines[index].match(/^([A-Za-z][A-Za-z0-9_-]*):\s*(.*?)\s*$/);
-    if (!match) continue;
-    let value = match[2];
-    if ((value.startsWith('"') && value.endsWith('"'))
-      || (value.startsWith("'") && value.endsWith("'"))) {
-      value = value.slice(1, -1);
-    }
-    values[match[1]] = value;
+    const allDocs = graph.documents.map(toLegacy);
+    const listedDocs = graph.listedDocuments.map(toLegacy);
+    const manualDocs = allDocs.filter((doc) => doc.category !== 'mom');
+    const momDocs = allDocs.filter((doc) => doc.category === 'mom');
+    allDocs.forEach((doc) => {
+      const target = path.join(siteRoot, ...doc.normalizedHref.split('/'));
+      if (!fs.existsSync(target)) errors.push(`Document target is missing from the artifact: ${doc.normalizedHref}`);
+    });
+    return { allDocs, listedDocs, manualDocs, momDocs, graph };
   }
-  return values;
+
+  errors.push('_source/catalog.json: schemaVersion must be 2');
+  return { allDocs: [], listedDocs: [], manualDocs: [], momDocs: [] };
 }
 
 function validateMomOutputs(sourceRoot, siteRoot, momDocs, errors) {
-  const manifestHrefs = new Set(momDocs.map((doc) => doc.normalizedHref));
+  const graphRoutes = new Set(momDocs.map((doc) => doc.normalizedHref));
   const publicMomDir = path.join(siteRoot, 'MoM');
   if (fs.existsSync(publicMomDir)) {
     fs.readdirSync(publicMomDir, { withFileTypes: true })
       .filter((entry) => entry.isFile() && path.extname(entry.name).toLowerCase() === '.html' && entry.name !== 'index.html')
       .forEach((entry) => {
         const href = `MoM/${entry.name}`;
-        if (!manifestHrefs.has(href)) errors.push(`${href} is stale or orphaned (not present in the generated manifest)`);
+        if (!graphRoutes.has(href)) errors.push(`${href} is stale or orphaned (not present in the content graph)`);
       });
   }
 
@@ -704,30 +553,36 @@ function validateMomOutputs(sourceRoot, siteRoot, momDocs, errors) {
   fs.readdirSync(sourceDir, { withFileTypes: true })
     .filter((entry) => entry.isFile() && path.extname(entry.name).toLowerCase() === '.md' && entry.name !== 'README.md')
     .forEach((entry) => {
-      const markdown = fs.readFileSync(path.join(sourceDir, entry.name), 'utf8');
-      const frontmatter = parseSimpleFrontmatter(markdown);
-      const legacyMatch = entry.name.match(/^(\d{6})/);
-      const rawSlug = frontmatter.slug || (legacyMatch ? legacyMatch[1] : path.basename(entry.name, '.md'));
-      const slug = String(rawSlug).replace(/\.html$/i, '');
-      if (!slug || /[\\/?#]/.test(slug) || slug === '.' || slug === '..') {
-        errors.push(`_source/MoM/${entry.name} has an unsafe or empty slug: ${rawSlug}`);
+      const sourcePath = path.join(sourceDir, entry.name);
+      const markdown = fs.readFileSync(sourcePath, 'utf8');
+      let frontmatter;
+      try {
+        frontmatter = parseYamlFrontMatter(markdown, `_source/MoM/${entry.name}`).metadata;
+      } catch (error) {
+        errors.push(error.message);
         return;
       }
-      const href = `MoM/${slug}.html`;
+      const legacyMatch = entry.name.match(/^(\d{6})/);
+      const rawRoute = frontmatter.route || `MoM/${frontmatter.slug || (legacyMatch ? legacyMatch[1] : path.basename(entry.name, '.md'))}.html`;
+      const href = String(rawRoute).replace(/\\/g, '/');
+      if (!/^MoM\/[^/?#%]+\.html$/u.test(href) || href.includes('..')) {
+        errors.push(`_source/MoM/${entry.name} has an unsafe or empty route: ${rawRoute}`);
+        return;
+      }
       const key = href.toLocaleLowerCase('en');
       if (sourceOutputs.has(key)) {
         errors.push(`Duplicate MoM output path ${href}: ${sourceOutputs.get(key)} and ${entry.name}`);
       } else {
         sourceOutputs.set(key, entry.name);
       }
-      if (!manifestHrefs.has(href)) {
-        errors.push(`_source/MoM/${entry.name} expects ${href}, but the generated manifest does not contain it`);
+      if (!graphRoutes.has(href)) {
+        errors.push(`_source/MoM/${entry.name} expects ${href}, but the content graph does not contain it`);
       }
     });
 
-  manifestHrefs.forEach((href) => {
+  graphRoutes.forEach((href) => {
     if (!sourceOutputs.has(href.toLocaleLowerCase('en'))) {
-      errors.push(`Generated manifest entry has no matching MoM source slug: ${href}`);
+      errors.push(`Content graph entry has no matching MoM source route: ${href}`);
     }
   });
 }
@@ -842,7 +697,72 @@ function validateIndexCards(relativeIndex, expectedDocs, context, errors) {
   });
 }
 
+function metaContent(document, attribute, value) {
+  const match = findElements(document, (node) => node.tagName === 'meta'
+    && getAttr(node, attribute) === value)[0];
+  return match ? getAttr(match, 'content') : undefined;
+}
+
+function linkContent(document, rel) {
+  const match = findElements(document, (node) => node.tagName === 'link'
+    && getAttr(node, 'rel') === rel)[0];
+  return match ? getAttr(match, 'href') : undefined;
+}
+
+function parseJsonLd(document, label, errors) {
+  const script = findElements(document, (node) => node.tagName === 'script'
+    && getAttr(node, 'type') === 'application/ld+json')[0];
+  if (!script) {
+    errors.push(`${label} is missing JSON-LD`);
+    return undefined;
+  }
+  try {
+    return JSON.parse(textContent(script));
+  } catch (error) {
+    errors.push(`${label} contains invalid JSON-LD: ${error.message}`);
+    return undefined;
+  }
+}
+
+function jsonLdNodes(jsonLd) {
+  if (!jsonLd || typeof jsonLd !== 'object') return [];
+  return Array.isArray(jsonLd['@graph']) ? jsonLd['@graph'] : [jsonLd];
+}
+
+function validateCollectionMetadata(relativeIndex, expectedDocs, context, errors) {
+  const indexPath = path.join(context.siteRoot, ...relativeIndex.split('/'));
+  const record = context.documents.get(path.resolve(indexPath));
+  if (!record) return;
+  if (findElements(record.document, (node) => node.tagName === 'meta'
+    && ['article:published_time', 'article:modified_time'].includes(getAttr(node, 'property'))).length) {
+    errors.push(`${relativeIndex} must not contain article date metadata`);
+  }
+  const jsonLd = parseJsonLd(record.document, relativeIndex, errors);
+  const collection = jsonLdNodes(jsonLd).find((node) => node['@type'] === 'CollectionPage');
+  if (!collection) {
+    errors.push(`${relativeIndex} JSON-LD must contain CollectionPage`);
+    return;
+  }
+  const list = collection.mainEntity;
+  if (!list || list['@type'] !== 'ItemList') {
+    errors.push(`${relativeIndex} JSON-LD must contain an ItemList`);
+    return;
+  }
+  const urls = Array.isArray(list.itemListElement)
+    ? list.itemListElement.map((item) => item.url).filter(Boolean)
+    : [];
+  const expected = expectedDocs.map((doc) => absolutePublicUrl(doc.normalizedHref));
+  if (list.numberOfItems !== expected.length) {
+    errors.push(`${relativeIndex} JSON-LD ItemList numberOfItems does not match the content graph`);
+  }
+  if (JSON.stringify(urls) !== JSON.stringify(expected)) {
+    errors.push(`${relativeIndex} JSON-LD ItemList does not match the content graph`);
+  }
+}
+
 function validateDocumentMetadata(docs, context, errors) {
+  const docsByHref = new Map(docs.map((doc) => [doc.normalizedHref, doc]));
+  const organizationId = `${absolutePublicUrl()}#organization`;
   docs.forEach((doc) => {
     const targetPath = path.join(context.siteRoot, ...doc.normalizedHref.split('/'));
     const record = context.documents.get(path.resolve(targetPath));
@@ -851,21 +771,139 @@ function validateDocumentMetadata(docs, context, errors) {
     if (h1s.length === 1 && normalizedText(h1s[0]) !== doc.title.trim()) {
       errors.push(`${doc.normalizedHref} h1 does not match its catalog/manifest title`);
     }
+    const canonical = absolutePublicUrl(doc.normalizedHref);
+    const expectedImage = absolutePublicUrl(doc.socialImage || 'assets/social-card.png');
+    const checks = [
+      ['name', 'description', doc.summary || doc.excerpt],
+      ['property', 'og:description', doc.summary || doc.excerpt],
+      ['property', 'og:title', doc.title],
+      ['property', 'og:url', canonical],
+      ['name', 'twitter:description', doc.summary || doc.excerpt],
+      ['name', 'twitter:title', doc.title],
+      ['property', 'og:image', expectedImage],
+      ['name', 'twitter:image', expectedImage],
+    ];
+    checks.forEach(([attribute, value, expected]) => {
+      const actual = metaContent(record.document, attribute, value);
+      if (actual !== expected) errors.push(`${doc.normalizedHref} ${value} metadata does not match the content graph`);
+    });
+    if (linkContent(record.document, 'canonical') !== canonical) {
+      errors.push(`${doc.normalizedHref} canonical URL does not match the content graph`);
+    }
+    const robots = metaContent(record.document, 'name', 'robots');
+    if (doc.visibility === 'unlisted' && robots !== 'noindex,follow') {
+      errors.push(`${doc.normalizedHref} unlisted document must use noindex,follow`);
+    }
+    if (doc.visibility === 'public' && robots) errors.push(`${doc.normalizedHref} public document must not use robots noindex`);
+    const publishedMeta = metaContent(record.document, 'property', 'article:published_time');
+    const modifiedMeta = metaContent(record.document, 'property', 'article:modified_time');
+    if (publishedMeta !== doc.date) errors.push(`${doc.normalizedHref} published date metadata does not match the content graph`);
+    if (modifiedMeta !== doc.dateModified) errors.push(`${doc.normalizedHref} modified date metadata does not match the content graph`);
+    const jsonLd = parseJsonLd(record.document, doc.normalizedHref, errors);
+    const nodes = jsonLdNodes(jsonLd);
+    const organization = nodes.find((node) => node['@type'] === 'Organization');
+    const website = nodes.find((node) => node['@type'] === 'WebSite');
+    const webPage = nodes.find((node) => node['@type'] === 'WebPage');
+    const creative = nodes.find((node) => ['Article', 'Report'].includes(node['@type']));
+    if (!organization || organization['@id'] !== organizationId || organization.name !== '우체국물류지원단 물류노동조합') {
+      errors.push(`${doc.normalizedHref} JSON-LD must contain the stable organization`);
+    }
+    if (!website || website['@id'] !== `${absolutePublicUrl()}#website` || website.url !== absolutePublicUrl()) {
+      errors.push(`${doc.normalizedHref} JSON-LD must contain the stable website`);
+    }
+    if (!webPage || webPage['@id'] !== canonical) {
+      errors.push(`${doc.normalizedHref} JSON-LD WebPage ID must equal canonical URL`);
+    } else if (webPage.name !== doc.title || webPage.description !== (doc.summary || doc.excerpt)
+      || webPage.url !== canonical) {
+      errors.push(`${doc.normalizedHref} JSON-LD WebPage values do not match the content graph`);
+    }
+    const expectedCreativeType = doc.category === 'mom' && doc.type === 'report' ? 'Report' : 'Article';
+    if (!creative || creative['@type'] !== expectedCreativeType) {
+      errors.push(`${doc.normalizedHref} JSON-LD must use ${expectedCreativeType}`);
+    } else {
+      const expectedCreativeId = `${absolutePublicUrl()}#document-${encodeURIComponent(doc.id)}`;
+      if (creative.description !== (doc.summary || doc.excerpt)) errors.push(`${doc.normalizedHref} JSON-LD description does not match the content graph`);
+      if (creative.name !== doc.title || creative.headline !== doc.title) errors.push(`${doc.normalizedHref} JSON-LD title does not match the content graph`);
+      if (creative['@id'] !== expectedCreativeId || creative.url !== canonical) errors.push(`${doc.normalizedHref} JSON-LD CreativeWork ID or URL is unstable`);
+      if (creative.image !== expectedImage) errors.push(`${doc.normalizedHref} JSON-LD image does not match the content graph`);
+      if (creative.datePublished !== doc.date) errors.push(`${doc.normalizedHref} JSON-LD datePublished does not match the content graph`);
+      if (creative.dateModified !== doc.dateModified) errors.push(`${doc.normalizedHref} JSON-LD dateModified does not match the content graph`);
+      if (creative.creativeWorkStatus !== doc.status) errors.push(`${doc.normalizedHref} JSON-LD creativeWorkStatus does not match the content graph`);
+      if (creative.author?.['@id'] !== organizationId || creative.publisher?.['@id'] !== organizationId) {
+        errors.push(`${doc.normalizedHref} JSON-LD author and publisher must be the organization`);
+      }
+      const aboutIds = Array.isArray(creative.about) ? creative.about.map((topic) => topic.identifier) : [];
+      if (JSON.stringify(aboutIds) !== JSON.stringify(doc.topicIds || [])) {
+        errors.push(`${doc.normalizedHref} JSON-LD topics do not match the content graph`);
+      }
+      if (creative.mainEntityOfPage?.['@id'] !== canonical) {
+        errors.push(`${doc.normalizedHref} JSON-LD mainEntityOfPage does not match the canonical URL`);
+      }
+    }
+    findElements(record.document, (node) => node.tagName === 'a' && hasClass(node, 'related-document'))
+      .forEach((link) => {
+        const target = publicPathForReference(getAttr(link, 'href'), record, context);
+        const related = target && docsByHref.get(target);
+        if (related && related.visibility !== 'public') {
+          errors.push(`${doc.normalizedHref} exposes an unlisted related document: ${target}`);
+        }
+      });
   });
 }
 
 function validateContentIndexes(content, context, errors) {
-  validateIndexCards('index.html', content.allDocs, context, errors);
-  validateIndexCards('MoM/index.html', content.momDocs, context, errors);
+  const listedDocs = content.listedDocs || content.allDocs;
+  validateIndexCards('index.html', listedDocs, context, errors);
+  validateIndexCards('MoM/index.html', listedDocs.filter((doc) => doc.category === 'mom'), context, errors);
   ['statement', 'knowledge', 'notice'].forEach((category) => {
     validateIndexCards(
       `${category}/index.html`,
-      content.manualDocs.filter((doc) => doc.category === category),
+      listedDocs.filter((doc) => doc.category === category),
       context,
       errors,
     );
   });
-  validateDocumentMetadata(content.allDocs, context, errors);
+  if (content.graph && content.allDocs.length > 0) {
+    validateDocumentMetadata(content.allDocs, context, errors);
+    validateCollectionMetadata('index.html', listedDocs, context, errors);
+    validateCollectionMetadata(
+      'MoM/index.html',
+      listedDocs.filter((doc) => doc.category === 'mom'),
+      context,
+      errors,
+    );
+    ['statement', 'knowledge', 'notice'].forEach((category) => {
+      validateCollectionMetadata(
+        `${category}/index.html`,
+        listedDocs.filter((doc) => doc.category === category),
+        context,
+        errors,
+      );
+    });
+  }
+}
+
+function validateSitemap(docs, siteRoot, errors) {
+  const sitemapPath = path.join(siteRoot, 'sitemap.xml');
+  if (!fs.existsSync(sitemapPath)) return;
+  const xml = fs.readFileSync(sitemapPath, 'utf8');
+  const actual = [...xml.matchAll(/<url>[\s\S]*?<loc>([^<]+)<\/loc>(?:[\s\S]*?<lastmod>([^<]+)<\/lastmod>)?[\s\S]*?<\/url>/g)]
+    .map((match) => ({ loc: match[1], lastmod: match[2] || '' }));
+  const newest = (items) => items.reduce((latest, item) => {
+    const date = item.dateModified || item.date;
+    return date > latest ? date : latest;
+  }, '');
+  const expected = [
+    { href: '', date: newest(docs) },
+    ...CATEGORY_REGISTRY.map((category) => ({
+      href: `${category.directory}/`,
+      date: newest(docs.filter((doc) => doc.category === category.key)),
+    })),
+    ...docs.map((doc) => ({ href: doc.normalizedHref, date: doc.dateModified || doc.date })),
+  ].map((entry) => ({ loc: absolutePublicUrl(entry.href), lastmod: entry.date || '' }));
+  if (JSON.stringify(actual) !== JSON.stringify(expected)) {
+    errors.push('sitemap.xml URLs do not match public content graph documents');
+  }
 }
 
 function validateSite(options = {}) {
@@ -897,6 +935,7 @@ function validateSite(options = {}) {
   validateMomOutputs(sourceRoot, siteRoot, content.momDocs, errors);
   validateStatementOutputs(sourceRoot, siteRoot, content.manualDocs, errors);
   validateContentIndexes(content, context, errors);
+  if (content.graph && content.allDocs.length > 0) validateSitemap(content.listedDocs || content.allDocs, siteRoot, errors);
 
   return { errors, siteRoot, pagesBasePath };
 }
@@ -915,7 +954,6 @@ if (require.main === module) main();
 
 module.exports = {
   normalizePagesBasePath,
-  parseSimpleFrontmatter,
   parseSrcset,
   resolveReference,
   validateSite,
