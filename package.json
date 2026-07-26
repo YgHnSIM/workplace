@@ -7,7 +7,7 @@
     "validate:sources": "node scripts/validate-sources.js",
     "validate:artifact": "node validate_site.js",
     "verify:generated": "node scripts/verify-generated.js",
-    "check:syntax": "node --check lib/site-utils.js && node --check lib/site-components.js && node --check lib/content-model.js && node --check lib/build-utils.js && node --check build_mom.js && node --check build_statement.js && node --check build_site.js && node --check scripts/build-all.js && node --check scripts/normalize-manual-sources.js && node --check scripts/validate-sources.js && node --check validate_site.js && node --check scripts/stage-site.js && node --check scripts/verify-generated.js && node --check assets/archive-filter.js && node --check assets/document-tools.js && node --check assets/video-embed.js",
+    "check:syntax": "node --check lib/html-tree.js && node --check lib/statement-fragment.js && node --check lib/site-utils.js && node --check lib/site-components.js && node --check lib/content-model.js && node --check lib/build-utils.js && node --check build_mom.js && node --check build_statement.js && node --check build_site.js && node --check scripts/build-all.js && node --check scripts/normalize-manual-sources.js && node --check scripts/validate-sources.js && node --check validate_site.js && node --check scripts/stage-site.js && node --check scripts/verify-generated.js && node --check assets/archive-filter.js && node --check assets/document-tools.js && node --check assets/video-embed.js",
     "check": "npm run check:syntax && npm run validate:sources && npm run build && npm run verify:generated && npm test && npm run stage && npm run validate:artifact"
   },
   "devDependencies": {

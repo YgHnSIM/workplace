@@ -8,6 +8,7 @@ const {
   validateRoute,
   validateSourceTree,
 } = require('../lib/content-model');
+const { validateStatementFragment } = require('../build_statement');
 const { buildAll } = require('../scripts/build-all');
 
 const projectRoot = path.resolve(__dirname, '..');
@@ -115,6 +116,49 @@ test('source validation rejects unsafe routes, missing relationships, and incomp
   assert.ok(result.errors.some((error) => error.includes('unknown document')));
   assert.ok(result.errors.some((error) => error.includes('unknown source')));
   assert.ok(result.errors.some((error) => error.includes('cannot exceed evidence.count')));
+});
+
+test('source validation and statement rendering share the strict fragment policy', () => {
+  const root = fixtureRoot();
+  const catalog = readCatalog(root);
+  const statement = catalog.documents.find((document) => document.category === 'statement');
+  const sourcePath = path.join(
+    root,
+    '_source',
+    'statement',
+    `${path.basename(statement.route, '.html')}.body.html`,
+  );
+  const invalidFragment = `<section>
+  <h2 class="section-title">제목</h2>
+  <p class="body-text">본문</p>
+  <div class="closing-block">
+    <p class="closing-highlight">요구</p>
+    <p class="closing-text">노동조합</p>
+  </div>
+</section>
+`;
+  fs.writeFileSync(sourcePath, invalidFragment, 'utf8');
+
+  const result = validateSourceTree({ projectRoot: root });
+
+  assert.equal(result.success, false);
+  assert.ok(result.errors.some((error) => error.includes('closing block must be a top-level element')));
+  assert.throws(
+    () => validateStatementFragment(invalidFragment, sourcePath),
+    /closing block must be a top-level element/,
+  );
+});
+
+test('content registries remain real Maps when an id matches a Map method', () => {
+  const root = fixtureRoot();
+  const topicsPath = path.join(root, '_source', 'topics.json');
+  const topics = JSON.parse(fs.readFileSync(topicsPath, 'utf8'));
+  topics.topics.push({ id: 'get', label: 'Map method collision fixture' });
+  fs.writeFileSync(topicsPath, `${JSON.stringify(topics, null, 2)}\n`, 'utf8');
+
+  const graph = loadContentGraph({ projectRoot: root });
+
+  assert.equal(graph.topicsById.get('get').label, 'Map method collision fixture');
 });
 
 test('route validator rejects traversal, query, fragments, schemes, and encoded paths', () => {

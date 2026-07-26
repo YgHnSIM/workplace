@@ -1,6 +1,5 @@
 const fs = require('fs');
 const path = require('path');
-const parse5 = require('parse5');
 const {
   assertIsoDate,
   escapeAttr,
@@ -13,172 +12,22 @@ const {
 const { CATEGORY_BY_ID, loadContentGraph } = require('./lib/content-model');
 const { writeOutputMap } = require('./lib/build-utils');
 const {
+  inspectStatementFragment,
+  validateStatementFragment,
+} = require('./lib/statement-fragment');
+const {
   renderBreadcrumb,
   renderDocumentTools,
   renderSiteMasthead,
 } = require('./lib/site-components');
 
 const rootDir = __dirname;
-const outputDir = path.join(rootDir, 'statement');
 
-const ALLOWED_TAGS = new Set([
-  'section',
-  'h2',
-  'p',
-  'div',
-  'ol',
-  'ul',
-  'li',
-  'strong',
-  'em',
-  'br',
-]);
-const ALLOWED_CLASSES = new Set([
-  'intro-section',
-  'section-title',
-  'body-text',
-  'no-indent',
-  'demands',
-  'closing-block',
-  'closing-highlight',
-  'closing-text',
-]);
 const PRINT_DENSITIES = Object.freeze({
   short: { maxScore: 1400 },
   standard: { maxScore: 2800 },
   long: { maxScore: Number.POSITIVE_INFINITY },
 });
-
-function visit(node, callback) {
-  callback(node);
-  (node.childNodes || []).forEach((child) => visit(child, callback));
-}
-
-function getAttribute(node, name) {
-  const attribute = (node.attrs || []).find((item) => item.name === name);
-  return attribute ? attribute.value : undefined;
-}
-
-function classesOf(node) {
-  return new Set(String(getAttribute(node, 'class') || '').split(/\s+/).filter(Boolean));
-}
-
-function hasClass(node, className) {
-  return classesOf(node).has(className);
-}
-
-function nodeText(node) {
-  if (node.nodeName === '#text') return node.value || '';
-  return (node.childNodes || []).map(nodeText).join(' ');
-}
-
-function inspectStatementFragment(fragment, sourcePath = 'statement body fragment') {
-  const document = parse5.parseFragment(String(fragment || ''), { sourceCodeLocationInfo: true });
-  const label = typeof sourcePath === 'string' ? sourcePath : String(sourcePath);
-  const metrics = {
-    sectionCount: 0,
-    sectionTitleCount: 0,
-    paragraphCount: 0,
-    lineBreakCount: 0,
-    demandCount: 0,
-    closingRowCount: 0,
-    characterCount: 0,
-  };
-  const closingBlocks = [];
-  const closingParagraphs = [];
-  let demandBlockCount = 0;
-
-  visit(document, (node) => {
-    if (node.nodeName === '#comment' || node.nodeName === '#documentType') {
-      throw new Error(`${label} contains unsupported comment or doctype markup`);
-    }
-    if (!node.tagName) return;
-    if (!ALLOWED_TAGS.has(node.tagName)) {
-      throw new Error(`${label} contains unsupported <${node.tagName}> markup`);
-    }
-    (node.attrs || []).forEach((attribute) => {
-      if (attribute.name !== 'class') {
-        throw new Error(`${label} contains unsupported ${attribute.name} attribute on <${node.tagName}>`);
-      }
-    });
-    classesOf(node).forEach((className) => {
-      if (!ALLOWED_CLASSES.has(className)) {
-        throw new Error(`${label} contains unsupported class: ${className}`);
-      }
-    });
-
-    if (node.tagName === 'section') metrics.sectionCount += 1;
-    if (node.tagName === 'h2' && hasClass(node, 'section-title')) metrics.sectionTitleCount += 1;
-    if (node.tagName === 'p' && hasClass(node, 'body-text')) metrics.paragraphCount += 1;
-    if (node.tagName === 'br') metrics.lineBreakCount += 1;
-    if (node.tagName === 'div' && hasClass(node, 'demands')) demandBlockCount += 1;
-    if (node.tagName === 'li' && (node.parentNode && ['ol', 'ul'].includes(node.parentNode.tagName))) {
-      let ancestor = node.parentNode;
-      while (ancestor && ancestor !== document) {
-        if (hasClass(ancestor, 'demands')) {
-          metrics.demandCount += 1;
-          break;
-        }
-        ancestor = ancestor.parentNode;
-      }
-    }
-    if (node.tagName === 'div' && hasClass(node, 'closing-block')) closingBlocks.push(node);
-    if (node.tagName === 'p' && (hasClass(node, 'closing-highlight') || hasClass(node, 'closing-text'))) {
-      closingParagraphs.push(node);
-    }
-  });
-
-  metrics.characterCount = nodeText(document).replace(/\s+/g, '').length;
-  if (metrics.sectionCount < 1 || metrics.sectionTitleCount < 1 || metrics.paragraphCount < 1) {
-    throw new Error(`${label} must contain sections, section-title headings, and body-text paragraphs`);
-  }
-  if (demandBlockCount > 1) throw new Error(`${label} may contain at most one demands block`);
-  if (demandBlockCount === 1 && metrics.demandCount < 1) {
-    throw new Error(`${label} demands block must contain at least one list item`);
-  }
-  if (closingBlocks.length !== 1) {
-    throw new Error(`${label} must contain one closing block with highlights and one closing-text row`);
-  }
-  const closingBlock = closingBlocks[0];
-  if (closingBlock.parentNode !== document) {
-    throw new Error(`${label} closing block must be a top-level element`);
-  }
-  const closingRows = (closingBlock.childNodes || []).filter((node) => node.tagName);
-  const invalidClosingText = (closingBlock.childNodes || [])
-    .some((node) => node.nodeName === '#text' && String(node.value || '').trim());
-  const validClosingRows = closingRows.every((node) => (
-    node.tagName === 'p'
-    && (hasClass(node, 'closing-highlight') || hasClass(node, 'closing-text'))
-  ));
-  const closingTextRows = closingRows.filter((node) => hasClass(node, 'closing-text'));
-  if (invalidClosingText || !validClosingRows || closingRows.length < 2
-    || closingTextRows.length !== 1 || !hasClass(closingRows.at(-1), 'closing-text')) {
-    throw new Error(`${label} closing block must end with one closing-text row after its highlights`);
-  }
-  if (closingParagraphs.some((node) => node.parentNode !== closingBlock)) {
-    throw new Error(`${label} closing rows must be direct children of the closing block`);
-  }
-  metrics.closingRowCount = closingRows.length;
-
-  const topLevelElements = (document.childNodes || []).filter((node) => node.tagName);
-  const invalidTopLevelNode = (document.childNodes || []).find((node) => {
-    if (node.nodeName === '#text') return String(node.value || '').trim();
-    if (node.tagName === 'section') return false;
-    return node !== closingBlock;
-  });
-  if (invalidTopLevelNode || topLevelElements.at(-1) !== closingBlock) {
-    throw new Error(`${label} may contain only sections followed by the closing block at the top level`);
-  }
-
-  return {
-    html: parse5.serialize(document).trim(),
-    metrics,
-  };
-}
-
-function validateStatementFragment(fragment, sourcePath = 'statement body fragment') {
-  return inspectStatementFragment(fragment, sourcePath).metrics;
-}
 
 function scoreStatementContent(metrics, document = {}) {
   const titleCharacterCount = String(document.title || '').replace(/\s+/g, '').length;

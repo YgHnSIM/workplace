@@ -2,6 +2,15 @@ const fs = require('fs');
 const path = require('path');
 const parse5 = require('parse5');
 const {
+  findElements,
+  findFirstDescendant,
+  getAttribute: getAttr,
+  hasClass,
+  normalizedText,
+  textContent,
+  visitNodes: visit,
+} = require('./lib/html-tree');
+const {
   absolutePublicUrl,
   relativeTo,
   toPosixPath,
@@ -62,47 +71,6 @@ function walkSiteFiles(directory, errors = [], siteRoot = directory) {
   });
 
   return files;
-}
-
-function getAttr(node, name) {
-  const attr = (node.attrs || []).find((candidate) => candidate.name.toLowerCase() === name.toLowerCase());
-  return attr ? attr.value : undefined;
-}
-
-function hasClass(node, className) {
-  return String(getAttr(node, 'class') || '').split(/\s+/).includes(className);
-}
-
-function visit(node, callback, ancestors = []) {
-  callback(node, ancestors);
-  (node.childNodes || []).forEach((child) => visit(child, callback, [...ancestors, node]));
-  if (node.content) visit(node.content, callback, [...ancestors, node]);
-}
-
-function findElements(document, predicate) {
-  const matches = [];
-  visit(document, (node) => {
-    if (node.tagName && predicate(node)) matches.push(node);
-  });
-  return matches;
-}
-
-function findFirstDescendant(node, predicate) {
-  let result;
-  visit(node, (candidate) => {
-    if (!result && candidate !== node && candidate.tagName && predicate(candidate)) result = candidate;
-  });
-  return result;
-}
-
-function textContent(node) {
-  if (!node) return '';
-  if (node.nodeName === '#text') return node.value || '';
-  return (node.childNodes || []).map(textContent).join('');
-}
-
-function normalizedText(node) {
-  return textContent(node).replace(/\s+/g, ' ').trim();
 }
 
 function nodeLocation(node) {
