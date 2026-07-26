@@ -4,13 +4,17 @@ const MarkdownIt = require('markdown-it');
 const {
   assertIsoDate,
   escapeAttr,
-  escapeHtml,
   relativeTo,
   renderPageHead,
-  renderTime,
   versionedAssetHref,
   writeTextFile,
 } = require('./lib/site-utils');
+const {
+  renderDocumentHeader,
+  renderDocumentToc,
+  renderDocumentTools,
+  renderSiteMasthead,
+} = require('./lib/site-components');
 
 const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'MoM');
@@ -319,75 +323,15 @@ function parseMarkdown(markdown, title) {
   const env = {};
   const tokens = markdownRenderer.parse(normalized, env);
   const toc = annotateDocumentTokens(tokens, title);
+  if (!toc.some((item) => item.level === 2)) {
+    toc.forEach((item) => {
+      if (item.level === 3) item.level = 2;
+    });
+  }
   return {
     content: markdownRenderer.renderer.render(tokens, markdownRenderer.options, env),
     toc,
   };
-}
-
-function buildUtilityBar() {
-  return `  <div class="utility-bar" id="utility-bar">
-    <div class="utility-button-container">
-      <button id="zoom-in-btn" aria-label="글자 크기 크게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 크게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-out-btn" aria-label="글자 크기 작게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 작게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-reset-btn" aria-label="글자 크기 초기화">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-      </button>
-      <span class="utility-tooltip">기본 크기</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-btn" aria-label="텍스트 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-      </button>
-      <span class="utility-tooltip">텍스트 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-link-btn" aria-label="웹페이지 링크 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-      </button>
-      <span class="utility-tooltip">링크 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="to-top-btn" aria-label="맨 위로 이동">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>
-      </button>
-      <span class="utility-tooltip">맨 위로</span>
-    </div>
-  </div>`;
-}
-
-function renderLogoMark() {
-  return `<div class="header-logo logo-mark" role="img" aria-label="우체국물류지원단 물류노동조합 로고">
-          <span>우체국물류지원단</span>
-          <strong>물류노동조합</strong>
-        </div>`;
-}
-
-function renderDocumentToc(toc) {
-  if (!toc.length) return '';
-
-  const links = toc.map((item) => (
-    `        <a href="#${escapeAttr(item.id)}" class="document-toc-link document-toc-level-${item.level}">${escapeHtml(item.text)}</a>`
-  )).join('\n');
-
-  return `    <nav class="document-toc" aria-label="문서 목차">
-      <h2 class="document-toc-title">문서 목차</h2>
-      <div class="document-toc-links">
-${links}
-      </div>
-    </nav>
-
-`;
 }
 
 function buildDetailHtml({ title, description, content, toc, date, type, outputPath }) {
@@ -411,20 +355,15 @@ ${renderPageHead({
 </head>
 
 <body>
-  <a href="../index.html" class="back-link">
-    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-    첫 페이지로 돌아가기
-  </a>
-
+${renderSiteMasthead({ rootDir, outputFile: outputPath })}
   <main class="mom-container document-article" id="mom-article" data-document-category="${escapeAttr(typeMeta.label)}">
-    <header class="mom-header">
-      <div class="header-top-row">
-        ${renderLogoMark()}
-        <div class="mom-category">${escapeHtml(typeMeta.label)}</div>
-      </div>
-      <h1 class="statement-title">${escapeHtml(title)}</h1>
-      <p class="document-date">${renderTime(date)}</p>
-    </header>
+${renderDocumentHeader({
+    rootDir,
+    outputFile: outputPath,
+    category: 'mom',
+    title,
+    description,
+  })}
 
 ${renderDocumentToc(toc)}
     <div class="mom-body" data-copy-body>
@@ -432,68 +371,8 @@ ${content}
     </div>
   </main>
 
-${buildUtilityBar()}
+${renderDocumentTools()}
   <script src="${escapeAttr(documentTools)}" defer></script>
-</body>
-
-</html>
-`;
-}
-
-function buildIndexHtml(docs, outputPath) {
-  const cards = docs.map((doc, index) => {
-    const idBase = `mom-doc-${index + 1}`;
-    return `      <article class="doc-card" data-category="mom" data-status="final" data-topics="${escapeAttr(doc.topics.join('|'))}">
-        <div class="card-meta" id="${idBase}-meta">
-          <span class="badge-category">${escapeHtml(doc.typeMeta.label)}</span>
-          ${renderTime(doc.date)}
-          <span class="card-status" data-status="final">확정</span>
-        </div>
-        <h2 class="doc-title" id="${idBase}-title"><a class="doc-card-link" href="${escapeAttr(doc.outputFileName)}" aria-describedby="${idBase}-meta ${idBase}-excerpt">${escapeHtml(doc.title)}</a></h2>
-        <p class="doc-excerpt" id="${idBase}-excerpt">${escapeHtml(doc.excerpt)}</p>
-        <div class="card-topics" aria-label="주제">${doc.topics.map((topic) => `<span class="card-topic">${escapeHtml(topic)}</span>`).join('')}</div>
-        <div class="card-footer" aria-hidden="true">
-          ${escapeHtml(doc.typeMeta.action)}
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </div>
-      </article>`;
-  }).join('\n\n');
-
-  return `<!DOCTYPE html>
-<html lang="ko">
-
-<head>
-${renderPageHead({
-    rootDir,
-    outputFile: outputPath,
-    title: '운영위원회 회의록 아카이브',
-    description: '우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 일람입니다.',
-    schemaType: 'CollectionPage',
-    dateModified: docs.reduce((latest, doc) => (doc.date > latest ? doc.date : latest), ''),
-    keywords: ['운영위원회', '회의록', '결산'],
-  })}
-</head>
-
-<body>
-  <main class="archive-container">
-    <a href="../index.html" class="back-link">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      첫 페이지로 돌아가기
-    </a>
-    <header class="archive-header">
-      ${renderLogoMark()}
-      <h1 class="archive-title">운영위원회 회의록</h1>
-      <p class="archive-desc">우체국물류지원단 물류노동조합 운영위원회의 정기 및 임시 회의록 보관소입니다.</p>
-    </header>
-
-    <section class="doc-list" aria-label="운영위원회 회의록 목록">
-${cards}
-    </section>
-
-    <footer class="archive-footer">
-      <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
-    </footer>
-  </main>
 </body>
 
 </html>
@@ -604,7 +483,6 @@ function logGeneratedFiles(docs) {
   docs.forEach((doc) => {
     console.log(`Generated ${relativeTo(rootDir, doc.outputPath)} from ${relativeTo(rootDir, doc.sourcePath)}`);
   });
-  console.log(`Generated ${relativeTo(rootDir, path.join(outputDir, 'index.html'))}`);
   console.log(`Generated ${relativeTo(rootDir, path.join(generatedDir, 'mom.json'))}`);
 }
 
@@ -614,8 +492,6 @@ function build() {
   docs.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug, 'ko'));
   docs.forEach(writeMomDocument);
 
-  const indexPath = path.join(outputDir, 'index.html');
-  writeTextFile(indexPath, buildIndexHtml(docs, indexPath));
   writeMomManifest(docs);
   logGeneratedFiles(docs);
 }

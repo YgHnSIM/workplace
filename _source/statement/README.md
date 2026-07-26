@@ -9,7 +9,7 @@
 3. 아래 허용 구조로 본문을 작성합니다.
 4. `npm run check`를 실행하고 원본과 생성 HTML을 함께 커밋합니다.
 
-`titleLines`는 선택 사항입니다. 정확한 제목 줄바꿈이 필요할 때만 사용하며, 각 줄을 공백으로 합친 값이 `title`과 같아야 합니다.
+`printTitleLines`는 선택 사항입니다. 인쇄에서만 정확한 제목 줄바꿈이 필요할 때 사용하며, 각 줄을 공백으로 합친 값이 `title`과 같아야 합니다.
 
 자동 선택 결과가 실제 인쇄물과 맞지 않는 예외 문서는 `printDensity`를 `short`, `standard`, `long` 중 하나로 지정해 수동 보정할 수 있습니다. 기본값은 항상 본문 분량에 따른 자동 선택입니다.
 
@@ -18,7 +18,7 @@
   "category": "statement",
   "href": "statement/example.html",
   "title": "성명서 제목",
-  "titleLines": ["성명서", "제목"],
+  "printTitleLines": ["성명서", "제목"],
   "date": "2026-07-11",
   "excerpt": "목록과 공유 메타데이터에 사용할 설명입니다.",
   "action": "성명서 보기",

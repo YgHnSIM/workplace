@@ -25,7 +25,7 @@
   <link rel="icon" href="../assets/favicon-32.png?v=2b7f670c1bde" sizes="32x32" type="image/png">
   <link rel="icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192">
-  <link rel="stylesheet" href="../assets/interface.css?v=021562a45334">
+  <link rel="stylesheet" href="../assets/interface.css?v=b24cf48646f1">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -105,148 +105,138 @@
 </head>
 
 <body>
-  <main class="archive-container">
-    <a href="../index.html" class="back-link">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      첫 페이지로 돌아가기
+<!-- site-masthead:start -->
+  <header class="site-masthead">
+    <a class="site-logo" href="../" aria-label="우체국물류지원단 물류노동조합 첫 페이지">
+      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합">
     </a>
+    <a class="site-archive-entry" href="../">공개 자료실</a>
+  </header>
+<!-- site-masthead:end -->
+  <main class="archive-container" data-archive-category="mom">
     <header class="archive-header">
-      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <div class="archive-heading">
-        <p class="archive-kicker">쟁점별 기록 원장</p>
-        <h1 class="archive-title">운영위원회 회의록</h1>
-      </div>
+      <h1 class="archive-title">운영위원회 회의록</h1>
       <p class="archive-desc">우체국물류지원단 물류노동조합 운영위원회의 정기·임시 회의록과 결산 자료입니다.</p>
     </header>
+
+    <nav class="archive-category-nav" aria-label="자료 분류">
+      <a href="../">전체</a>
+      <a href="../statement/">성명서</a>
+      <a href="./" aria-current="page">회의록</a>
+      <a href="../knowledge/">지식</a>
+      <a href="../notice/">알림</a>
+    </nav>
+
+    <section class="archive-tools" aria-label="자료 찾기">
+      <p class="archive-result-summary" id="archive-result-summary" aria-live="polite">자료 7건</p>
+      <div class="archive-query-row">
+        <form class="archive-search" role="search" novalidate>
+          <label for="archive-search-input">자료 검색</label>
+          <div class="archive-search-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="archive-search-input" name="q" type="search" inputmode="search" autocomplete="off" placeholder="제목·설명·주제 검색">
+            <button class="archive-search-clear" type="button" hidden>지우기</button>
+          </div>
+        </form>
+        <div class="topic-filter">
+          <label for="archive-topic-select">쟁점</label>
+          <select id="archive-topic-select" name="topic">
+            <option value="all">모든 쟁점</option>
+          <option value="결산">결산</option>
+          <option value="운영위원회">운영위원회</option>
+          <option value="회의록">회의록</option>
+          </select>
+        </div>
+      </div>
+    </section>
 
     <section class="doc-list" id="archive-results" aria-label="운영위원회 회의록 목록">
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|회의록" data-search="2026년 7월 운영위원회 회의록 통상임금 소송, 병가 차별 재심, 명절 보로금과 고용 안정, 조직 확대 및 하반기 활동 계획을 논의했습니다. 회의록 확정 운영위원회 회의록">
         <div class="card-meta" id="doc-1-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-07-03">2026년&nbsp;7월&nbsp;3일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-1-title"><a class="doc-card-link" href="202607.html" aria-describedby="doc-1-meta doc-1-excerpt">2026년 7월 운영위원회 회의록</a></h2>
         <p class="doc-excerpt" id="doc-1-excerpt">통상임금 소송, 병가 차별 재심, 명절 보로금과 고용 안정, 조직 확대 및 하반기 활동 계획을 논의했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">회의록</span></div>
-        <div class="card-footer" aria-hidden="true">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|결산" data-search="2026년 상반기 운영위원회 종합 결산 상반기 운영위원회의 현장 인력, 고용 안정, 병가 차별, 복무·복지, 조직 확대와 재정 안정 과제를 종합했습니다. 회의록 확정 운영위원회 결산">
         <div class="card-meta" id="doc-2-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-06-30">2026년&nbsp;6월&nbsp;30일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-2-title"><a class="doc-card-link" href="202606.html" aria-describedby="doc-2-meta doc-2-excerpt">2026년 상반기 운영위원회 종합 결산</a></h2>
         <p class="doc-excerpt" id="doc-2-excerpt">상반기 운영위원회의 현장 인력, 고용 안정, 병가 차별, 복무·복지, 조직 확대와 재정 안정 과제를 종합했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">결산</span></div>
-        <div class="card-footer" aria-hidden="true">
-          결산 자료 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|회의록" data-search="2026년 5월 운영위원회 회의록 병가 차별 재심 대응, 현장 안전과 휴게권 개선, 공동 워크숍과 퇴직 시점 단일화 방안을 논의했습니다. 회의록 확정 운영위원회 회의록">
         <div class="card-meta" id="doc-3-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-05-08">2026년&nbsp;5월&nbsp;8일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-3-title"><a class="doc-card-link" href="202605.html" aria-describedby="doc-3-meta doc-3-excerpt">2026년 5월 운영위원회 회의록</a></h2>
         <p class="doc-excerpt" id="doc-3-excerpt">병가 차별 재심 대응, 현장 안전과 휴게권 개선, 공동 워크숍과 퇴직 시점 단일화 방안을 논의했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">회의록</span></div>
-        <div class="card-footer" aria-hidden="true">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|회의록" data-search="2026년 4월 운영위원회 회의록 현장 인력 충원과 병가 제도, 차별 시정 신청, 작업 환경 개선과 고용 안정 대응 계획을 논의했습니다. 회의록 확정 운영위원회 회의록">
         <div class="card-meta" id="doc-4-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-04-03">2026년&nbsp;4월&nbsp;3일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-4-title"><a class="doc-card-link" href="202604.html" aria-describedby="doc-4-meta doc-4-excerpt">2026년 4월 운영위원회 회의록</a></h2>
         <p class="doc-excerpt" id="doc-4-excerpt">현장 인력 충원과 병가 제도, 차별 시정 신청, 작업 환경 개선과 고용 안정 대응 계획을 논의했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">회의록</span></div>
-        <div class="card-footer" aria-hidden="true">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|회의록" data-search="2026년 3월 운영위원회 회의록 단시간 노동자 병가 차별 시정 신청, 기간제 쪼개기 계약 대응, 고용 안정과 조합 권리 확보 방안을 논의했습니다. 회의록 확정 운영위원회 회의록">
         <div class="card-meta" id="doc-5-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-03-06">2026년&nbsp;3월&nbsp;6일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-5-title"><a class="doc-card-link" href="202603.html" aria-describedby="doc-5-meta doc-5-excerpt">2026년 3월 운영위원회 회의록</a></h2>
         <p class="doc-excerpt" id="doc-5-excerpt">단시간 노동자 병가 차별 시정 신청, 기간제 쪼개기 계약 대응, 고용 안정과 조합 권리 확보 방안을 논의했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">회의록</span></div>
-        <div class="card-footer" aria-hidden="true">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|회의록" data-search="2026년 2월 운영위원회 회의록 기간제 고용 불안에 대한 단계적 대응, 단시간 노동자 병가 차별 개선, 본사 이전과 현장 현안을 논의했습니다. 회의록 확정 운영위원회 회의록">
         <div class="card-meta" id="doc-6-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-01-30">2026년&nbsp;1월&nbsp;30일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-6-title"><a class="doc-card-link" href="202602.html" aria-describedby="doc-6-meta doc-6-excerpt">2026년 2월 운영위원회 회의록</a></h2>
         <p class="doc-excerpt" id="doc-6-excerpt">기간제 고용 불안에 대한 단계적 대응, 단시간 노동자 병가 차별 개선, 본사 이전과 현장 현안을 논의했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">회의록</span></div>
-        <div class="card-footer" aria-hidden="true">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="mom" data-status="final" data-topics="운영위원회|회의록" data-search="2026년 1월 운영위원회 회의록 신임 임원 선임, 임금·복지 교섭 경과, 기간제 고용 안정과 현장 운영 개선 과제를 논의했습니다. 회의록 확정 운영위원회 회의록">
         <div class="card-meta" id="doc-7-meta">
-          <span class="badge-category">회의록</span>
           <time class="doc-date" datetime="2026-01-09">2026년&nbsp;1월&nbsp;9일</time>
+          <span class="badge-category">회의록</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-7-title"><a class="doc-card-link" href="202601.html" aria-describedby="doc-7-meta doc-7-excerpt">2026년 1월 운영위원회 회의록</a></h2>
         <p class="doc-excerpt" id="doc-7-excerpt">신임 임원 선임, 임금·복지 교섭 경과, 기간제 고용 안정과 현장 운영 개선 과제를 논의했습니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">운영위원회</span><span class="card-topic">회의록</span></div>
-        <div class="card-footer" aria-hidden="true">
-          회의록 전문 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
       <div class="empty-state archive-no-results" role="status" hidden>
-        <p>조건에 맞는 자료가 없습니다. 검색어나 필터를 바꿔보세요.</p>
+        <p>일치하는 자료가 없습니다.</p>
       </div>
     </section>
 
     <footer class="archive-footer">
-      <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
+      <p>우체국물류지원단 물류노동조합</p>
     </footer>
   </main>
+  <script src="../assets/archive-filter.js?v=fecfd98c157b" defer></script>
 </body>
 
 </html>

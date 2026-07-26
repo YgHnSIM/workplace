@@ -26,7 +26,7 @@
   <meta name="twitter:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
   <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/favicon-192.png" sizes="192x192">
-  <link rel="stylesheet" href="../assets/interface.css?v=021562a45334">
+  <link rel="stylesheet" href="../assets/interface.css?v=b24cf48646f1">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -373,17 +373,12 @@
       font-size: calc(26px * var(--font-scale));
     }
 
-    .utility-bar {
-      display: none;
-    }
 
     @media (max-width: 720px) {
       body {
         padding: 24px 16px 96px;
       }
-
-      .archive-container,
-      .back-link {
+.archive-container {
         width: 100%;
       }
 
@@ -486,13 +481,27 @@
 </head>
 
 <body>
+<!-- site-masthead:start -->
+  <header class="site-masthead">
+    <a class="site-logo" href="../" aria-label="우체국물류지원단 물류노동조합 첫 페이지">
+      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합">
+    </a>
+    <a class="site-archive-entry" href="../">공개 자료실</a>
+  </header>
+<!-- site-masthead:end -->
   <main class="archive-container document-article" data-document-category="지식">
-    <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>
-    <header class="archive-header">
-      <img src="../assets/logo-header-300.webp" srcset="../assets/logo-header-600.webp 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <h1 class="archive-title">퇴직금·퇴직연금 DB/DC 선택 안내 v1</h1>
-      <p class="archive-desc">퇴직급여 제도의 역사, 법적 구조, 장단점, 그리고 조합원이 DB와 DC를 선택할 때 확인해야 할 기준을 정리한 초안입니다.</p>
+<!-- document-header:start -->
+    <header class="document-header">
+    <nav class="document-breadcrumb" aria-label="현재 위치">
+      <ol>
+        <li><a href="../">공개 자료실</a></li>
+        <li aria-current="page"><a href="./">지식</a></li>
+      </ol>
+    </nav>
+      <h1 class="document-title">퇴직금·퇴직연금 DB/DC 선택 안내 v1</h1>
+      <p class="document-summary">퇴직금 제도의 기원, 고용보험·국민연금·퇴직연금으로의 기능 분화, 사내·사외 적립 차이, DB와 DC 선택 기준을 정리한 조합원 안내 초안입니다.</p>
     </header>
+<!-- document-header:end -->
 
 <!-- document-facts:start -->
     <aside class="document-facts" aria-label="문서 정보">
@@ -511,30 +520,13 @@
         </div>
         <div class="document-fact-topics">
           <dt>쟁점</dt>
-          <dd><a href="../index.html?topic=%ED%87%B4%EC%A7%81%EA%B8%88">퇴직금</a><a href="../index.html?topic=%ED%87%B4%EC%A7%81%EC%97%B0%EA%B8%88">퇴직연금</a><a href="../index.html?topic=DB%C2%B7DC">DB·DC</a></dd>
+          <dd><a href="../?topic=%ED%87%B4%EC%A7%81%EA%B8%88">퇴직금</a><a href="../?topic=%ED%87%B4%EC%A7%81%EC%97%B0%EA%B8%88">퇴직연금</a><a href="../?topic=DB%C2%B7DC">DB·DC</a></dd>
         </div>
       </dl>
       <p>법령과 공공기관 공개 자료를 검토해 작성</p>
     </aside>
 <!-- document-facts:end -->
-
-    <nav class="document-toc" aria-label="문서 목차">
-      <h2 class="document-toc-title">목차</h2>
-      <div class="document-toc-links">
-        <a class="document-toc-link" href="#quick-guide">1. 먼저 보는 선택 기준</a>
-        <a class="document-toc-link" href="#system-map">2. 제도 전체 지도</a>
-        <a class="document-toc-link" href="#history">3. 법제사 흐름</a>
-        <a class="document-toc-link" href="#function-split">4. 기능 분화 지도</a>
-        <a class="document-toc-link" href="#coexistence">5. 병존·적립 구조</a>
-        <a class="document-toc-link" href="#theory">6. 이론적 관점</a>
-        <a class="document-toc-link" href="#comparison">7. 제도별 장단점</a>
-        <a class="document-toc-link" href="#db-dc">8. DB와 DC 비교</a>
-        <a class="document-toc-link" href="#union-check">9. 노조·조합원 체크리스트</a>
-        <a class="document-toc-link" href="#sources">10. 근거 자료</a>
-      </div>
-    </nav>
-
-    <article class="post-article" data-copy-body>
+<article class="post-article" data-copy-body>
       <section class="post-summary" aria-labelledby="draft-note-title">
         <h2 class="post-summary-title" id="draft-note-title">초안의 성격</h2>
         <p class="body-text">
@@ -580,7 +572,7 @@
           퇴직급여는 크게 퇴직금제도와 퇴직연금제도로 나뉩니다. 퇴직연금제도 안에는 확정급여형(DB), 확정기여형(DC), 개인형퇴직연금(IRP)이 있습니다. 법정 퇴직급여의 기본선은 계속근로기간 1년에 대하여 30일분 이상의 평균임금입니다.
         </p>
         <div class="table-container" role="region" aria-label="퇴직급여 제도 비교 표" tabindex="0">
-        <table class="post-table">
+        <table class="post-table" data-mobile-layout="stack">
           <thead>
             <tr>
               <th scope="col">구분</th>
@@ -766,7 +758,7 @@
       <section class="post-summary" aria-labelledby="comparison">
         <h2 class="post-summary-title" id="comparison">7. 제도별 장단점</h2>
         <div class="table-container" role="region" aria-label="퇴직급여 제도별 장단점 표" tabindex="0">
-        <table class="post-table">
+        <table class="post-table" data-mobile-layout="stack">
           <thead>
             <tr>
               <th scope="col">제도</th>
@@ -825,7 +817,7 @@
           DB는 “마지막 임금으로 과거 근속기간까지 다시 평가”하는 성격이 있습니다. 예를 들어 입사 초기에 낮은 임금을 받았더라도 퇴직 직전 임금이 높으면 전체 근속기간에 그 효과가 반영됩니다. 반대로 DC는 매년 그 해의 임금 기준으로 부담금이 들어가므로, 과거 낮은 임금 기간은 운용수익으로 보완해야 합니다.
         </p>
         <div class="table-container" role="region" aria-label="DB와 DC 선택 신호 비교 표" tabindex="0">
-        <table class="post-table">
+        <table class="post-table" data-mobile-layout="stack">
           <thead>
             <tr>
               <th scope="col">질문</th>
@@ -881,7 +873,7 @@
           퇴직급여제도는 개별 금융상품 문제가 아니라 노동조건입니다. 사용자가 퇴직급여제도를 새로 설정하거나 다른 종류로 변경하려면 근로자대표 동의가 필요합니다. 이미 정한 제도 내용을 바꾸는 경우에도 의견청취 또는 불이익 변경 시 동의 절차가 문제됩니다.
         </p>
         <div class="table-container" role="region" aria-label="노조 요구자료 체크리스트 표" tabindex="0">
-        <table class="post-table">
+        <table class="post-table" data-mobile-layout="stack">
           <thead>
             <tr>
               <th scope="col">쟁점</th>
@@ -998,46 +990,32 @@
     </aside>
 <!-- related-documents:end -->
   </main>
-
-  <div class="utility-bar" id="utility-bar">
-    <div class="utility-button-container">
-      <button id="zoom-in-btn" aria-label="글자 크기 크게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 크게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-out-btn" aria-label="글자 크기 작게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 작게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-reset-btn" aria-label="글자 크기 초기화">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-      </button>
-      <span class="utility-tooltip">기본 크기</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-btn" aria-label="텍스트 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-      </button>
-      <span class="utility-tooltip">텍스트 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-link-btn" aria-label="웹페이지 링크 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-      </button>
-      <span class="utility-tooltip">링크 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="to-top-btn" aria-label="맨 위로 이동">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>
-      </button>
-      <span class="utility-tooltip">맨 위로</span>
-    </div>
+<!-- document-tools:start -->
+  <div class="document-tools" data-document-tools>
+    <button class="document-tools-trigger" type="button" aria-expanded="false" aria-controls="document-tools-panel">문서 도구</button>
+    <div class="document-tools-backdrop" hidden></div>
+    <section class="document-tools-panel" id="document-tools-panel" aria-label="문서 도구" role="dialog" aria-modal="false" tabindex="-1" hidden>
+      <div class="document-tools-panel-header">
+        <h2>문서 도구</h2>
+        <button class="document-tools-close" type="button" aria-label="문서 도구 닫기">닫기</button>
+      </div>
+      <div class="document-tools-size" role="group" aria-label="글자 크기">
+        <button type="button" data-document-action="font-down">글자 축소</button>
+        <output id="document-font-scale" for="document-font-down document-font-up">현재 100%</output>
+        <button type="button" data-document-action="font-up">글자 확대</button>
+        <button type="button" data-document-action="font-reset">초기화</button>
+      </div>
+      <div class="document-tools-actions">
+        <button type="button" data-document-action="copy-document"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11"></rect><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4"></path></svg><span>본문 복사</span></button>
+        <button type="button" data-document-action="share"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="18" cy="19" r="2"></circle><path d="m8 11 8-5M8 13l8 5"></path></svg><span>공유</span></button>
+        <button type="button" data-document-action="copy-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11"></rect><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4"></path></svg><span>링크 복사</span></button>
+        <button type="button" data-document-action="top"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 14 6-6 6 6"></path><path d="M12 8v11"></path></svg><span>맨 위로</span></button>
+      </div>
+      <p class="document-tools-status" id="document-action-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
   </div>
-  <script src="../assets/document-tools.js?v=f2d95cc849fa"></script>
+<!-- document-tools:end -->
+  <script src="../assets/document-tools.js?v=563116a9a8dc" defer></script>
 </body>
 
 </html>

@@ -2,7 +2,7 @@
   "category": "statement",
   "href": "statement/sample-one-page.html",
   "title": "샘플 성명서: 차별 없는 일터와 병들지 않는 노동",
-  "titleLines": [
+  "printTitleLines": [
     "샘플 성명서:",
     "차별 없는 일터와 병들지 않는 노동"
   ],

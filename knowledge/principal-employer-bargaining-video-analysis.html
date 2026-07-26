@@ -26,7 +26,7 @@
   <meta name="twitter:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
   <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/favicon-192.png" sizes="192x192">
-  <link rel="stylesheet" href="../assets/interface.css?v=021562a45334">
+  <link rel="stylesheet" href="../assets/interface.css?v=b24cf48646f1">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -273,9 +273,7 @@
       body {
         padding: 24px 16px 96px;
       }
-
-      .archive-container,
-      .back-link {
+.archive-container {
         width: 100%;
       }
 
@@ -341,13 +339,27 @@
 </head>
 
 <body>
+<!-- site-masthead:start -->
+  <header class="site-masthead">
+    <a class="site-logo" href="../" aria-label="우체국물류지원단 물류노동조합 첫 페이지">
+      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합">
+    </a>
+    <a class="site-archive-entry" href="../">공개 자료실</a>
+  </header>
+<!-- site-masthead:end -->
   <main class="archive-container document-article" data-document-category="지식">
-    <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>
-    <header class="archive-header">
-      <img src="../assets/logo-header-300.webp" srcset="../assets/logo-header-600.webp 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <h1 class="archive-title">원청 사용자성·교섭단위 분리 영상 해설</h1>
-      <p class="archive-desc">두 편의 YouTube 영상을 바탕으로 원청 사용자성, 교섭창구 단일화, 공정대표의무, 교섭단위 분리의 실무적 의미를 스크립트와 슬라이드 흐름으로 해설합니다.</p>
+<!-- document-header:start -->
+    <header class="document-header">
+    <nav class="document-breadcrumb" aria-label="현재 위치">
+      <ol>
+        <li><a href="../">공개 자료실</a></li>
+        <li aria-current="page"><a href="./">지식</a></li>
+      </ol>
+    </nav>
+      <h1 class="document-title">원청 사용자성·교섭단위 분리 영상 해설</h1>
+      <p class="document-summary">원청 사용자성, 교섭창구 단일화, 공정대표의무, 교섭단위 분리를 다룬 두 YouTube 영상의 스크립트와 슬라이드 흐름을 해설한 자료입니다.</p>
     </header>
+<!-- document-header:end -->
 
 <!-- document-facts:start -->
     <aside class="document-facts" aria-label="문서 정보">
@@ -366,26 +378,13 @@
         </div>
         <div class="document-fact-topics">
           <dt>쟁점</dt>
-          <dd><a href="../index.html?topic=%EC%9B%90%EC%B2%AD%20%EC%82%AC%EC%9A%A9%EC%9E%90%EC%84%B1">원청 사용자성</a><a href="../index.html?topic=%EB%8B%A8%EC%B2%B4%EA%B5%90%EC%84%AD">단체교섭</a><a href="../index.html?topic=%EA%B5%90%EC%84%AD%EB%8B%A8%EC%9C%84">교섭단위</a></dd>
+          <dd><a href="../?topic=%EC%9B%90%EC%B2%AD%20%EC%82%AC%EC%9A%A9%EC%9E%90%EC%84%B1">원청 사용자성</a><a href="../?topic=%EB%8B%A8%EC%B2%B4%EA%B5%90%EC%84%AD">단체교섭</a><a href="../?topic=%EA%B5%90%EC%84%AD%EB%8B%A8%EC%9C%84">교섭단위</a></dd>
         </div>
       </dl>
       <p>영상 2편과 관련 법령·판례 자료를 대조해 작성</p>
     </aside>
 <!-- document-facts:end -->
-
-    <nav class="document-toc" aria-label="문서 목차">
-      <h2 class="document-toc-title">목차</h2>
-      <div class="document-toc-links">
-        <a class="document-toc-link" href="#source-videos">1. 영상 자료</a>
-        <a class="document-toc-link" href="#core-map">2. 핵심 논점 지도</a>
-        <a class="document-toc-link" href="#script-analysis">3. 스크립트 분석</a>
-        <a class="document-toc-link" href="#slide-analysis">4. 슬라이드 해설</a>
-        <a class="document-toc-link" href="#field-use">5. 현장 활용법</a>
-        <a class="document-toc-link" href="#sources">6. 근거와 참고</a>
-      </div>
-    </nav>
-
-    <article class="post-article" data-copy-body>
+<article class="post-article" data-copy-body>
       <section class="post-summary" aria-labelledby="source-videos">
         <h2 class="post-summary-title" id="source-videos">1. 영상 자료</h2>
         <div class="video-grid">
@@ -614,46 +613,34 @@
 <!-- related-documents:end -->
   </main>
 
-  <div class="utility-bar" id="utility-bar">
-    <div class="utility-button-container">
-      <button id="zoom-in-btn" aria-label="글자 크기 크게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 크게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-out-btn" aria-label="글자 크기 작게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 작게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-reset-btn" aria-label="글자 크기 초기화">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-      </button>
-      <span class="utility-tooltip">기본 크기</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-btn" aria-label="텍스트 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-      </button>
-      <span class="utility-tooltip">텍스트 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-link-btn" aria-label="웹페이지 링크 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-      </button>
-      <span class="utility-tooltip">링크 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="to-top-btn" aria-label="맨 위로 이동">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>
-      </button>
-      <span class="utility-tooltip">맨 위로</span>
-    </div>
-  </div>
+
   <script src="../assets/video-embed.js?v=9c27b0adae58" defer></script>
-  <script src="../assets/document-tools.js?v=f2d95cc849fa"></script>
+<!-- document-tools:start -->
+  <div class="document-tools" data-document-tools>
+    <button class="document-tools-trigger" type="button" aria-expanded="false" aria-controls="document-tools-panel">문서 도구</button>
+    <div class="document-tools-backdrop" hidden></div>
+    <section class="document-tools-panel" id="document-tools-panel" aria-label="문서 도구" role="dialog" aria-modal="false" tabindex="-1" hidden>
+      <div class="document-tools-panel-header">
+        <h2>문서 도구</h2>
+        <button class="document-tools-close" type="button" aria-label="문서 도구 닫기">닫기</button>
+      </div>
+      <div class="document-tools-size" role="group" aria-label="글자 크기">
+        <button type="button" data-document-action="font-down">글자 축소</button>
+        <output id="document-font-scale" for="document-font-down document-font-up">현재 100%</output>
+        <button type="button" data-document-action="font-up">글자 확대</button>
+        <button type="button" data-document-action="font-reset">초기화</button>
+      </div>
+      <div class="document-tools-actions">
+        <button type="button" data-document-action="copy-document"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11"></rect><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4"></path></svg><span>본문 복사</span></button>
+        <button type="button" data-document-action="share"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="18" cy="19" r="2"></circle><path d="m8 11 8-5M8 13l8 5"></path></svg><span>공유</span></button>
+        <button type="button" data-document-action="copy-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11"></rect><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4"></path></svg><span>링크 복사</span></button>
+        <button type="button" data-document-action="top"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 14 6-6 6 6"></path><path d="M12 8v11"></path></svg><span>맨 위로</span></button>
+      </div>
+      <p class="document-tools-status" id="document-action-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
+  </div>
+<!-- document-tools:end -->
+  <script src="../assets/document-tools.js?v=563116a9a8dc" defer></script>
 </body>
 
 </html>
