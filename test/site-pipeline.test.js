@@ -21,7 +21,7 @@ const {
   selectPrintDensity,
   validateStatementFragment,
 } = require('../build_statement');
-const { versionedAssetHref } = require('../lib/site-utils');
+const { contentHash, versionedAssetHref } = require('../lib/site-utils');
 const { stageSite } = require('../scripts/stage-site');
 const { verifyGeneratedFiles } = require('../scripts/verify-generated');
 
@@ -83,6 +83,17 @@ function git(cwd, args) {
 
 test.after(() => {
   temporaryDirectories.forEach((directory) => fs.rmSync(directory, { recursive: true, force: true }));
+});
+
+test('text asset version hashes are stable across line endings', () => {
+  const root = createFixture();
+  const lfPath = path.join(root, 'assets', 'line-endings-lf.css');
+  const crlfPath = path.join(root, 'assets', 'line-endings-crlf.css');
+
+  fs.writeFileSync(lfPath, 'body { color: #111; }\n', 'utf8');
+  fs.writeFileSync(crlfPath, 'body { color: #111; }\r\n', 'utf8');
+
+  assert.equal(contentHash(lfPath), contentHash(crlfPath));
 });
 
 test('clean staging removes stale files and copies only the public allowlist', () => {
