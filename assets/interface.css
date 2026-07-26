@@ -2976,6 +2976,14 @@ html[data-font-scale="1.5"] .document-facts dl {
     width: 100%;
   }
 
+  .document-tools-actions button:nth-child(odd) {
+    border-right: 0 !important;
+  }
+
+  .document-tools-actions button:nth-child(even) {
+    border-left: 1px solid #D9D9D9 !important;
+  }
+
   .document-tools-size {
     grid-template-columns: 1fr 1fr;
   }
