@@ -48,7 +48,10 @@ test('content graph exposes one v2 record set and the public listing policy', ()
     ['href', 'date', 'excerpt', 'topics', 'sourceCount', 'provenance', 'relatedDocuments', 'groupOrder', 'order', 'sortKey']
       .forEach((legacyField) => assert.equal(Object.hasOwn(document, legacyField), false, `${legacyField} should not be in v2`));
   });
-  const categoryCounts = Object.groupBy(graph.listedDocuments, (document) => document.category);
+  const categoryCounts = graph.listedDocuments.reduce((groups, document) => {
+    (groups[document.category] ||= []).push(document);
+    return groups;
+  }, {});
   assert.equal(categoryCounts.statement.length, 1);
   assert.equal(categoryCounts.mom.length, 7);
   assert.equal(categoryCounts.knowledge.length, 2);
