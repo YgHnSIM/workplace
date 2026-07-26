@@ -13,6 +13,13 @@ const {
   versionedAssetHref,
   writeTextFile,
 } = require('./lib/site-utils');
+const {
+  archiveHref,
+  renderArchiveCategoryNav,
+  renderDocumentHeader,
+  renderDocumentTools,
+  renderSiteMasthead,
+} = require('./lib/site-components');
 
 const rootDir = __dirname;
 const catalogPath = path.join(rootDir, '_source', 'catalog.json');
@@ -32,6 +39,11 @@ const categoryLabels = {
 };
 
 const categoryTitles = {
+  statement: {
+    directory: 'statement',
+    title: '성명서',
+    description: '노동 현장의 쟁점과 요구를 알리는 노동조합 성명서입니다.',
+  },
   mom: {
     directory: 'MoM',
     title: '운영위원회 회의록',
@@ -61,18 +73,6 @@ const defaultTopics = {
   notice: ['조합 알림'],
   statement: ['노동조합', '성명서'],
 };
-
-function isHomeOutput(outputFile) {
-  return outputFile === homeFilePath;
-}
-
-function renderBackLink(outputFile) {
-  return isHomeOutput(outputFile) ? '' : `    <a href="../index.html" class="back-link">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      첫 페이지로 돌아가기
-    </a>
-`;
-}
 
 function normalizeHref(href) {
   const value = toPosixPath(String(href || '').trim());
@@ -194,12 +194,6 @@ function readDocuments() {
   ));
 }
 
-function renderIconChevron() {
-  return `<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>`;
-}
-
 function renderCard(doc, outputFile, index) {
   const label = categoryLabels[doc.category] || doc.category;
   const idBase = `doc-${index + 1}`;
@@ -214,35 +208,14 @@ function renderCard(doc, outputFile, index) {
     .toLocaleLowerCase('ko');
   return `      <article class="doc-card" data-category="${escapeAttr(doc.category)}" data-status="${escapeAttr(doc.status)}" data-topics="${escapeAttr(doc.topics.join('|'))}" data-search="${escapeAttr(searchText)}">
         <div class="card-meta" id="${metaId}">
-          <span class="badge-category">${escapeHtml(label)}</span>
           ${renderTime(doc.date)}
+          <span class="badge-category">${escapeHtml(label)}</span>
           <span class="card-status" data-status="${escapeAttr(doc.status)}">${escapeHtml(statusLabels[doc.status])}</span>
         </div>
         <h2 class="doc-title" id="${titleId}"><a class="doc-card-link" href="${escapeAttr(pageHref(doc.href, outputFile))}" aria-describedby="${metaId} ${excerptId}">${escapeHtml(doc.title)}</a></h2>
         <p class="doc-excerpt" id="${excerptId}">${escapeHtml(doc.excerpt)}</p>
         <div class="card-topics" aria-label="주제">${topics}</div>
-        <div class="card-footer" aria-hidden="true">
-          ${escapeHtml(doc.action || `${label} 보기`)}
-          ${renderIconChevron()}
-        </div>
       </article>`;
-}
-
-function renderFilterButton(category, active = false) {
-  return `      <button class="filter-btn${active ? ' active' : ''}" id="filter-${escapeAttr(category)}" type="button" data-filter="${escapeAttr(category)}" aria-pressed="${active ? 'true' : 'false'}" tabindex="${active ? '0' : '-1'}">${escapeHtml(categoryLabels[category] || category)}</button>`;
-}
-
-function renderFilterBar(docs) {
-  const categories = Object.keys(categoryLabels)
-    .filter((category) => category !== 'all' && docs.some((doc) => doc.category === category));
-  const buttons = [
-    renderFilterButton('all', true),
-    ...categories.map((category) => renderFilterButton(category)),
-  ].join('\n');
-
-  return `    <div class="filter-bar" role="toolbar" aria-label="자료 분류 필터">
-${buttons}
-    </div>`;
 }
 
 function renderArchiveTools(docs) {
@@ -251,13 +224,8 @@ function renderArchiveTools(docs) {
   const topicOptions = topics.map((topic) => (
     `          <option value="${escapeAttr(topic)}">${escapeHtml(topic)}</option>`
   )).join('\n');
-  const updated = newestDate(docs);
-
   return `    <section class="archive-tools" aria-label="자료 찾기">
-      <div class="archive-ledger-meta" aria-label="자료실 현황">
-        <span>공개 문서 <strong>${docs.length}</strong>건</span>
-        <span>최근 수정 ${renderTime(updated, 'ledger-date')}</span>
-      </div>
+      <p class="archive-result-summary" id="archive-result-summary" aria-live="polite">자료 ${docs.length}건</p>
       <div class="archive-query-row">
         <form class="archive-search" role="search" novalidate>
           <label for="archive-search-input">자료 검색</label>
@@ -275,7 +243,6 @@ ${topicOptions}
           </select>
         </div>
       </div>
-${renderFilterBar(docs)}
     </section>`;
 }
 
@@ -294,23 +261,37 @@ function collectionSchema(docs) {
   };
 }
 
-function buildArchiveHtml({ title, description, docs, outputFile, includeFilter = false, includeKicker = true }) {
-  const cards = docs.map((doc, index) => renderCard(doc, outputFile, index)).join('\n\n');
+function renderArchiveList({ docs, outputFile, title, showOlderDocuments = false }) {
+  const visibleDocs = showOlderDocuments ? docs.slice(0, 8) : docs;
+  const olderDocs = showOlderDocuments ? docs.slice(8) : [];
+  const cards = visibleDocs.map((doc, index) => renderCard(doc, outputFile, index)).join('\n\n');
+  const olderCards = olderDocs.map((doc, index) => renderCard(doc, outputFile, visibleDocs.length + index)).join('\n\n');
+  const older = olderCards ? `
+      <details class="archive-older-documents" data-archive-older-documents>
+        <summary>이전 자료 ${olderDocs.length}건 보기</summary>
+        <div class="archive-older-document-list">
+${olderCards}
+        </div>
+      </details>` : '';
   const noResults = docs.length ? `
       <div class="empty-state archive-no-results" role="status" hidden>
-        <p>조건에 맞는 자료가 없습니다. 검색어나 필터를 바꿔보세요.</p>
+        <p>일치하는 자료가 없습니다.</p>
       </div>` : '';
-  const listContent = cards ? `${cards}${noResults}` : `      <div class="empty-state" role="status">
+  const listContent = cards ? `${cards}${older}${noResults}` : `      <div class="empty-state" role="status">
         <p>아직 공개된 ${escapeHtml(title)} 자료가 없습니다.</p>
       </div>`;
-  const logo300 = versionedAssetHref(rootDir, outputFile, 'assets/logo-header-300.webp');
-  const logo600 = versionedAssetHref(rootDir, outputFile, 'assets/logo-header-600.webp');
-  const script = includeFilter
-    ? `\n  <script src="${escapeAttr(versionedAssetHref(rootDir, outputFile, 'assets/archive-filter.js'))}" defer></script>`
-    : '';
-  const kicker = includeKicker
-    ? `\n        <p class="archive-kicker">쟁점별 기록 원장</p>`
-    : '';
+
+  return listContent;
+}
+
+function buildArchiveHtml({ title, description, docs, outputFile, category = 'all' }) {
+  const listContent = renderArchiveList({
+    docs,
+    outputFile,
+    title,
+    showOlderDocuments: category === 'all',
+  });
+  const archiveFilter = versionedAssetHref(rootDir, outputFile, 'assets/archive-filter.js');
 
   return `<!DOCTYPE html>
 <html lang="ko">
@@ -329,23 +310,26 @@ ${renderPageHead({
 </head>
 
 <body>
-  <main class="archive-container">
-${renderBackLink(outputFile)}    <header class="archive-header">
-      <img src="${escapeAttr(logo300)}" srcset="${escapeAttr(logo300)} 1x, ${escapeAttr(logo600)} 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <div class="archive-heading">${kicker}
-        <h1 class="archive-title">${escapeHtml(title)}</h1>
-      </div>
+${renderSiteMasthead({ rootDir, outputFile })}
+  <main class="archive-container" data-archive-category="${escapeAttr(category)}">
+    <header class="archive-header">
+      <h1 class="archive-title">${escapeHtml(title)}</h1>
       <p class="archive-desc">${escapeHtml(description)}</p>
     </header>
 
-${includeFilter ? `${renderArchiveTools(docs)}\n\n` : ''}    <section class="doc-list${docs.length === 0 ? ' is-empty' : ''}" id="archive-results" aria-label="${escapeAttr(title)} 목록">
+${renderArchiveCategoryNav({ rootDir, outputFile, activeCategory: category })}
+
+${renderArchiveTools(docs)}
+
+    <section class="doc-list${docs.length === 0 ? ' is-empty' : ''}" id="archive-results" aria-label="${escapeAttr(title)} 목록">
 ${listContent}
     </section>
 
     <footer class="archive-footer">
-      <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
+      <p>우체국물류지원단 물류노동조합</p>
     </footer>
-  </main>${script}
+  </main>
+  <script src="${escapeAttr(archiveFilter)}" defer></script>
 </body>
 
 </html>
@@ -362,6 +346,7 @@ function newestDate(docs) {
 function buildSitemapXml(docs) {
   const entries = [
     { href: '', date: newestDate(docs) },
+    { href: 'statement/', date: newestDate(docs.filter((doc) => doc.category === 'statement')) },
     { href: 'MoM/', date: newestDate(docs.filter((doc) => doc.category === 'mom')) },
     { href: 'knowledge/', date: newestDate(docs.filter((doc) => doc.category === 'knowledge')) },
     { href: 'notice/', date: newestDate(docs.filter((doc) => doc.category === 'notice')) },
@@ -400,7 +385,7 @@ function replaceVersionedAssetReference(html, assetPath, expectedHref) {
 }
 
 function renderDocumentFacts(doc, outputFile) {
-  const homeHref = pageHref('index.html', outputFile);
+  const homeHref = archiveHref(rootDir, outputFile, 'all');
   const topics = doc.topics.map((topic) => (
     `<a href="${escapeAttr(`${homeHref}?topic=${encodeURIComponent(topic)}`)}">${escapeHtml(topic)}</a>`
   )).join('');
@@ -459,6 +444,140 @@ function replaceManagedBlock(html, name, content, insertBlock) {
   return insertBlock(html, block);
 }
 
+function upsertManagedComponent(html, name, component, insertBlock) {
+  const escapedName = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const pattern = new RegExp(`<!-- ${escapedName}:start -->[\\s\\S]*?<!-- ${escapedName}:end -->`);
+  if (pattern.test(html)) return html.replace(pattern, component);
+  return insertBlock(html, component);
+}
+
+function insertAfterDocumentHeader(html, block, href) {
+  const mainStart = html.search(/<main\b/i);
+  const headerEnd = mainStart >= 0 ? html.indexOf('</header>', mainStart) : -1;
+  if (headerEnd < 0) throw new Error(`${href} must contain a document header`);
+  const insertionPoint = headerEnd + '</header>'.length;
+  return `${html.slice(0, insertionPoint)}\n\n${block}${html.slice(insertionPoint)}`;
+}
+
+function removeElementWithClass(html, className) {
+  const openingPattern = new RegExp(`<div\\b[^>]*class=["'][^"']*\\b${className}\\b[^"']*["'][^>]*>`, 'ig');
+  let updated = html;
+  let match = openingPattern.exec(updated);
+  while (match) {
+    const tagPattern = /<\/?div\b[^>]*>/ig;
+    tagPattern.lastIndex = match.index;
+    let depth = 0;
+    let tag;
+    let end = -1;
+    while ((tag = tagPattern.exec(updated))) {
+      if (/^<\/div\b/i.test(tag[0])) depth -= 1;
+      else depth += 1;
+      if (depth === 0) {
+        end = tagPattern.lastIndex;
+        break;
+      }
+    }
+    if (end < 0) break;
+    updated = `${updated.slice(0, match.index)}${updated.slice(end)}`;
+    openingPattern.lastIndex = 0;
+    match = openingPattern.exec(updated);
+  }
+  return updated;
+}
+
+function removeLegacyDocumentControls(html) {
+  return removeElementWithClass(html, 'utility-bar')
+    .replace(/\s*<a\b[^>]*class=["'][^"']*\bback-link\b[^"']*["'][^>]*>[\s\S]*?<\/a>\s*/gi, '\n')
+    .replace(/\s*<script\b[^>]*document-tools\.js[^>]*><\/script>\s*/gi, '\n');
+}
+
+function removeLegacyStyleRules(html) {
+  const legacySelector = /\.(?:utility-bar|back-link|history-nav|archive-kicker|card-footer)\b/i;
+  const stripRules = (css) => css.replace(
+    /^([ \t]*)([^{}]+?)\{([^{}]*)\}/gm,
+    (match, indent, rawSelectors, declarations) => {
+      const selectors = rawSelectors.split(',').map((selector) => selector.trim()).filter(Boolean);
+      if (!selectors.some((selector) => legacySelector.test(selector))) return match;
+      const retained = selectors.filter((selector) => !legacySelector.test(selector));
+      if (!retained.length) return '';
+      return `${indent}${retained.join(', ')} {${declarations}}`;
+    },
+  );
+  return html.replace(
+    /(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi,
+    (match, opening, css, closing) => `${opening}${stripRules(css)}${closing}`,
+  );
+}
+
+function markMobileStackTables(html) {
+  return html.replace(
+    /<table\b([^>]*\bclass=["'][^"']*\bpost-table\b[^"']*["'][^>]*)>/gi,
+    (match, attributes) => (/data-mobile-layout\s*=/.test(attributes)
+      ? match
+      : `<table${attributes} data-mobile-layout="stack">`),
+  );
+}
+
+function migrateManualDocumentShell(html, doc, filePath) {
+  let updated = removeLegacyStyleRules(removeLegacyDocumentControls(html));
+  const documentHeader = `<!-- document-header:start -->\n${renderDocumentHeader({
+    rootDir,
+    outputFile: filePath,
+    category: doc.category,
+    title: doc.title,
+    description: doc.excerpt,
+  })}\n<!-- document-header:end -->`;
+  const existingHeader = /<!-- document-header:start -->[\s\S]*?<!-- document-header:end -->/;
+  if (existingHeader.test(updated)) {
+    updated = updated.replace(existingHeader, documentHeader);
+  } else {
+    const legacyHeader = /<header\b[^>]*class=["'][^"']*\b(?:archive-header|history-header)\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i;
+    if (!legacyHeader.test(updated)) throw new Error(`${doc.href} must contain a replaceable document header`);
+    updated = updated.replace(legacyHeader, documentHeader);
+  }
+
+  updated = updated
+    .replace(/\s*<nav\b[^>]*class=["'][^"']*\bdocument-toc\b[^"']*["'][^>]*>[\s\S]*?<\/nav>\s*/gi, '\n')
+    .replace(/\s*<nav\b[^>]*class=["'][^"']*\bhistory-nav\b[^"']*["'][^>]*>[\s\S]*?<\/nav>\s*/gi, '\n');
+
+  if ([
+    'notice/2025-performance-pay.html',
+    'knowledge/retirement-benefit-db-dc-guide.html',
+  ].includes(doc.href)) {
+    updated = markMobileStackTables(updated);
+  }
+  return updated;
+}
+
+function syncSiteMasthead(html, filePath) {
+  return upsertManagedComponent(
+    html,
+    'site-masthead',
+    renderSiteMasthead({ rootDir, outputFile: filePath }),
+    (source, component) => source.replace(/<body\b[^>]*>/i, (openingTag) => `${openingTag}\n${component}`),
+  );
+}
+
+function syncDocumentTools(html, filePath) {
+  const component = renderDocumentTools();
+  let updated = upsertManagedComponent(
+    html,
+    'document-tools',
+    component,
+    (source, content) => source.replace(
+      /<\/body>/i,
+      `${content}\n  <script src="${escapeAttr(versionedAssetHref(rootDir, filePath, 'assets/document-tools.js'))}" defer></script>\n</body>`,
+    ),
+  );
+  if (!/<script\b[^>]*document-tools\.js[^>]*><\/script>/i.test(updated)) {
+    updated = updated.replace(
+      /<\/body>/i,
+      `  <script src="${escapeAttr(versionedAssetHref(rootDir, filePath, 'assets/document-tools.js'))}" defer></script>\n</body>`,
+    );
+  }
+  return updated;
+}
+
 function syncStructuredMetadata(html, doc) {
   let updated = html
     .replace(/^[ \t]*<meta property="article:modified_time"[^>]*>\r?\n?/gim, '')
@@ -507,13 +626,18 @@ function syncDocumentPages(docs) {
       versionedAssetHref(rootDir, filePath, assetPath),
     ), original);
 
+    if (doc.category === 'knowledge' || doc.category === 'notice') {
+      updated = migrateManualDocumentShell(updated, doc, filePath);
+    }
+    updated = syncSiteMasthead(updated, filePath);
+    updated = syncDocumentTools(updated, filePath);
     updated = syncStructuredMetadata(updated, doc);
-    updated = replaceManagedBlock(updated, 'document-facts', renderDocumentFacts(doc, filePath), (html, block) => {
-      const headerEnd = html.indexOf('</header>');
-      if (headerEnd < 0) throw new Error(`${doc.href} must contain a header`);
-      const insertionPoint = headerEnd + '</header>'.length;
-      return `${html.slice(0, insertionPoint)}\n\n${block}${html.slice(insertionPoint)}`;
-    });
+    updated = replaceManagedBlock(
+      updated,
+      'document-facts',
+      renderDocumentFacts(doc, filePath),
+      (html, block) => insertAfterDocumentHeader(html, block, doc.href),
+    );
 
     const related = renderRelatedDocuments(doc, docs, filePath);
     if (related) {
@@ -524,10 +648,9 @@ function syncDocumentPages(docs) {
         return `${beforeMainEnd}\n${block}\n  ${html.slice(mainEnd)}`;
       });
     }
-    updated = updated.replace(
-      /^[ \t]+\r?\n(?=<!-- (?:document-facts|related-documents):start -->)/gm,
-      '',
-    );
+    updated = updated
+      .replace(/^[ \t]+\r?\n(?=<!-- (?:document-(?:facts|tools)|related-documents|site-masthead):start -->)/gm, '')
+      .replace(/^[ \t]+(?=\r?\n)/gm, '');
 
     if (updated !== original) {
       writeTextFile(filePath, updated);
@@ -549,11 +672,10 @@ function build() {
     description: '회의록, 성명서, 노동·법률 해설과 조합원 안내를 쟁점별로 찾아볼 수 있습니다.',
     docs,
     outputFile: homeFilePath,
-    includeFilter: true,
-    includeKicker: false,
+    category: 'all',
   }));
 
-  ['mom', 'knowledge', 'notice'].forEach((category) => {
+  ['statement', 'mom', 'knowledge', 'notice'].forEach((category) => {
     const meta = categoryTitles[category];
     const outputFile = path.join(rootDir, meta.directory, 'index.html');
     writeFile(outputFile, buildArchiveHtml({
@@ -561,6 +683,7 @@ function build() {
       description: meta.description,
       docs: docs.filter((doc) => doc.category === category),
       outputFile,
+      category,
     }));
   });
 

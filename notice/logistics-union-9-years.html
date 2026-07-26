@@ -26,7 +26,7 @@
   <meta name="twitter:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
   <link rel="icon" href="../assets/favicon-32.png" sizes="32x32" type="image/png">
   <link rel="apple-touch-icon" href="../assets/favicon-192.png" sizes="192x192">
-  <link rel="stylesheet" href="../assets/interface.css?v=021562a45334">
+  <link rel="stylesheet" href="../assets/interface.css?v=b24cf48646f1">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -335,36 +335,9 @@
       word-break: keep-all;
     }
 
-    .history-nav {
-      display: grid;
-      grid-template-columns: repeat(5, minmax(0, 1fr));
-      border: 1px solid #111111;
-      margin-bottom: 42px;
-    }
 
-    .history-nav a {
-      color: #111111;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 8px 10px;
-      text-align: center;
-      text-decoration: none;
-      font-size: calc(13px * var(--font-scale));
-      font-weight: 700;
-      line-height: 1.35;
-      word-break: keep-all;
-    }
 
-    .history-nav a + a {
-      border-left: 1px solid #111111;
-    }
 
-    .history-nav a:hover {
-      background: #002FA7;
-      color: #FFFFFF;
-    }
 
     .history-section {
       margin-bottom: 54px;
@@ -533,17 +506,6 @@
       margin-bottom: 0;
     }
 
-    body.history-page .utility-bar {
-      bottom: 24px !important;
-      display: flex !important;
-      flex-direction: column !important;
-      left: auto !important;
-      margin: 0 !important;
-      position: fixed !important;
-      right: 24px !important;
-      width: auto !important;
-      z-index: 1000 !important;
-    }
 
     body.history-page .utility-button-container {
       position: relative;
@@ -566,11 +528,6 @@
         width: 100%;
       }
 
-      .history-nav,
-      .utility-bar,
-      .back-link {
-        display: none !important;
-      }
     }
 
     @media (max-width: 920px) {
@@ -580,14 +537,7 @@
         grid-template-columns: 1fr;
       }
 
-      .history-nav {
-        grid-template-columns: 1fr;
-      }
 
-      .history-nav a + a {
-        border-left: 0;
-        border-top: 1px solid #111111;
-      }
 
       .infographic-flow {
         grid-template-columns: 1fr;
@@ -694,16 +644,6 @@
         padding-bottom: 112px !important;
       }
 
-      body.history-page .utility-bar {
-        bottom: 16px !important;
-        flex-direction: row !important;
-        justify-content: space-between !important;
-        left: 50% !important;
-        position: fixed !important;
-        right: auto !important;
-        transform: translateX(-50%) !important;
-        width: min(calc(100% - 32px), 360px) !important;
-      }
 
       body.history-page .utility-tooltip {
         display: none !important;
@@ -728,17 +668,27 @@
 </head>
 
 <body class="history-page">
-  <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>
-
-  <main class="history-container document-article" id="history-article" data-document-category="알림">
-    <header class="history-header">
-      <div class="history-header-aside">
-        <img src="../assets/logo-header-300.webp" srcset="../assets/logo-header-600.webp 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="history-logo">
-        <span class="history-category">알림</span>
-      </div>
-      <h1 class="history-title">우체국물류지원단 물류노동조합 9년의 투쟁과 역사</h1>
-      <p class="history-subtitle">왜 물류노동조합인가: 서서울, 부평, 안양 물류노동자의 권익 향상 기록</p>
+<!-- site-masthead:start -->
+  <header class="site-masthead">
+    <a class="site-logo" href="../" aria-label="우체국물류지원단 물류노동조합 첫 페이지">
+      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합">
+    </a>
+    <a class="site-archive-entry" href="../">공개 자료실</a>
+  </header>
+<!-- site-masthead:end -->
+<main class="history-container document-article" id="history-article" data-document-category="알림">
+    <!-- document-header:start -->
+    <header class="document-header">
+    <nav class="document-breadcrumb" aria-label="현재 위치">
+      <ol>
+        <li><a href="../">공개 자료실</a></li>
+        <li aria-current="page"><a href="./">알림</a></li>
+      </ol>
+    </nav>
+      <h1 class="document-title">우체국물류지원단 물류노동조합 9년의 투쟁과 역사</h1>
+      <p class="document-summary">서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다.</p>
     </header>
+<!-- document-header:end -->
 
 <!-- document-facts:start -->
     <aside class="document-facts" aria-label="문서 정보">
@@ -757,7 +707,7 @@
         </div>
         <div class="document-fact-topics">
           <dt>쟁점</dt>
-          <dd><a href="../index.html?topic=%EB%85%B8%EC%A1%B0%20%EC%97%AD%EC%82%AC">노조 역사</a><a href="../index.html?topic=%EA%B3%A0%EC%9A%A9%EC%95%88%EC%A0%95">고용안정</a><a href="../index.html?topic=%EC%B0%A8%EB%B3%84">차별</a></dd>
+          <dd><a href="../?topic=%EB%85%B8%EC%A1%B0%20%EC%97%AD%EC%82%AC">노조 역사</a><a href="../?topic=%EA%B3%A0%EC%9A%A9%EC%95%88%EC%A0%95">고용안정</a><a href="../?topic=%EC%B0%A8%EB%B3%84">차별</a></dd>
         </div>
       </dl>
       <p>노동조합 내부 활동 기록을 바탕으로 정리</p>
@@ -826,16 +776,7 @@
           <span>물류노동조합은 조직화, 고용안정, 차별 철폐, 임금 정상화, 안전 개선을 현장 투쟁의 성과로 연결해 왔습니다.</span>
         </div>
       </section>
-
-      <nav class="history-nav" aria-label="문서 목차">
-        <a href="#birth">조직의 탄생</a>
-        <a href="#employment">생존권 사수</a>
-        <a href="#equality">차별 철폐</a>
-        <a href="#wage">임금과 통상임금</a>
-        <a href="#safety">작업 환경과 안전</a>
-      </nav>
-
-      <section class="history-section" id="birth">
+<section class="history-section" id="birth">
         <h2 class="history-section-title">1. 조직의 탄생과 독자 노선 구축</h2>
         <p class="history-copy">물류노동조합은 우체국물류지원단 내에서 상대적으로 소외되었던 물류사업소 노동자들의 생존권과 처우 개선을 위해 출범했습니다. 운송과 물류 직종 간 이해관계 차이를 넘어, 물류 현장의 권익을 전문적으로 지키는 독자 조직으로 자리 잡았습니다.</p>
         <div class="timeline">
@@ -1031,46 +972,32 @@
     </aside>
 <!-- related-documents:end -->
   </main>
-
-  <div class="utility-bar" id="utility-bar">
-    <div class="utility-button-container">
-      <button id="zoom-in-btn" aria-label="글자 크기 크게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 크게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-out-btn" aria-label="글자 크기 작게">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg>
-      </button>
-      <span class="utility-tooltip">글자 작게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-reset-btn" aria-label="글자 크기 초기화">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg>
-      </button>
-      <span class="utility-tooltip">기본 크기</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-btn" aria-label="텍스트 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
-      </button>
-      <span class="utility-tooltip">텍스트 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-link-btn" aria-label="웹페이지 링크 복사">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg>
-      </button>
-      <span class="utility-tooltip">링크 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="to-top-btn" aria-label="맨 위로 이동">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg>
-      </button>
-      <span class="utility-tooltip">맨 위로</span>
-    </div>
+<!-- document-tools:start -->
+  <div class="document-tools" data-document-tools>
+    <button class="document-tools-trigger" type="button" aria-expanded="false" aria-controls="document-tools-panel">문서 도구</button>
+    <div class="document-tools-backdrop" hidden></div>
+    <section class="document-tools-panel" id="document-tools-panel" aria-label="문서 도구" role="dialog" aria-modal="false" tabindex="-1" hidden>
+      <div class="document-tools-panel-header">
+        <h2>문서 도구</h2>
+        <button class="document-tools-close" type="button" aria-label="문서 도구 닫기">닫기</button>
+      </div>
+      <div class="document-tools-size" role="group" aria-label="글자 크기">
+        <button type="button" data-document-action="font-down">글자 축소</button>
+        <output id="document-font-scale" for="document-font-down document-font-up">현재 100%</output>
+        <button type="button" data-document-action="font-up">글자 확대</button>
+        <button type="button" data-document-action="font-reset">초기화</button>
+      </div>
+      <div class="document-tools-actions">
+        <button type="button" data-document-action="copy-document"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11"></rect><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4"></path></svg><span>본문 복사</span></button>
+        <button type="button" data-document-action="share"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="18" cy="5" r="2"></circle><circle cx="6" cy="12" r="2"></circle><circle cx="18" cy="19" r="2"></circle><path d="m8 11 8-5M8 13l8 5"></path></svg><span>공유</span></button>
+        <button type="button" data-document-action="copy-link"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="9" y="9" width="11" height="11"></rect><path d="M15 9V5a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h4"></path></svg><span>링크 복사</span></button>
+        <button type="button" data-document-action="top"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m6 14 6-6 6 6"></path><path d="M12 8v11"></path></svg><span>맨 위로</span></button>
+      </div>
+      <p class="document-tools-status" id="document-action-status" role="status" aria-live="polite" aria-atomic="true"></p>
+    </section>
   </div>
-  <script src="../assets/document-tools.js?v=f2d95cc849fa"></script>
+<!-- document-tools:end -->
+  <script src="../assets/document-tools.js?v=563116a9a8dc" defer></script>
 </body>
 
 </html>

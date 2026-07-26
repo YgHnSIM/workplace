@@ -67,7 +67,7 @@ function createFixture() {
   ['assets', 'MoM', 'statement', 'knowledge', 'notice'].forEach((directory) => {
     fs.mkdirSync(path.join(root, directory), { recursive: true });
   });
-  ['MoM', 'knowledge', 'notice'].forEach((directory) => {
+  ['MoM', 'statement', 'knowledge', 'notice'].forEach((directory) => {
     write(path.join(root, directory, 'index.html'), html());
   });
   write(path.join(root, '_source', 'catalog.json'), '{"documents":[]}\n');
@@ -269,39 +269,19 @@ test('generated-file drift check passes clean commits and rejects rebuilt change
   );
 });
 
-test('document TOC keeps a continuous bottom rule without expanding links', () => {
+test('document TOC uses nested parent and child groups with a current-location marker', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const css = fs.readFileSync(path.join(projectRoot, 'assets', 'interface.css'), 'utf8');
-  const commonRule = css.match(/\.document-toc-links\s*\{([^}]*)\}/);
+  const mom = fs.readFileSync(path.join(projectRoot, 'MoM', '202607.html'), 'utf8');
 
-  assert.ok(commonRule, 'common document TOC rule should exist');
-  assert.match(commonRule[1], /border-bottom:\s*0;/);
-  assert.match(commonRule[1], /box-shadow:\s*inset 0 -1px 0 #111111;/);
-  assert.match(
-    commonRule[1],
-    /grid-template-columns:\s*repeat\(auto-fit,\s*minmax\(180px,\s*1fr\)\);/,
-  );
-  assert.doesNotMatch(
-    css,
-    /\.document-toc-link[^\{]*:last-child\s*\{[^}]*grid-column:/s,
-    'the visual rule must not enlarge a link into empty grid columns',
-  );
-
-  [
-    'principal-employer-bargaining-video-analysis.html',
-    'retirement-benefit-db-dc-guide.html',
-  ].forEach((name) => {
-    const html = fs.readFileSync(path.join(projectRoot, 'knowledge', name), 'utf8');
-    assert.doesNotMatch(
-      html,
-      /<style>[\s\S]*?\.document-toc-links\s*\{/,
-      `${name} should reuse the shared TOC component instead of duplicating it inline`,
-    );
-  });
-
-  assert.doesNotMatch(css, /max-height:\s*260px/);
+  assert.match(css, /\.document-toc-sections\s*\{[^}]*grid-template-columns:\s*repeat\(2,\s*minmax\(0,\s*1fr\)\);/s);
+  assert.match(css, /\.document-toc-children\s*\{[^}]*padding-left:\s*14px;/s);
+  assert.match(css, /\.document-toc-link\.is-current/);
+  assert.match(mom, /<ol class="document-toc-sections">[\s\S]*?<ol class="document-toc-children">/);
+  assert.match(mom, /class="document-toc-link document-toc-section"/);
+  assert.match(mom, /class="document-toc-link document-toc-child"/);
   assert.match(css, /\.document-toc-toggle\s*\{/);
-  assert.match(css, /\.document-toc\.is-collapsible\[data-collapsed="true"\] \.document-toc-links/);
+  assert.match(css, /\.document-toc\[data-collapsed="true"\] \.document-toc-sections/);
 });
 
 test('archive cards, search controls, and content governance metadata stay semantic', () => {
@@ -315,6 +295,19 @@ test('archive cards, search controls, and content governance metadata stay seman
   assert.match(index, /<a class="doc-card-link"/);
   assert.doesNotMatch(index, /<a\b[^>]*class="doc-card"/);
   assert.doesNotMatch(index, /쟁점별 기록 원장/);
+  assert.doesNotMatch(index, /class="card-footer"/);
+  assert.doesNotMatch(index, /All rights reserved/);
+  assert.match(index, /<!-- site-masthead:start -->/);
+  assert.match(index, /<details class="archive-older-documents"/);
+  ['statement/', 'MoM/', 'knowledge/', 'notice/'].forEach((href) => {
+    assert.match(index, new RegExp(`<a href="${href}">`));
+  });
+  ['statement', 'MoM', 'knowledge', 'notice'].forEach((directory) => {
+    const categoryIndex = fs.readFileSync(path.join(projectRoot, directory, 'index.html'), 'utf8');
+    assert.match(categoryIndex, /data-archive-category=/);
+    assert.match(categoryIndex, /class="archive-category-nav"/);
+    assert.match(categoryIndex, /class="archive-search"/);
+  });
   const topics = catalog.documents.flatMap((document) => document.topics);
   assert.ok(topics.includes('차별'));
   assert.ok(!topics.includes('차별 철폐'));
@@ -329,6 +322,28 @@ test('archive cards, search controls, and content governance metadata stay seman
     assert.ok(document.showProvenance === undefined || typeof document.showProvenance === 'boolean');
     assert.ok(Array.isArray(document.relatedDocuments));
   });
+});
+
+test('shared document chrome and explicit mobile table layouts remain free of legacy controls', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
+  const momDocuments = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'generated', 'mom.json'), 'utf8'));
+  const documents = [...catalog.documents, ...momDocuments];
+
+  documents.forEach((document) => {
+    const page = fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8');
+    assert.equal((page.match(/<!-- site-masthead:start -->/g) || []).length, 1, document.href);
+    assert.equal((page.match(/class="document-tools"/g) || []).length, 1, document.href);
+    assert.doesNotMatch(page, /class="(?:utility-bar|back-link|history-nav|card-footer|archive-kicker)\b/);
+  });
+
+  const dbDcGuide = fs.readFileSync(
+    path.join(projectRoot, 'knowledge', 'retirement-benefit-db-dc-guide.html'),
+    'utf8',
+  );
+  const performancePay = fs.readFileSync(path.join(projectRoot, 'notice', '2025-performance-pay.html'), 'utf8');
+  assert.equal((dbDcGuide.match(/data-mobile-layout="stack"/g) || []).length, 4);
+  assert.equal((performancePay.match(/data-mobile-layout="stack"/g) || []).length, 1);
 });
 
 test('performance pay distinguishes the two allowances without correction callouts', () => {
@@ -392,14 +407,18 @@ test('statement print layout uses the A2 page width with controlled page breaks'
     assert.doesNotMatch(statementHtml, /class="statement-meta"/);
     assert.match(statementHtml, /class="statement-identity"[^>]*>[\s\S]*차별 없는 일터[\s\S]*병들지 않는 노동[\s\S]*<\/p>/);
     assert.match(statementHtml, /class="statement-brand-mark"/);
-    assert.match(statementHtml, /<h1 class="statement-title">/);
+    assert.match(statementHtml, /<h1 class="statement-title[^\"]*">/);
+    assert.match(statementHtml, /class="statement-title-line"/);
+    assert.doesNotMatch(statementHtml.match(/<h1[^>]*statement-title[^>]*>[\s\S]*?<\/h1>/)?.[0] || '', /<br\s*\/?>/i);
     assert.match(statementHtml, /@page\s*\{\s*margin:\s*18mm 0;\s*size:\s*420mm 594mm;\s*\}/);
     assert.match(statementHtml, /@page :first\s*\{\s*margin-top:\s*0;\s*\}/);
-    assert.match(statementHtml, /data-document-toc="false"/);
+    assert.doesNotMatch(statementHtml, /data-document-toc="false"/);
     assert.match(statementHtml, /data-print-density="(?:short|standard|long)"/);
     assert.match(statementHtml, /class="signature-date"[\s\S]*<time datetime="\d{4}-\d{2}-\d{2}">/);
     assert.match(statementHtml, /class="signature-org-logo"/);
     assert.doesNotMatch(statementHtml, /class="document-toc"/);
+    assert.match(statementHtml, /<!-- site-masthead:start -->/);
+    assert.match(statementHtml, /class="document-tools"/);
   });
   const currentStatement = fs.readFileSync(
     path.join(projectRoot, 'statement', '성명서_202607.html'),
@@ -485,17 +504,15 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   );
 });
 
-test('meeting document header keeps its title outside the logo and category column', () => {
-  const css = fs.readFileSync(path.resolve(__dirname, '..', 'assets', 'interface.css'), 'utf8');
+test('meeting documents use the shared masthead and category breadcrumb', () => {
+  const projectRoot = path.resolve(__dirname, '..');
+  const meeting = fs.readFileSync(path.join(projectRoot, 'MoM', '202607.html'), 'utf8');
 
-  assert.match(
-    css,
-    /\.mom-header > \.statement-title\s*\{[^}]*grid-column:\s*2;[^}]*grid-row:\s*2;[^}]*max-width:\s*none;/s,
-  );
-  assert.match(
-    css,
-    /@media \(max-width:\s*768px\)[\s\S]*\.mom-header > \.statement-title\s*\{[^}]*grid-column:\s*1;[^}]*grid-row:\s*auto;/s,
-  );
+  assert.match(meeting, /<!-- site-masthead:start -->/);
+  assert.match(meeting, /<header class="document-header">/);
+  assert.match(meeting, /<li aria-current="page"><a href="\.\/">회의록<\/a><\/li>/);
+  assert.doesNotMatch(meeting, /class="mom-header"/);
+  assert.doesNotMatch(meeting, /class="utility-bar"/);
 });
 
 test('statement builder reuses the template and selects the one-page print density', () => {
@@ -515,7 +532,7 @@ test('statement builder reuses the template and selects the one-page print densi
   assert.ok(rendered.score <= 1400);
   assert.ok(rendered.score > scoreStatementContent(rendered.metrics));
   assert.match(rendered.html, /data-document-category="성명서"/);
-  assert.match(rendered.html, /data-document-toc="false"/);
+  assert.doesNotMatch(rendered.html, /data-document-toc="false"/);
   assert.match(rendered.html, /data-print-density="short"/);
   assert.match(rendered.html, /@page\s*\{\s*margin:\s*18mm 0;\s*size:\s*420mm 594mm;\s*\}/);
   assert.match(rendered.html, /@page :first\s*\{\s*margin-top:\s*0;\s*\}/);
@@ -532,8 +549,14 @@ test('statement builder reuses the template and selects the one-page print densi
   );
   assert.match(rendered.html, /<img[^>]*loading="eager"[^>]*decoding="sync"[^>]*fetchpriority="high"[^>]*class="signature-org-logo">/);
   assert.match(rendered.html, /class="statement-identity"/);
+  assert.match(rendered.html, /<!-- site-masthead:start -->/);
+  assert.match(rendered.html, /class="document-tools"/);
+  assert.match(rendered.html, /class="statement-title-line"/);
+  const renderedTitle = rendered.html.match(/<h1[^>]*statement-title[^>]*>[\s\S]*?<\/h1>/)?.[0] || '';
+  assert.doesNotMatch(renderedTitle, /<br\s*\/?>/i);
   assert.equal((rendered.html.match(/class="section-title"/g) || []).length, 2);
-  assert.equal((rendered.html.match(/<li>/g) || []).length, 3);
+  const demands = rendered.html.match(/<div class="demands">[\s\S]*?<\/div>/)?.[0] || '';
+  assert.equal((demands.match(/<li>/g) || []).length, 3);
   assert.equal((rendered.html.match(/class="closing-(?:highlight|text)"/g) || []).length, 3);
   assert.doesNotMatch(rendered.html, /class="document-toc"/);
   assert.match(rendered.html, /<time datetime="2026-07-11">2026년 7월 11일<\/time>/);
@@ -637,7 +660,7 @@ test('statement renderer inserts only the validated normalized fragment', () => 
   assert.ok(rendered.html.indexOf('class="signature-block"') < rendered.html.indexOf('</main>'));
 });
 
-test('statement category opts out of automatic document TOC generation', () => {
+test('statement category participates in the common runtime TOC generation', () => {
   const projectRoot = path.resolve(__dirname, '..');
   const script = fs.readFileSync(path.join(projectRoot, 'assets', 'document-tools.js'), 'utf8');
   const catalog = JSON.parse(fs.readFileSync(path.join(projectRoot, '_source', 'catalog.json'), 'utf8'));
@@ -645,13 +668,12 @@ test('statement category opts out of automatic document TOC generation', () => {
     .filter((document) => document.category === 'statement')
     .map((document) => fs.readFileSync(path.join(projectRoot, ...document.href.split('/')), 'utf8'));
 
-  assert.match(script, /article\.dataset\.documentCategory === '성명서'/);
-  assert.match(script, /article\.dataset\.documentToc === 'false'/);
+  assert.match(script, /function tocGroups/);
+  assert.match(script, /function makeToc/);
+  assert.match(script, /IntersectionObserver/);
   statements.forEach((statement) => {
-    assert.match(
-      statement,
-      /<main\b[^>]*class="[^"]*\bdocument-article\b[^"]*"[^>]*data-document-toc="false"/,
-    );
+    assert.match(statement, /class="statement-body" data-copy-body/);
+    assert.doesNotMatch(statement, /data-document-toc="false"/);
   });
 });
 

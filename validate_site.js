@@ -740,7 +740,10 @@ function validateStatementOutputs(sourceRoot, siteRoot, manualDocs, errors) {
 
   if (fs.existsSync(publicStatementDir)) {
     walkSiteFiles(publicStatementDir, errors, siteRoot)
-      .filter((filePath) => path.extname(filePath).toLowerCase() === '.html')
+      .filter((filePath) => (
+        path.extname(filePath).toLowerCase() === '.html'
+        && path.basename(filePath).toLowerCase() !== 'index.html'
+      ))
       .forEach((filePath) => {
         const href = toPosixPath(path.relative(siteRoot, filePath));
         if (!expectedKeys.has(href.toLocaleLowerCase('en'))) {
@@ -854,7 +857,7 @@ function validateDocumentMetadata(docs, context, errors) {
 function validateContentIndexes(content, context, errors) {
   validateIndexCards('index.html', content.allDocs, context, errors);
   validateIndexCards('MoM/index.html', content.momDocs, context, errors);
-  ['knowledge', 'notice'].forEach((category) => {
+  ['statement', 'knowledge', 'notice'].forEach((category) => {
     validateIndexCards(
       `${category}/index.html`,
       content.manualDocs.filter((doc) => doc.category === category),

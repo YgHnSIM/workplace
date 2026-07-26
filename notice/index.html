@@ -25,7 +25,7 @@
   <link rel="icon" href="../assets/favicon-32.png?v=2b7f670c1bde" sizes="32x32" type="image/png">
   <link rel="icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192">
-  <link rel="stylesheet" href="../assets/interface.css?v=021562a45334">
+  <link rel="stylesheet" href="../assets/interface.css?v=b24cf48646f1">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -75,63 +75,86 @@
 </head>
 
 <body>
-  <main class="archive-container">
-    <a href="../index.html" class="back-link">
-      <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
-      첫 페이지로 돌아가기
+<!-- site-masthead:start -->
+  <header class="site-masthead">
+    <a class="site-logo" href="../" aria-label="우체국물류지원단 물류노동조합 첫 페이지">
+      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합">
     </a>
+    <a class="site-archive-entry" href="../">공개 자료실</a>
+  </header>
+<!-- site-masthead:end -->
+  <main class="archive-container" data-archive-category="notice">
     <header class="archive-header">
-      <img src="../assets/logo-header-300.webp?v=02c96d546fb3" srcset="../assets/logo-header-300.webp?v=02c96d546fb3 1x, ../assets/logo-header-600.webp?v=47e0fed82fc9 2x" width="300" height="84" alt="우체국물류지원단 물류노동조합 로고" class="header-logo">
-      <div class="archive-heading">
-        <p class="archive-kicker">쟁점별 기록 원장</p>
-        <h1 class="archive-title">알림</h1>
-      </div>
+      <h1 class="archive-title">알림</h1>
       <p class="archive-desc">노동조합의 활동 기록과 조합원 안내를 모았습니다.</p>
     </header>
+
+    <nav class="archive-category-nav" aria-label="자료 분류">
+      <a href="../">전체</a>
+      <a href="../statement/">성명서</a>
+      <a href="../MoM/">회의록</a>
+      <a href="../knowledge/">지식</a>
+      <a href="./" aria-current="page">알림</a>
+    </nav>
+
+    <section class="archive-tools" aria-label="자료 찾기">
+      <p class="archive-result-summary" id="archive-result-summary" aria-live="polite">자료 2건</p>
+      <div class="archive-query-row">
+        <form class="archive-search" role="search" novalidate>
+          <label for="archive-search-input">자료 검색</label>
+          <div class="archive-search-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4-4"></path></svg>
+            <input id="archive-search-input" name="q" type="search" inputmode="search" autocomplete="off" placeholder="제목·설명·주제 검색">
+            <button class="archive-search-clear" type="button" hidden>지우기</button>
+          </div>
+        </form>
+        <div class="topic-filter">
+          <label for="archive-topic-select">쟁점</label>
+          <select id="archive-topic-select" name="topic">
+            <option value="all">모든 쟁점</option>
+          <option value="고용안정">고용안정</option>
+          <option value="노조 역사">노조 역사</option>
+          <option value="성과급">성과급</option>
+          <option value="임금">임금</option>
+          <option value="직무수당">직무수당</option>
+          <option value="차별">차별</option>
+          </select>
+        </div>
+      </div>
+    </section>
 
     <section class="doc-list" id="archive-results" aria-label="알림 목록">
       <article class="doc-card" data-category="notice" data-status="final" data-topics="노조 역사|고용안정|차별" data-search="우체국물류지원단 물류노동조합 9년의 투쟁과 역사 서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다. 알림 확정 노조 역사 고용안정 차별">
         <div class="card-meta" id="doc-1-meta">
-          <span class="badge-category">알림</span>
           <time class="doc-date" datetime="2026-07-06">2026년&nbsp;7월&nbsp;6일</time>
+          <span class="badge-category">알림</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-1-title"><a class="doc-card-link" href="logistics-union-9-years.html" aria-describedby="doc-1-meta doc-1-excerpt">우체국물류지원단 물류노동조합 9년의 투쟁과 역사</a></h2>
         <p class="doc-excerpt" id="doc-1-excerpt">서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">노조 역사</span><span class="card-topic">고용안정</span><span class="card-topic">차별</span></div>
-        <div class="card-footer" aria-hidden="true">
-          알림 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
 
       <article class="doc-card" data-category="notice" data-status="final" data-topics="성과급|직무수당|임금" data-search="2025년 성과급 계산 방식 직무수당 100,000원과 근속수당 10,000원, 내부평가 b등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내입니다. 알림 확정 성과급 직무수당 임금">
         <div class="card-meta" id="doc-2-meta">
-          <span class="badge-category">알림</span>
           <time class="doc-date" datetime="2026-07-06">2026년&nbsp;7월&nbsp;6일</time>
+          <span class="badge-category">알림</span>
           <span class="card-status" data-status="final">확정</span>
         </div>
         <h2 class="doc-title" id="doc-2-title"><a class="doc-card-link" href="2025-performance-pay.html" aria-describedby="doc-2-meta doc-2-excerpt">2025년 성과급 계산 방식</a></h2>
         <p class="doc-excerpt" id="doc-2-excerpt">직무수당 100,000원과 근속수당 10,000원, 내부평가 B등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내입니다.</p>
         <div class="card-topics" aria-label="주제"><span class="card-topic">성과급</span><span class="card-topic">직무수당</span><span class="card-topic">임금</span></div>
-        <div class="card-footer" aria-hidden="true">
-          알림 보기
-          <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
-            <polyline points="9 18 15 12 9 6"></polyline>
-          </svg>
-        </div>
       </article>
       <div class="empty-state archive-no-results" role="status" hidden>
-        <p>조건에 맞는 자료가 없습니다. 검색어나 필터를 바꿔보세요.</p>
+        <p>일치하는 자료가 없습니다.</p>
       </div>
     </section>
 
     <footer class="archive-footer">
-      <p>&copy; 2026 우체국물류지원단 물류노동조합. All rights reserved.</p>
+      <p>우체국물류지원단 물류노동조합</p>
     </footer>
   </main>
+  <script src="../assets/archive-filter.js?v=fecfd98c157b" defer></script>
 </body>
 
 </html>

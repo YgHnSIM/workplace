@@ -12,6 +12,11 @@ const {
   versionedAssetHref,
   writeTextFile,
 } = require('./lib/site-utils');
+const {
+  renderBreadcrumb,
+  renderDocumentTools,
+  renderSiteMasthead,
+} = require('./lib/site-components');
 
 const rootDir = __dirname;
 const sourceDir = path.join(rootDir, '_source', 'statement');
@@ -179,8 +184,8 @@ function validateStatementFragment(fragment, sourcePath = 'statement body fragme
 
 function scoreStatementContent(metrics, document = {}) {
   const titleCharacterCount = String(document.title || '').replace(/\s+/g, '').length;
-  const titleLineCount = Array.isArray(document.titleLines) && document.titleLines.length > 0
-    ? document.titleLines.length
+  const titleLineCount = Array.isArray(document.printTitleLines) && document.printTitleLines.length > 0
+    ? document.printTitleLines.length
     : 1;
   return metrics.characterCount
     + ((metrics.paragraphCount || 0) * 45)
@@ -224,51 +229,22 @@ function validateStatementDocument(rawDocument) {
     }
   }
 
-  if (document.titleLines !== undefined) {
-    if (!Array.isArray(document.titleLines) || document.titleLines.length < 1
-      || document.titleLines.some((line) => !String(line || '').trim())) {
-      throw new Error(`${document.href} titleLines must be a non-empty string array`);
+  if (document.printTitleLines !== undefined) {
+    if (!Array.isArray(document.printTitleLines) || document.printTitleLines.length < 1
+      || document.printTitleLines.some((line) => !String(line || '').trim())) {
+      throw new Error(`${document.href} printTitleLines must be a non-empty string array`);
     }
-    document.titleLines = document.titleLines.map((line) => String(line).trim());
-    if (document.titleLines.join(' ').replace(/\s+/g, ' ') !== document.title.replace(/\s+/g, ' ')) {
-      throw new Error(`${document.href} titleLines must combine to the catalog title`);
+    document.printTitleLines = document.printTitleLines.map((line) => String(line).trim());
+    if (document.printTitleLines.join(' ').replace(/\s+/g, ' ') !== document.title.replace(/\s+/g, ' ')) {
+      throw new Error(`${document.href} printTitleLines must combine to the catalog title`);
     }
   }
   return document;
 }
 
 function renderStatementTitle(document) {
-  const lines = document.titleLines || [document.title];
-  return lines.map((line) => escapeHtml(line)).join('<br>\n        ');
-}
-
-function buildUtilityBar() {
-  return `  <div class="utility-bar" id="utility-bar">
-    <div class="utility-button-container">
-      <button id="zoom-in-btn" aria-label="글자 크기 크게"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="11" y1="8" x2="11" y2="14"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></button>
-      <span class="utility-tooltip">글자 크게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-out-btn" aria-label="글자 크기 작게"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line><line x1="8" y1="11" x2="14" y2="11"></line></svg></button>
-      <span class="utility-tooltip">글자 작게</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="zoom-reset-btn" aria-label="글자 크기 초기화"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path></svg></button>
-      <span class="utility-tooltip">기본 크기</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-btn" aria-label="텍스트 복사"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg></button>
-      <span class="utility-tooltip">텍스트 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="copy-link-btn" aria-label="웹페이지 링크 복사"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></button>
-      <span class="utility-tooltip">링크 복사</span>
-    </div>
-    <div class="utility-button-container">
-      <button id="to-top-btn" aria-label="맨 위로 이동"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="18 15 12 9 6 15"></polyline></svg></button>
-      <span class="utility-tooltip">맨 위로</span>
-    </div>
-  </div>`;
+  const lines = document.printTitleLines || [document.title];
+  return lines.map((line) => `<span class="statement-title-line">${escapeHtml(line)}</span>`).join(' ');
 }
 
 function renderStatementHtml(rawDocument, bodyFragment, options = {}) {
@@ -283,6 +259,7 @@ function renderStatementHtml(rawDocument, bodyFragment, options = {}) {
   const logo300 = versionedAssetHref(buildRoot, outputPath, 'assets/logo-header-300.webp');
   const logo600 = versionedAssetHref(buildRoot, outputPath, 'assets/logo-header-600.webp');
   const documentTools = versionedAssetHref(buildRoot, outputPath, 'assets/document-tools.js');
+  const titleClass = document.title.replace(/\s+/g, '').length > 42 ? ' statement-title--long' : '';
 
   const html = `<!DOCTYPE html>
 <html lang="ko">
@@ -304,10 +281,10 @@ ${renderPageHead({
 </head>
 
 <body>
-  <a href="../index.html" class="back-link">첫 페이지로 돌아가기</a>
-
-  <main class="statement-container document-article" id="statement-article" data-document-category="성명서" data-document-toc="false" data-print-density="${density}">
+${renderSiteMasthead({ rootDir: buildRoot, outputFile: outputPath })}
+  <main class="statement-container document-article" id="statement-article" data-document-category="성명서" data-print-density="${density}">
     <header class="statement-header">
+${renderBreadcrumb({ rootDir: buildRoot, outputFile: outputPath, category: 'statement' })}
       <p class="statement-identity">
         <span>차별 없는 일터</span>
         <span>병들지 않는 노동</span>
@@ -315,7 +292,7 @@ ${renderPageHead({
       <span class="statement-brand-mark" aria-hidden="true">
         <img src="${escapeAttr(logo300)}" srcset="${escapeAttr(logo300)} 1x, ${escapeAttr(logo600)} 2x" width="300" height="84" loading="eager" decoding="sync" alt="">
       </span>
-      <h1 class="statement-title">${renderStatementTitle(document)}</h1>
+      <h1 class="statement-title${titleClass}">${renderStatementTitle(document)}</h1>
     </header>
 
     <div class="statement-body" data-copy-body>
@@ -330,7 +307,7 @@ ${inspectedFragment.html}
     </div>
   </main>
 
-${buildUtilityBar()}
+${renderDocumentTools()}
   <script src="${escapeAttr(documentTools)}" defer></script>
 </body>
 
