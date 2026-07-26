@@ -5,13 +5,11 @@ const {
   assertIsoDate,
   escapeAttr,
   escapeHtml,
-  readJson,
   relativeTo,
   renderPageHead,
   renderTime,
   toPosixPath,
   versionedAssetHref,
-  writeTextFile,
 } = require('./lib/site-utils');
 const {
   archiveHref,
@@ -20,210 +18,88 @@ const {
   renderDocumentTools,
   renderSiteMasthead,
 } = require('./lib/site-components');
+const { CATEGORY_REGISTRY, loadContentGraph } = require('./lib/content-model');
+const { writeOutputMap } = require('./lib/build-utils');
 
 const rootDir = __dirname;
-const catalogPath = path.join(rootDir, '_source', 'catalog.json');
-const momManifestPath = path.join(rootDir, '_source', 'generated', 'mom.json');
-const homeFilePath = path.join(rootDir, 'index.html');
-const sitemapPath = path.join(rootDir, 'sitemap.xml');
-const robotsPath = path.join(rootDir, 'robots.txt');
 
-const supportedStatuses = new Set(['draft', 'reviewed', 'final']);
-
-const categoryLabels = {
+const categoryLabels = Object.freeze({
   all: '전체',
-  statement: '성명서',
-  mom: '회의록',
-  knowledge: '지식',
-  notice: '알림',
-};
-
-const categoryTitles = {
-  statement: {
-    directory: 'statement',
-    title: '성명서',
-    description: '노동 현장의 쟁점과 요구를 알리는 노동조합 성명서입니다.',
-  },
-  mom: {
-    directory: 'MoM',
-    title: '운영위원회 회의록',
-    description: '우체국물류지원단 물류노동조합 운영위원회의 정기·임시 회의록과 결산 자료입니다.',
-  },
-  knowledge: {
-    directory: 'knowledge',
-    title: '지식',
-    description: '노동·법률 쟁점을 판례와 공개 자료에 비추어 해설한 지식 자료입니다.',
-  },
-  notice: {
-    directory: 'notice',
-    title: '알림',
-    description: '노동조합의 활동 기록과 조합원 안내를 모았습니다.',
-  },
-};
-
-const statusLabels = {
-  draft: '초안',
-  reviewed: '검토 완료',
-  final: '확정',
-};
-
-const defaultTopics = {
-  mom: ['운영위원회', '회의록'],
-  knowledge: ['노동 지식'],
-  notice: ['조합 알림'],
-  statement: ['노동조합', '성명서'],
-};
+  ...Object.fromEntries(CATEGORY_REGISTRY.map((category) => [category.key, category.label])),
+});
+const categoryTitles = Object.freeze(
+  Object.fromEntries(CATEGORY_REGISTRY.map((category) => [category.key, {
+    directory: category.directory,
+    title: category.title,
+    description: category.description,
+  }])),
+);
+const statusLabels = Object.freeze({ draft: '초안', reviewed: '검토 완료', final: '확정' });
 
 function normalizeHref(href) {
   const value = toPosixPath(String(href || '').trim());
-  if (!value || value.startsWith('/') || value.startsWith('//')) {
-    throw new Error(`Unsafe href in catalog: ${href}`);
-  }
-  if (/^[a-z][a-z0-9+.-]*:/i.test(value)) {
-    throw new Error(`External href is not allowed in catalog: ${href}`);
-  }
-  if (value.split('/').includes('..')) {
-    throw new Error(`Parent directory href is not allowed in catalog: ${href}`);
+  if (!value || value.startsWith('/') || value.startsWith('//') || value.includes('\\')
+    || value.includes('?') || value.includes('#') || value.includes('%')
+    || /^[a-z][a-z0-9+.-]*:/i.test(value) || value.split('/').some((part) => !part || part === '.' || part === '..')) {
+    throw new Error(`Unsafe document route: ${href}`);
   }
   return value;
 }
 
-function pageHref(docHref, outputFile) {
+function pageHref(docHref, outputFile, buildRoot = rootDir) {
   const normalized = normalizeHref(docHref);
-  const target = path.join(rootDir, normalized);
-  if (!fs.existsSync(target)) {
-    throw new Error(`Catalog target is missing: ${normalized}`);
-  }
+  const target = path.join(buildRoot, ...normalized.split('/'));
   const relative = toPosixPath(path.relative(path.dirname(outputFile), target));
   return relative || path.basename(target);
 }
 
-function validateDocument(doc, sourceLabel) {
-  ['category', 'href', 'title', 'date', 'excerpt'].forEach((field) => {
-    if (!String(doc[field] || '').trim()) {
-      throw new Error(`${sourceLabel} document is missing ${field}`);
-    }
-  });
-  const date = assertIsoDate(doc.date, `${sourceLabel} date for ${doc.href}`);
-  const dateModified = doc.dateModified
-    ? assertIsoDate(doc.dateModified, `${sourceLabel} dateModified for ${doc.href}`)
-    : date;
-  if (dateModified < date) {
-    throw new Error(`${sourceLabel} dateModified cannot precede date for ${doc.href}`);
-  }
+function topicLabels(record, graph) {
+  return record.topicIds.map((topicId) => graph.topicsById.get(topicId)?.label || topicId);
+}
 
-  const status = String(doc.status || 'final').trim();
-  if (!supportedStatuses.has(status)) {
-    throw new Error(`${sourceLabel} status must be draft, reviewed, or final for ${doc.href}`);
-  }
-
-  const rawTopics = Array.isArray(doc.topics) && doc.topics.length
-    ? doc.topics
-    : (defaultTopics[doc.category] || [doc.category]);
-  const topics = [...new Set(rawTopics.map((topic) => String(topic || '').trim()).filter(Boolean))];
-  if (!topics.length) throw new Error(`${sourceLabel} topics cannot be empty for ${doc.href}`);
-
-  const sourceCount = doc.sourceCount === undefined ? 1 : Number(doc.sourceCount);
-  if (!Number.isInteger(sourceCount) || sourceCount < 1) {
-    throw new Error(`${sourceLabel} sourceCount must be a positive integer for ${doc.href}`);
-  }
-
-  const relatedDocuments = Array.isArray(doc.relatedDocuments)
-    ? [...new Set(doc.relatedDocuments.map((href) => normalizeHref(href)))]
-    : [];
-  const showProvenance = doc.showProvenance === undefined ? true : doc.showProvenance;
-  if (typeof showProvenance !== 'boolean') {
-    throw new Error(`${sourceLabel} showProvenance must be a boolean for ${doc.href}`);
-  }
-
+function renderDocument(record, graph) {
+  const labels = topicLabels(record, graph);
   return {
-    ...doc,
-    href: normalizeHref(doc.href),
-    date,
-    dateModified,
-    status,
-    topics,
-    sourceCount,
-    provenance: String(doc.provenance || '노동조합 공개 기록').trim(),
-    showProvenance,
-    relatedDocuments,
+    ...record,
+    href: record.route,
+    date: record.dates.publishedOn,
+    dateModified: record.dates.modifiedOn,
+    reviewedOn: record.dates.reviewedOn,
+    excerpt: record.summary,
+    status: record.workflow.status,
+    visibility: record.workflow.visibility,
+    topics: labels,
+    sourceCount: record.evidence.count,
+    provenance: record.evidence.note,
+    showProvenance: record.evidence.noteVisibility === 'public',
+    relatedDocuments: record.relatedDocumentIds.map((id) => graph.documentsById.get(id)?.route).filter(Boolean),
   };
 }
 
-function assertUniqueDocumentHrefs(docs) {
-  const seen = new Map();
-  docs.forEach((doc) => {
-    const key = doc.href.toLowerCase();
-    const previous = seen.get(key);
-    if (previous) {
-      throw new Error(`Duplicate public href in document manifests: ${previous.href} and ${doc.href}`);
-    }
-    seen.set(key, doc);
-  });
-}
-
-function assertRelatedDocuments(docs) {
-  const hrefs = new Set(docs.map((doc) => doc.href));
-  docs.forEach((doc) => {
-    doc.relatedDocuments.forEach((href) => {
-      if (href === doc.href) throw new Error(`${doc.href} cannot relate to itself`);
-      if (!hrefs.has(href)) throw new Error(`${doc.href} relates to missing document: ${href}`);
-    });
-  });
-}
-
-function readDocuments() {
-  const catalog = readJson(catalogPath);
-  const manualDocs = catalog.documents
-    .map((doc) => validateDocument(doc, '_source/catalog.json'));
-
-  const momDocs = readJson(momManifestPath).map((doc, index) => validateDocument({
-    ...doc,
-    groupOrder: 20,
-    order: index,
-  }, '_source/generated/mom.json'));
-
-  const docs = [...manualDocs, ...momDocs];
-  assertUniqueDocumentHrefs(docs);
-  assertRelatedDocuments(docs);
-  return docs.sort((a, b) => (
-    b.date.localeCompare(a.date)
-    || ((a.groupOrder || 0) - (b.groupOrder || 0))
-    || ((a.order || 0) - (b.order || 0))
-    || a.href.localeCompare(b.href, 'ko')
-  ));
-}
-
-function renderCard(doc, outputFile, index) {
+function renderCard(doc, outputFile, index, buildRoot = rootDir) {
   const label = categoryLabels[doc.category] || doc.category;
   const idBase = `doc-${index + 1}`;
   const metaId = `${idBase}-meta`;
   const titleId = `${idBase}-title`;
   const excerptId = `${idBase}-excerpt`;
-  const topics = doc.topics.map((topic) => (
-    `<span class="card-topic">${escapeHtml(topic)}</span>`
-  )).join('');
+  const topics = doc.topics.map((topic) => `<span class="card-topic">${escapeHtml(topic)}</span>`).join('');
   const searchText = [doc.title, doc.excerpt, label, statusLabels[doc.status], ...doc.topics]
-    .join(' ')
-    .toLocaleLowerCase('ko');
-  return `      <article class="doc-card" data-category="${escapeAttr(doc.category)}" data-status="${escapeAttr(doc.status)}" data-topics="${escapeAttr(doc.topics.join('|'))}" data-search="${escapeAttr(searchText)}">
+    .join(' ').toLocaleLowerCase('ko');
+  return `      <article class="doc-card" data-category="${escapeAttr(doc.category)}" data-status="${escapeAttr(doc.status)}" data-visibility="${escapeAttr(doc.visibility)}" data-topics="${escapeAttr(doc.topics.join('|'))}" data-search="${escapeAttr(searchText)}">
         <div class="card-meta" id="${metaId}">
           ${renderTime(doc.date)}
           <span class="badge-category">${escapeHtml(label)}</span>
           <span class="card-status" data-status="${escapeAttr(doc.status)}">${escapeHtml(statusLabels[doc.status])}</span>
         </div>
-        <h2 class="doc-title" id="${titleId}"><a class="doc-card-link" href="${escapeAttr(pageHref(doc.href, outputFile))}" aria-describedby="${metaId} ${excerptId}">${escapeHtml(doc.title)}</a></h2>
+        <h2 class="doc-title" id="${titleId}"><a class="doc-card-link" href="${escapeAttr(pageHref(doc.href, outputFile, buildRoot))}" aria-describedby="${metaId} ${excerptId}">${escapeHtml(doc.title)}</a></h2>
         <p class="doc-excerpt" id="${excerptId}">${escapeHtml(doc.excerpt)}</p>
         <div class="card-topics" aria-label="주제">${topics}</div>
       </article>`;
 }
 
 function renderArchiveTools(docs) {
-  const topics = [...new Set(docs.flatMap((doc) => doc.topics))]
-    .sort((a, b) => a.localeCompare(b, 'ko'));
-  const topicOptions = topics.map((topic) => (
-    `          <option value="${escapeAttr(topic)}">${escapeHtml(topic)}</option>`
-  )).join('\n');
+  const topics = [...new Set(docs.flatMap((doc) => doc.topics))].sort((a, b) => a.localeCompare(b, 'ko'));
+  const topicOptions = topics.map((topic) => `          <option value="${escapeAttr(topic)}">${escapeHtml(topic)}</option>`).join('\n');
   return `    <section class="archive-tools" aria-label="자료 찾기">
       <p class="archive-result-summary" id="archive-result-summary" aria-live="polite">자료 ${docs.length}건</p>
       <div class="archive-query-row">
@@ -261,11 +137,11 @@ function collectionSchema(docs) {
   };
 }
 
-function renderArchiveList({ docs, outputFile, title, showOlderDocuments = false }) {
+function renderArchiveList({ docs, outputFile, title, showOlderDocuments = false, buildRoot = rootDir }) {
   const visibleDocs = showOlderDocuments ? docs.slice(0, 8) : docs;
   const olderDocs = showOlderDocuments ? docs.slice(8) : [];
-  const cards = visibleDocs.map((doc, index) => renderCard(doc, outputFile, index)).join('\n\n');
-  const olderCards = olderDocs.map((doc, index) => renderCard(doc, outputFile, visibleDocs.length + index)).join('\n\n');
+  const cards = visibleDocs.map((doc, index) => renderCard(doc, outputFile, index, buildRoot)).join('\n\n');
+  const olderCards = olderDocs.map((doc, index) => renderCard(doc, outputFile, visibleDocs.length + index, buildRoot)).join('\n\n');
   const older = olderCards ? `
       <details class="archive-older-documents" data-archive-older-documents>
         <summary>이전 자료 ${olderDocs.length}건 보기</summary>
@@ -277,47 +153,53 @@ ${olderCards}
       <div class="empty-state archive-no-results" role="status" hidden>
         <p>일치하는 자료가 없습니다.</p>
       </div>` : '';
-  const listContent = cards ? `${cards}${older}${noResults}` : `      <div class="empty-state" role="status">
+  return cards
+    ? `${cards}${older}${noResults}`
+    : `      <div class="empty-state" role="status">
         <p>아직 공개된 ${escapeHtml(title)} 자료가 없습니다.</p>
       </div>`;
-
-  return listContent;
 }
 
-function buildArchiveHtml({ title, description, docs, outputFile, category = 'all' }) {
+function newestDate(docs) {
+  return docs.reduce((latest, doc) => {
+    const candidate = doc.dateModified || doc.date;
+    return candidate > latest ? candidate : latest;
+  }, '');
+}
+
+function buildArchiveHtml({ title, description, docs, outputFile, category = 'all', buildRoot = rootDir }) {
   const listContent = renderArchiveList({
     docs,
     outputFile,
     title,
     showOlderDocuments: category === 'all',
+    buildRoot,
   });
-  const archiveFilter = versionedAssetHref(rootDir, outputFile, 'assets/archive-filter.js');
-
+  const archiveFilter = versionedAssetHref(buildRoot, outputFile, 'assets/archive-filter.js');
   return `<!DOCTYPE html>
 <html lang="ko">
 
 <head>
 ${renderPageHead({
-    rootDir,
+    rootDir: buildRoot,
     outputFile,
     title,
     description,
     schemaType: 'CollectionPage',
-    dateModified: newestDate(docs),
     keywords: [...new Set(docs.flatMap((doc) => doc.topics))],
     schemaProperties: collectionSchema(docs),
   })}
 </head>
 
 <body>
-${renderSiteMasthead({ rootDir, outputFile })}
+${renderSiteMasthead({ rootDir: buildRoot, outputFile })}
   <main class="archive-container" data-archive-category="${escapeAttr(category)}">
     <header class="archive-header">
       <h1 class="archive-title">${escapeHtml(title)}</h1>
       <p class="archive-desc">${escapeHtml(description)}</p>
     </header>
 
-${renderArchiveCategoryNav({ rootDir, outputFile, activeCategory: category })}
+${renderArchiveCategoryNav({ rootDir: buildRoot, outputFile, activeCategory: category })}
 
 ${renderArchiveTools(docs)}
 
@@ -336,20 +218,13 @@ ${listContent}
 `;
 }
 
-function newestDate(docs) {
-  return docs.reduce((latest, doc) => {
-    const candidate = doc.dateModified || doc.date;
-    return candidate > latest ? candidate : latest;
-  }, '');
-}
-
 function buildSitemapXml(docs) {
   const entries = [
     { href: '', date: newestDate(docs) },
-    { href: 'statement/', date: newestDate(docs.filter((doc) => doc.category === 'statement')) },
-    { href: 'MoM/', date: newestDate(docs.filter((doc) => doc.category === 'mom')) },
-    { href: 'knowledge/', date: newestDate(docs.filter((doc) => doc.category === 'knowledge')) },
-    { href: 'notice/', date: newestDate(docs.filter((doc) => doc.category === 'notice')) },
+    ...CATEGORY_REGISTRY.map((category) => ({
+      href: `${category.directory}/`,
+      date: newestDate(docs.filter((doc) => doc.category === category.key)),
+    })),
     ...docs.map((doc) => ({ href: doc.href, date: doc.dateModified || doc.date })),
   ];
   const seen = new Set();
@@ -360,7 +235,6 @@ function buildSitemapXml(docs) {
     const lastmod = date ? `\n    <lastmod>${escapeHtml(assertIsoDate(date, `sitemap lastmod for ${href || '/'}`))}</lastmod>` : '';
     return `  <url>\n    <loc>${escapeHtml(loc)}</loc>${lastmod}\n  </url>`;
   }).join('\n');
-
   return `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${urls}
@@ -377,22 +251,16 @@ Sitemap: ${absolutePublicUrl('sitemap.xml')}
 
 function replaceVersionedAssetReference(html, assetPath, expectedHref) {
   const escapedAssetPath = assetPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp(
-    `(["'])(?:\\.\\.?/)*${escapedAssetPath}(?:\\?v=[^"'\\s>]*)?\\1`,
-    'g',
-  );
+  const pattern = new RegExp(`(["'])(?:\\.\\.?/)*${escapedAssetPath}(?:\\?v=[^"'\\s>]*)?\\1`, 'g');
   return html.replace(pattern, (_, quote) => `${quote}${expectedHref}${quote}`);
 }
 
-function renderDocumentFacts(doc, outputFile) {
-  const homeHref = archiveHref(rootDir, outputFile, 'all');
+function renderDocumentFacts(doc, outputFile, buildRoot = rootDir) {
+  const homeHref = archiveHref(buildRoot, outputFile, 'all');
   const topics = doc.topics.map((topic) => (
     `<a href="${escapeAttr(`${homeHref}?topic=${encodeURIComponent(topic)}`)}">${escapeHtml(topic)}</a>`
   )).join('');
-  const provenance = doc.showProvenance
-    ? `\n      <p>${escapeHtml(doc.provenance)}</p>`
-    : '';
-
+  const provenance = doc.showProvenance ? `\n      <p>${escapeHtml(doc.provenance)}</p>` : '';
   return `    <aside class="document-facts" aria-label="문서 정보">
       <dl>
         <div>
@@ -415,17 +283,17 @@ function renderDocumentFacts(doc, outputFile) {
     </aside>`;
 }
 
-function renderRelatedDocuments(doc, docs, outputFile) {
+function renderRelatedDocuments(doc, docs, outputFile, buildRoot = rootDir) {
   if (!doc.relatedDocuments.length) return '';
   const docsByHref = new Map(docs.map((candidate) => [candidate.href, candidate]));
-  const items = doc.relatedDocuments.map((href) => docsByHref.get(href)).filter(Boolean);
+  const items = doc.relatedDocuments
+    .map((href) => docsByHref.get(href))
+    .filter((item) => item && item.visibility === 'public');
   if (!items.length) return '';
-
-  const links = items.map((item) => `        <a class="related-document" href="${escapeAttr(pageHref(item.href, outputFile))}">
+  const links = items.map((item) => `        <a class="related-document" href="${escapeAttr(pageHref(item.href, outputFile, buildRoot))}">
           <span>${escapeHtml(categoryLabels[item.category] || item.category)} · ${renderTime(item.date, 'related-document-date')}</span>
           <strong>${escapeHtml(item.title)}</strong>
         </a>`).join('\n');
-
   return `    <aside class="related-documents" aria-labelledby="related-documents-title">
       <h2 id="related-documents-title">관련 자료</h2>
       <div class="related-document-grid">
@@ -472,10 +340,7 @@ function removeElementWithClass(html, className) {
     while ((tag = tagPattern.exec(updated))) {
       if (/^<\/div\b/i.test(tag[0])) depth -= 1;
       else depth += 1;
-      if (depth === 0) {
-        end = tagPattern.lastIndex;
-        break;
-      }
+      if (depth === 0) { end = tagPattern.lastIndex; break; }
     }
     if (end < 0) break;
     updated = `${updated.slice(0, match.index)}${updated.slice(end)}`;
@@ -491,24 +356,6 @@ function removeLegacyDocumentControls(html) {
     .replace(/\s*<script\b[^>]*document-tools\.js[^>]*><\/script>\s*/gi, '\n');
 }
 
-function removeLegacyStyleRules(html) {
-  const legacySelector = /\.(?:utility-bar|back-link|history-nav|archive-kicker|card-footer)\b/i;
-  const stripRules = (css) => css.replace(
-    /^([ \t]*)([^{}]+?)\{([^{}]*)\}/gm,
-    (match, indent, rawSelectors, declarations) => {
-      const selectors = rawSelectors.split(',').map((selector) => selector.trim()).filter(Boolean);
-      if (!selectors.some((selector) => legacySelector.test(selector))) return match;
-      const retained = selectors.filter((selector) => !legacySelector.test(selector));
-      if (!retained.length) return '';
-      return `${indent}${retained.join(', ')} {${declarations}}`;
-    },
-  );
-  return html.replace(
-    /(<style\b[^>]*>)([\s\S]*?)(<\/style>)/gi,
-    (match, opening, css, closing) => `${opening}${stripRules(css)}${closing}`,
-  );
-}
-
 function markMobileStackTables(html) {
   return html.replace(
     /<table\b([^>]*\bclass=["'][^"']*\bpost-table\b[^"']*["'][^>]*)>/gi,
@@ -518,47 +365,64 @@ function markMobileStackTables(html) {
   );
 }
 
-function migrateManualDocumentShell(html, doc, filePath) {
-  let updated = removeLegacyStyleRules(removeLegacyDocumentControls(html));
+function extractPageStyles(html) {
+  const styles = [...String(html).matchAll(/<style\b[^>]*>[\s\S]*?<\/style>/gi)].map((match) => match[0].trim());
+  return styles.map((style) => `<!-- page-style:start -->\n${style}\n<!-- page-style:end -->`).join('\n');
+}
+
+function replaceSourceHead(html, record, sourceStyles, filePath, graph, buildRoot = rootDir) {
+  const keywords = topicLabels(record, graph);
+  const head = `<head>\n  <!-- seo-head:start -->\n${renderPageHead({
+    rootDir: buildRoot,
+    outputFile: filePath,
+    title: record.title,
+    description: record.summary,
+    record,
+    schemaType: 'WebPage',
+    openGraphType: 'article',
+    keywords,
+    topicLabels: keywords,
+    robots: record.workflow.visibility === 'unlisted' ? 'noindex,follow' : undefined,
+  })}\n  <!-- seo-head:end -->${sourceStyles ? `\n${sourceStyles}` : ''}\n</head>`;
+  if (!/<head\b/i.test(html)) throw new Error(`${record.route} must contain a head element`);
+  return html.replace(/<head\b[^>]*>[\s\S]*?<\/head>/i, head);
+}
+
+function migrateManualDocumentShell(html, doc, filePath, buildRoot = rootDir) {
+  let updated = removeLegacyDocumentControls(html);
   const documentHeader = `<!-- document-header:start -->\n${renderDocumentHeader({
-    rootDir,
+    rootDir: buildRoot,
     outputFile: filePath,
     category: doc.category,
     title: doc.title,
     description: doc.excerpt,
   })}\n<!-- document-header:end -->`;
   const existingHeader = /<!-- document-header:start -->[\s\S]*?<!-- document-header:end -->/;
-  if (existingHeader.test(updated)) {
-    updated = updated.replace(existingHeader, documentHeader);
-  } else {
+  if (existingHeader.test(updated)) updated = updated.replace(existingHeader, documentHeader);
+  else {
     const legacyHeader = /<header\b[^>]*class=["'][^"']*\b(?:archive-header|history-header)\b[^"']*["'][^>]*>[\s\S]*?<\/header>/i;
     if (!legacyHeader.test(updated)) throw new Error(`${doc.href} must contain a replaceable document header`);
     updated = updated.replace(legacyHeader, documentHeader);
   }
-
   updated = updated
     .replace(/\s*<nav\b[^>]*class=["'][^"']*\bdocument-toc\b[^"']*["'][^>]*>[\s\S]*?<\/nav>\s*/gi, '\n')
     .replace(/\s*<nav\b[^>]*class=["'][^"']*\bhistory-nav\b[^"']*["'][^>]*>[\s\S]*?<\/nav>\s*/gi, '\n');
-
-  if ([
-    'notice/2025-performance-pay.html',
-    'knowledge/retirement-benefit-db-dc-guide.html',
-  ].includes(doc.href)) {
+  if (['notice/2025-performance-pay.html', 'knowledge/retirement-benefit-db-dc-guide.html'].includes(doc.href)) {
     updated = markMobileStackTables(updated);
   }
   return updated;
 }
 
-function syncSiteMasthead(html, filePath) {
+function syncSiteMasthead(html, filePath, buildRoot = rootDir) {
   return upsertManagedComponent(
     html,
     'site-masthead',
-    renderSiteMasthead({ rootDir, outputFile: filePath }),
+    renderSiteMasthead({ rootDir: buildRoot, outputFile: filePath }),
     (source, component) => source.replace(/<body\b[^>]*>/i, (openingTag) => `${openingTag}\n${component}`),
   );
 }
 
-function syncDocumentTools(html, filePath) {
+function syncDocumentTools(html, filePath, buildRoot = rootDir) {
   const component = renderDocumentTools();
   let updated = upsertManagedComponent(
     html,
@@ -566,80 +430,44 @@ function syncDocumentTools(html, filePath) {
     component,
     (source, content) => source.replace(
       /<\/body>/i,
-      `${content}\n  <script src="${escapeAttr(versionedAssetHref(rootDir, filePath, 'assets/document-tools.js'))}" defer></script>\n</body>`,
+      `${content}\n  <script src="${escapeAttr(versionedAssetHref(buildRoot, filePath, 'assets/document-tools.js'))}" defer></script>\n</body>`,
     ),
   );
   if (!/<script\b[^>]*document-tools\.js[^>]*><\/script>/i.test(updated)) {
     updated = updated.replace(
       /<\/body>/i,
-      `  <script src="${escapeAttr(versionedAssetHref(rootDir, filePath, 'assets/document-tools.js'))}" defer></script>\n</body>`,
+      `  <script src="${escapeAttr(versionedAssetHref(buildRoot, filePath, 'assets/document-tools.js'))}" defer></script>\n</body>`,
     );
   }
   return updated;
 }
 
-function syncStructuredMetadata(html, doc) {
-  let updated = html
-    .replace(/^[ \t]*<meta property="article:modified_time"[^>]*>\r?\n?/gim, '')
-    .replace(/^[ \t]*<meta name="keywords"[^>]*>\r?\n?/gim, '');
-  const meta = `  <meta property="article:modified_time" content="${escapeAttr(doc.dateModified)}">\n  <meta name="keywords" content="${escapeAttr(doc.topics.join(', '))}">\n`;
-  if (/<meta name="twitter:card"/i.test(updated)) {
-    updated = updated.replace(/^[ \t]*<meta name="twitter:card"/im, `${meta}$&`);
-  } else {
-    updated = updated.replace(/<\/head>/i, `${meta}</head>`);
-  }
-
-  const jsonLdPattern = /(<script\s+type=["']application\/ld\+json["']\s*>)([\s\S]*?)(<\/script>)/i;
-  const match = updated.match(jsonLdPattern);
-  if (!match) throw new Error(`${doc.href} must contain JSON-LD metadata`);
-
-  let jsonLd;
-  try {
-    jsonLd = JSON.parse(match[2]);
-  } catch (error) {
-    throw new Error(`${doc.href} contains invalid JSON-LD: ${error.message}`);
-  }
-  jsonLd.datePublished = jsonLd.datePublished || doc.date;
-  jsonLd.dateModified = doc.dateModified;
-  jsonLd.keywords = doc.topics.join(', ');
-  jsonLd.about = doc.topics.map((topic) => ({ '@type': 'Thing', name: topic }));
-  jsonLd.mainEntityOfPage = absolutePublicUrl(doc.href);
-  const serialized = JSON.stringify(jsonLd, null, 2).replace(/</g, '\\u003c');
-  return updated.replace(
-    jsonLdPattern,
-    (_match, openingTag, _existingJson, closingTag) => `${openingTag}\n${serialized}\n  ${closingTag}`,
-  );
-}
-
-function syncDocumentPages(docs) {
-  const assetPaths = ['assets/interface.css', 'assets/document-tools.js', 'assets/video-embed.js'];
-  docs.forEach((doc) => {
-    const filePath = path.join(rootDir, ...doc.href.split('/'));
-    if (path.extname(filePath).toLowerCase() !== '.html') {
-      throw new Error(`Catalog document must point to an HTML file: ${doc.href}`);
-    }
-
-    const original = fs.readFileSync(filePath, 'utf8');
-    let updated = assetPaths.reduce((html, assetPath) => replaceVersionedAssetReference(
+function renderManualOutputs(graph, docs) {
+  const outputs = new Map();
+  const buildRoot = graph.projectRoot || rootDir;
+  docs.filter((doc) => ['knowledge', 'notice'].includes(doc.category)).forEach((doc) => {
+    const filePath = path.join(buildRoot, ...doc.href.split('/'));
+    const sourcePath = graph.sourcePathsById.get(doc.id);
+    if (!sourcePath || !fs.existsSync(sourcePath)) throw new Error(`${doc.href} source is missing`);
+    const original = fs.readFileSync(sourcePath, 'utf8');
+    const sourceStyles = extractPageStyles(original);
+    let updated = replaceSourceHead(original, graph.documentsById.get(doc.id), sourceStyles, filePath, graph, buildRoot);
+    const assetPaths = ['assets/interface.css', 'assets/document-tools.js', 'assets/video-embed.js'];
+    updated = assetPaths.reduce((html, assetPath) => replaceVersionedAssetReference(
       html,
       assetPath,
-      versionedAssetHref(rootDir, filePath, assetPath),
-    ), original);
-
-    if (doc.category === 'knowledge' || doc.category === 'notice') {
-      updated = migrateManualDocumentShell(updated, doc, filePath);
-    }
-    updated = syncSiteMasthead(updated, filePath);
-    updated = syncDocumentTools(updated, filePath);
-    updated = syncStructuredMetadata(updated, doc);
+      versionedAssetHref(buildRoot, filePath, assetPath),
+    ), updated);
+    updated = migrateManualDocumentShell(updated, doc, filePath, buildRoot);
+    updated = syncSiteMasthead(updated, filePath, buildRoot);
+    updated = syncDocumentTools(updated, filePath, buildRoot);
     updated = replaceManagedBlock(
       updated,
       'document-facts',
-      renderDocumentFacts(doc, filePath),
+      renderDocumentFacts(doc, filePath, buildRoot),
       (html, block) => insertAfterDocumentHeader(html, block, doc.href),
     );
-
-    const related = renderRelatedDocuments(doc, docs, filePath);
+    const related = renderRelatedDocuments(doc, docs, filePath, buildRoot);
     if (related) {
       updated = replaceManagedBlock(updated, 'related-documents', related, (html, block) => {
         const mainEnd = html.lastIndexOf('</main>');
@@ -647,54 +475,66 @@ function syncDocumentPages(docs) {
         const beforeMainEnd = html.slice(0, mainEnd).replace(/[ \t]+$/, '');
         return `${beforeMainEnd}\n${block}\n  ${html.slice(mainEnd)}`;
       });
+    } else {
+      updated = updated.replace(/\s*<!-- related-documents:start -->[\s\S]*?<!-- related-documents:end -->\s*/i, '\n');
     }
     updated = updated
       .replace(/^[ \t]+\r?\n(?=<!-- (?:document-(?:facts|tools)|related-documents|site-masthead):start -->)/gm, '')
       .replace(/^[ \t]+(?=\r?\n)/gm, '');
-
-    if (updated !== original) {
-      writeTextFile(filePath, updated);
-      console.log(`Synchronized document metadata in ${relativeTo(rootDir, filePath)}`);
-    }
+    outputs.set(filePath, updated);
   });
+  return outputs;
 }
 
-function writeFile(filePath, html) {
-  writeTextFile(filePath, html);
-  console.log(`Generated ${relativeTo(rootDir, filePath)}`);
-}
-
-function build() {
-  const docs = readDocuments();
-
-  writeFile(homeFilePath, buildArchiveHtml({
+function renderArchiveOutputs(docs, buildRoot = rootDir) {
+  const outputs = new Map();
+  outputs.set(path.join(buildRoot, 'index.html'), buildArchiveHtml({
     title: '공개 자료실',
     description: '회의록, 성명서, 노동·법률 해설과 조합원 안내를 쟁점별로 찾아볼 수 있습니다.',
     docs,
-    outputFile: homeFilePath,
+    outputFile: path.join(buildRoot, 'index.html'),
     category: 'all',
+    buildRoot,
   }));
-
-  ['statement', 'mom', 'knowledge', 'notice'].forEach((category) => {
-    const meta = categoryTitles[category];
-    const outputFile = path.join(rootDir, meta.directory, 'index.html');
-    writeFile(outputFile, buildArchiveHtml({
+  CATEGORY_REGISTRY.forEach((category) => {
+    const meta = categoryTitles[category.key];
+    const outputFile = path.join(buildRoot, meta.directory, 'index.html');
+    outputs.set(outputFile, buildArchiveHtml({
       title: meta.title,
       description: meta.description,
-      docs: docs.filter((doc) => doc.category === category),
+      docs: docs.filter((doc) => doc.category === category.key),
       outputFile,
-      category,
+      category: category.key,
+      buildRoot,
     }));
   });
+  outputs.set(path.join(buildRoot, 'sitemap.xml'), buildSitemapXml(docs));
+  outputs.set(path.join(buildRoot, 'robots.txt'), buildRobotsTxt());
+  return outputs;
+}
 
-  syncDocumentPages(docs);
-  writeFile(sitemapPath, buildSitemapXml(docs));
-  writeFile(robotsPath, buildRobotsTxt());
+function renderSiteOutputs(graph = loadContentGraph({ projectRoot: rootDir })) {
+  const buildRoot = graph.projectRoot || rootDir;
+  const allDocs = graph.documents.map((record) => renderDocument(record, graph));
+  const listedDocs = graph.listedDocuments.map((record) => renderDocument(record, graph));
+  return require('./lib/build-utils').mergeOutputMaps(
+    renderArchiveOutputs(listedDocs, buildRoot),
+    renderManualOutputs(graph, allDocs),
+  );
+}
+
+function build() {
+  const graph = loadContentGraph({ projectRoot: rootDir });
+  const outputs = renderSiteOutputs(graph);
+  writeOutputMap(outputs, { projectRoot: rootDir });
+  outputs.forEach((_content, outputPath) => console.log(`Generated ${relativeTo(rootDir, outputPath)}`));
 }
 
 module.exports = {
   buildRobotsTxt,
   buildSitemapXml,
+  normalizeHref,
+  renderSiteOutputs,
   replaceVersionedAssetReference,
 };
 

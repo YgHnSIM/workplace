@@ -10,18 +10,18 @@
   <meta property="og:locale" content="ko_KR">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="우체국물류지원단 물류노동조합">
-  <meta property="og:title" content="알림 - 우체국물류지원단 물류노동조합">
+  <meta property="og:title" content="알림">
   <meta property="og:description" content="노동조합의 활동 기록과 조합원 안내를 모았습니다.">
   <meta property="og:url" content="https://yghnsim.github.io/workplace/notice/">
   <meta property="og:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="article:modified_time" content="2026-07-14">
   <meta name="keywords" content="노조 역사, 고용안정, 차별, 성과급, 직무수당, 임금">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="알림 - 우체국물류지원단 물류노동조합">
+  <meta name="twitter:title" content="알림">
   <meta name="twitter:description" content="노동조합의 활동 기록과 조합원 안내를 모았습니다.">
   <meta name="twitter:image" content="https://yghnsim.github.io/workplace/assets/social-card.png">
+
   <link rel="icon" href="../assets/favicon-32.png?v=2b7f670c1bde" sizes="32x32" type="image/png">
   <link rel="icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192" type="image/png">
   <link rel="apple-touch-icon" href="../assets/favicon-192.png?v=ad2aaaaf203d" sizes="192x192">
@@ -29,47 +29,59 @@
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "CollectionPage",
-  "name": "알림",
-  "headline": "알림",
-  "description": "노동조합의 활동 기록과 조합원 안내를 모았습니다.",
-  "url": "https://yghnsim.github.io/workplace/notice/",
-  "image": "https://yghnsim.github.io/workplace/assets/social-card.png",
-  "inLanguage": "ko-KR",
-  "isPartOf": {
-    "@type": "WebSite",
-    "name": "우체국물류지원단 물류노동조합",
-    "url": "https://yghnsim.github.io/workplace/"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "우체국물류지원단 물류노동조합",
-    "url": "https://yghnsim.github.io/workplace/",
-    "logo": {
-      "@type": "ImageObject",
-      "url": "https://yghnsim.github.io/workplace/assets/favicon-192.png"
-    }
-  },
-  "dateModified": "2026-07-14",
-  "keywords": "노조 역사, 고용안정, 차별, 성과급, 직무수당, 임금",
-  "mainEntity": {
-    "@type": "ItemList",
-    "numberOfItems": 2,
-    "itemListElement": [
-      {
-        "@type": "ListItem",
-        "position": 1,
-        "url": "https://yghnsim.github.io/workplace/notice/logistics-union-9-years.html",
-        "name": "우체국물류지원단 물류노동조합 9년의 투쟁과 역사"
-      },
-      {
-        "@type": "ListItem",
-        "position": 2,
-        "url": "https://yghnsim.github.io/workplace/notice/2025-performance-pay.html",
-        "name": "2025년 성과급 계산 방식"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://yghnsim.github.io/workplace/#organization",
+      "name": "우체국물류지원단 물류노동조합",
+      "url": "https://yghnsim.github.io/workplace/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://yghnsim.github.io/workplace/assets/favicon-192.png"
       }
-    ]
-  }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://yghnsim.github.io/workplace/#website",
+      "name": "우체국물류지원단 물류노동조합",
+      "url": "https://yghnsim.github.io/workplace/",
+      "publisher": {
+        "@id": "https://yghnsim.github.io/workplace/#organization"
+      }
+    },
+    {
+      "@type": "CollectionPage",
+      "@id": "https://yghnsim.github.io/workplace/notice/",
+      "url": "https://yghnsim.github.io/workplace/notice/",
+      "name": "알림",
+      "description": "노동조합의 활동 기록과 조합원 안내를 모았습니다.",
+      "inLanguage": "ko-KR",
+      "isPartOf": {
+        "@id": "https://yghnsim.github.io/workplace/#website"
+      },
+      "publisher": {
+        "@id": "https://yghnsim.github.io/workplace/#organization"
+      },
+      "mainEntity": {
+        "@type": "ItemList",
+        "numberOfItems": 2,
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "url": "https://yghnsim.github.io/workplace/notice/logistics-union-9-years.html",
+            "name": "우체국물류지원단 물류노동조합 9년의 투쟁과 역사"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "url": "https://yghnsim.github.io/workplace/notice/2025-performance-pay.html",
+            "name": "2025년 성과급 계산 방식"
+          }
+        ]
+      }
+    }
+  ]
 }
   </script>
 </head>
@@ -124,7 +136,7 @@
     </section>
 
     <section class="doc-list" id="archive-results" aria-label="알림 목록">
-      <article class="doc-card" data-category="notice" data-status="final" data-topics="노조 역사|고용안정|차별" data-search="우체국물류지원단 물류노동조합 9년의 투쟁과 역사 서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다. 알림 확정 노조 역사 고용안정 차별">
+      <article class="doc-card" data-category="notice" data-status="final" data-visibility="public" data-topics="노조 역사|고용안정|차별" data-search="우체국물류지원단 물류노동조합 9년의 투쟁과 역사 서서울, 부평, 안양 물류노동자의 권익 향상을 위해 이어온 조직화, 고용안정, 차별 철폐, 작업환경 개선의 기록입니다. 알림 확정 노조 역사 고용안정 차별">
         <div class="card-meta" id="doc-1-meta">
           <time class="doc-date" datetime="2026-07-06">2026년&nbsp;7월&nbsp;6일</time>
           <span class="badge-category">알림</span>
@@ -135,7 +147,7 @@
         <div class="card-topics" aria-label="주제"><span class="card-topic">노조 역사</span><span class="card-topic">고용안정</span><span class="card-topic">차별</span></div>
       </article>
 
-      <article class="doc-card" data-category="notice" data-status="final" data-topics="성과급|직무수당|임금" data-search="2025년 성과급 계산 방식 직무수당 100,000원과 근속수당 10,000원, 내부평가 b등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내입니다. 알림 확정 성과급 직무수당 임금">
+      <article class="doc-card" data-category="notice" data-status="final" data-visibility="public" data-topics="성과급|직무수당|임금" data-search="2025년 성과급 계산 방식 직무수당 100,000원과 근속수당 10,000원, 내부평가 b등급인 경우를 기준으로 한 2025년 성과급 계산 방식 안내입니다. 알림 확정 성과급 직무수당 임금">
         <div class="card-meta" id="doc-2-meta">
           <time class="doc-date" datetime="2026-07-06">2026년&nbsp;7월&nbsp;6일</time>
           <span class="badge-category">알림</span>

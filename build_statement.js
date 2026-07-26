@@ -6,12 +6,12 @@ const {
   escapeAttr,
   escapeHtml,
   formatKoreanDate,
-  readJson,
   relativeTo,
   renderPageHead,
   versionedAssetHref,
-  writeTextFile,
 } = require('./lib/site-utils');
+const { CATEGORY_BY_ID, loadContentGraph } = require('./lib/content-model');
+const { writeOutputMap } = require('./lib/build-utils');
 const {
   renderBreadcrumb,
   renderDocumentTools,
@@ -19,9 +19,7 @@ const {
 } = require('./lib/site-components');
 
 const rootDir = __dirname;
-const sourceDir = path.join(rootDir, '_source', 'statement');
 const outputDir = path.join(rootDir, 'statement');
-const catalogPath = path.join(rootDir, '_source', 'catalog.json');
 
 const ALLOWED_TAGS = new Set([
   'section',
@@ -213,7 +211,17 @@ function normalizeStatementHref(value) {
 }
 
 function validateStatementDocument(rawDocument) {
-  const document = { ...rawDocument };
+  const isV2 = rawDocument && rawDocument.route && rawDocument.dates && rawDocument.workflow;
+  const document = isV2
+    ? {
+      ...rawDocument,
+      href: rawDocument.route,
+      date: rawDocument.dates.publishedOn,
+      dateModified: rawDocument.dates.modifiedOn,
+      excerpt: rawDocument.summary,
+      printTitleLines: rawDocument.presentation?.print?.titleLines,
+    }
+    : { ...rawDocument };
   ['title', 'date', 'excerpt', 'href'].forEach((field) => {
     if (!String(document[field] || '').trim()) throw new Error(`Statement document is missing ${field}`);
   });
@@ -249,6 +257,27 @@ function renderStatementTitle(document) {
 
 function renderStatementHtml(rawDocument, bodyFragment, options = {}) {
   const document = validateStatementDocument(rawDocument);
+  const record = rawDocument && rawDocument.route && rawDocument.dates && rawDocument.workflow
+    ? rawDocument
+    : {
+      id: `statement:${path.basename(document.href, '.html')}`,
+      category: 'statement',
+      route: document.href,
+      title: document.title,
+      summary: document.excerpt,
+      dates: {
+        publishedOn: document.date,
+        modifiedOn: document.dateModified || document.date,
+        reviewedOn: document.dateModified || document.date,
+        eventOn: document.date,
+      },
+      workflow: { status: 'final', visibility: 'public' },
+      topicIds: [],
+      evidence: { count: 0, note: '공개 기록', noteVisibility: 'private', sourceIds: [], complete: false },
+      relatedDocumentIds: [],
+      displayOrder: 0,
+      presentation: { print: {} },
+    };
   const buildRoot = path.resolve(options.rootDir || rootDir);
   const outputPath = path.resolve(options.outputPath || path.join(buildRoot, ...document.href.split('/')));
   const inspectedFragment = inspectStatementFragment(bodyFragment, options.sourcePath || document.href);
@@ -256,6 +285,8 @@ function renderStatementHtml(rawDocument, bodyFragment, options = {}) {
   const automaticDensity = selectPrintDensity(metrics, document);
   const { score } = automaticDensity;
   const density = document.printDensity || automaticDensity.density;
+  const eventDate = record.dates?.eventOn || document.date;
+  const categoryLabel = CATEGORY_BY_ID.get('statement').label;
   const logo300 = versionedAssetHref(buildRoot, outputPath, 'assets/logo-header-300.webp');
   const logo600 = versionedAssetHref(buildRoot, outputPath, 'assets/logo-header-600.webp');
   const documentTools = versionedAssetHref(buildRoot, outputPath, 'assets/document-tools.js');
@@ -270,9 +301,11 @@ ${renderPageHead({
     outputFile: outputPath,
     title: document.title,
     description: document.excerpt,
-    schemaType: 'Article',
+    record,
+    schemaType: 'WebPage',
     openGraphType: 'article',
-    datePublished: document.date,
+    topicLabels: options.topicLabels || [],
+    robots: record.workflow?.visibility === 'unlisted' ? 'noindex,follow' : undefined,
   })}
   <style>
     @page { margin: 18mm 0; size: 420mm 594mm; }
@@ -282,7 +315,7 @@ ${renderPageHead({
 
 <body>
 ${renderSiteMasthead({ rootDir: buildRoot, outputFile: outputPath })}
-  <main class="statement-container document-article" id="statement-article" data-document-category="성명서" data-print-density="${density}">
+  <main class="statement-container document-article" id="statement-article" data-document-category="${escapeAttr(categoryLabel)}" data-print-density="${density}">
     <header class="statement-header">
 ${renderBreadcrumb({ rootDir: buildRoot, outputFile: outputPath, category: 'statement' })}
       <p class="statement-identity">
@@ -299,7 +332,7 @@ ${renderBreadcrumb({ rootDir: buildRoot, outputFile: outputPath, category: 'stat
 ${inspectedFragment.html}
 
       <div class="signature-block">
-        <p class="signature-date"><time datetime="${escapeAttr(document.date)}">${escapeHtml(formatKoreanDate(document.date))}</time></p>
+        <p class="signature-date"><time datetime="${escapeAttr(eventDate)}">${escapeHtml(formatKoreanDate(eventDate))}</time></p>
         <div class="signature-org-row">
           <img src="${escapeAttr(logo300)}" srcset="${escapeAttr(logo300)} 1x, ${escapeAttr(logo600)} 2x" width="300" height="84" loading="eager" decoding="sync" fetchpriority="high" alt="우체국물류지원단 물류노동조합" class="signature-org-logo">
         </div>
@@ -324,58 +357,31 @@ ${renderDocumentTools()}
   };
 }
 
-function sourcePathForDocument(document) {
-  const fileName = `${path.basename(document.href, '.html')}.body.html`;
-  return path.join(sourceDir, fileName);
-}
-
-function readStatementDocuments() {
-  const catalog = readJson(catalogPath);
-  const documents = catalog.documents
-    .filter((document) => document.category === 'statement')
-    .map(validateStatementDocument);
-  const seen = new Set();
-  documents.forEach((document) => {
-    const key = document.href.toLocaleLowerCase('en');
-    if (seen.has(key)) throw new Error(`Duplicate statement href: ${document.href}`);
-    seen.add(key);
+function renderStatementOutputs(graph = loadContentGraph({ projectRoot: rootDir })) {
+  const outputs = new Map();
+  const buildRoot = graph.projectRoot || rootDir;
+  graph.documents.filter((record) => record.category === 'statement').forEach((record) => {
+    const sourcePath = graph.sourcePathsById.get(record.id);
+    if (!sourcePath || !fs.existsSync(sourcePath)) {
+      throw new Error(`Statement source is missing: ${record.route}`);
+    }
+    const outputPath = path.join(buildRoot, ...record.route.split('/'));
+    const rendered = renderStatementHtml(record, fs.readFileSync(sourcePath, 'utf8'), {
+      outputPath,
+      rootDir: buildRoot,
+      sourcePath: relativeTo(buildRoot, sourcePath),
+      topicLabels: record.topicIds.map((topicId) => graph.topicsById.get(topicId)?.label || topicId),
+    });
+    outputs.set(outputPath, rendered.html);
   });
-  return documents;
-}
-
-function assertSourceParity(documents) {
-  const expected = new Set(documents.map((document) => path.basename(sourcePathForDocument(document)).toLocaleLowerCase('en')));
-  const actual = fs.existsSync(sourceDir)
-    ? fs.readdirSync(sourceDir)
-      .filter((file) => file.endsWith('.body.html'))
-      .map((file) => file.toLocaleLowerCase('en'))
-    : [];
-  actual.forEach((file) => {
-    if (!expected.has(file)) throw new Error(`Orphan statement source: _source/statement/${file}`);
-  });
+  return outputs;
 }
 
 function build() {
-  const documents = readStatementDocuments();
-  assertSourceParity(documents);
-  documents.forEach((document) => {
-    const sourcePath = sourcePathForDocument(document);
-    if (!fs.existsSync(sourcePath)) {
-      throw new Error(`Statement source is missing: ${relativeTo(rootDir, sourcePath)}`);
-    }
-    const bodyFragment = fs.readFileSync(sourcePath, 'utf8');
-    const outputPath = path.join(rootDir, ...document.href.split('/'));
-    const rendered = renderStatementHtml(document, bodyFragment, {
-      outputPath,
-      rootDir,
-      sourcePath: relativeTo(rootDir, sourcePath),
-    });
-    writeTextFile(outputPath, rendered.html);
-    console.log(
-      `Generated ${relativeTo(rootDir, outputPath)} from ${relativeTo(rootDir, sourcePath)} `
-      + `(print density: ${rendered.density}, score: ${rendered.score})`,
-    );
-  });
+  const graph = loadContentGraph({ projectRoot: rootDir });
+  const outputs = renderStatementOutputs(graph);
+  writeOutputMap(outputs, { projectRoot: rootDir });
+  outputs.forEach((_content, outputPath) => console.log(`Generated ${relativeTo(graph.projectRoot || rootDir, outputPath)}`));
 }
 
 module.exports = {
@@ -385,6 +391,7 @@ module.exports = {
   selectPrintDensity,
   validateStatementDocument,
   validateStatementFragment,
+  renderStatementOutputs,
 };
 
 if (require.main === module) {

@@ -1,14 +1,13 @@
-const fs = require('fs');
 const path = require('path');
 const MarkdownIt = require('markdown-it');
 const {
-  assertIsoDate,
   escapeAttr,
   relativeTo,
   renderPageHead,
   versionedAssetHref,
-  writeTextFile,
 } = require('./lib/site-utils');
+const { loadContentGraph, parseYamlFrontMatter } = require('./lib/content-model');
+const { writeOutputMap } = require('./lib/build-utils');
 const {
   renderDocumentHeader,
   renderDocumentToc,
@@ -17,85 +16,13 @@ const {
 } = require('./lib/site-components');
 
 const rootDir = __dirname;
-const sourceDir = path.join(rootDir, '_source', 'MoM');
-const outputDir = path.join(rootDir, 'MoM');
-const generatedDir = path.join(rootDir, '_source', 'generated');
-
-const requiredFrontMatterFields = ['title', 'date', 'excerpt', 'type', 'slug'];
-const documentTypes = {
-  minutes: {
-    label: '회의록',
-    action: '회의록 전문 보기',
-  },
-  report: {
-    label: '결산 자료',
-    action: '결산 자료 전문 보기',
-  },
-};
-
-function parseFrontMatterScalar(rawValue, sourcePath, key) {
-  const value = rawValue.trim();
-  if (!value) return '';
-  if (value.startsWith('"')) {
-    try {
-      return JSON.parse(value);
-    } catch (error) {
-      throw new Error(`${relativeTo(rootDir, sourcePath)} has invalid JSON quoting for ${key}`);
-    }
-  }
-  if (value.startsWith("'") && value.endsWith("'")) {
-    return value.slice(1, -1).replace(/''/g, "'");
-  }
-  return value;
-}
-
 function parseFrontMatter(markdown, sourcePath) {
-  const match = markdown.match(/^---\r?\n([\s\S]*?)\r?\n---(?:\r?\n|$)/);
-  if (!match) {
-    throw new Error(`${relativeTo(rootDir, sourcePath)} must start with YAML front matter`);
+  const label = relativeTo(rootDir, sourcePath);
+  try {
+    return parseYamlFrontMatter(markdown, label);
+  } catch (error) {
+    throw new Error(error.message);
   }
-
-  const metadata = {};
-  match[1].split(/\r?\n/).forEach((line, index) => {
-    if (!line.trim() || /^\s*#/.test(line)) return;
-    const field = line.match(/^([A-Za-z][A-Za-z0-9_-]*):\s*(.*)$/);
-    if (!field) {
-      throw new Error(`${relativeTo(rootDir, sourcePath)} has invalid front matter on line ${index + 2}`);
-    }
-    const [, key, rawValue] = field;
-    if (Object.prototype.hasOwnProperty.call(metadata, key)) {
-      throw new Error(`${relativeTo(rootDir, sourcePath)} repeats front matter field: ${key}`);
-    }
-    metadata[key] = parseFrontMatterScalar(rawValue, sourcePath, key);
-  });
-
-  const missing = requiredFrontMatterFields.filter((field) => !String(metadata[field] || '').trim());
-  if (missing.length) {
-    throw new Error(`${relativeTo(rootDir, sourcePath)} is missing front matter: ${missing.join(', ')}`);
-  }
-
-  const unexpected = Object.keys(metadata).filter((field) => !requiredFrontMatterFields.includes(field));
-  if (unexpected.length) {
-    throw new Error(`${relativeTo(rootDir, sourcePath)} has unsupported front matter: ${unexpected.join(', ')}`);
-  }
-
-  metadata.title = String(metadata.title).trim();
-  metadata.date = assertIsoDate(metadata.date, `${relativeTo(rootDir, sourcePath)} front matter date`);
-  metadata.excerpt = String(metadata.excerpt).trim();
-  metadata.type = String(metadata.type).trim();
-  metadata.slug = String(metadata.slug).trim();
-
-  if (!documentTypes[metadata.type]) {
-    throw new Error(`${relativeTo(rootDir, sourcePath)} type must be one of: ${Object.keys(documentTypes).join(', ')}`);
-  }
-  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(metadata.slug) || metadata.slug === 'index') {
-    throw new Error(`${relativeTo(rootDir, sourcePath)} has an unsafe or reserved slug: ${metadata.slug}`);
-  }
-
-  return {
-    metadata,
-    body: markdown.slice(match[0].length),
-  };
 }
 
 function sanitizeUrl(value) {
@@ -334,40 +261,47 @@ function parseMarkdown(markdown, title) {
   };
 }
 
-function buildDetailHtml({ title, description, content, toc, date, type, outputPath }) {
-  const typeMeta = documentTypes[type];
-  const documentTools = versionedAssetHref(rootDir, outputPath, 'assets/document-tools.js');
+function topicLabelsForRecord(record, graph) {
+  return record.topicIds.map((topicId) => graph.topicsById.get(topicId)?.label || topicId);
+}
+
+function renderMomDocument(record, sourceData, graph, outputPath) {
+  const buildRoot = graph.projectRoot || rootDir;
+  const parsed = parseMarkdown(sourceData.body, record.title);
+  const category = graph.categoryRegistry.find((candidate) => candidate.key === 'mom');
+  const documentTools = versionedAssetHref(buildRoot, outputPath, 'assets/document-tools.js');
+  const topicLabels = topicLabelsForRecord(record, graph);
   return `<!DOCTYPE html>
 <html lang="ko">
 
 <head>
 ${renderPageHead({
-    rootDir,
+    rootDir: buildRoot,
     outputFile: outputPath,
-    title,
-    description,
-    schemaType: 'Article',
+    title: record.title,
+    description: record.summary,
+    record,
+    schemaType: 'WebPage',
     openGraphType: 'article',
-    datePublished: date,
-    dateModified: date,
-    keywords: type === 'report' ? ['운영위원회', '결산'] : ['운영위원회', '회의록'],
+    keywords: topicLabels,
+    topicLabels,
   })}
 </head>
 
 <body>
-${renderSiteMasthead({ rootDir, outputFile: outputPath })}
-  <main class="mom-container document-article" id="mom-article" data-document-category="${escapeAttr(typeMeta.label)}">
+${renderSiteMasthead({ rootDir: buildRoot, outputFile: outputPath })}
+  <main class="mom-container document-article" id="mom-article" data-document-category="${escapeAttr(category.label)}">
 ${renderDocumentHeader({
-    rootDir,
+    rootDir: buildRoot,
     outputFile: outputPath,
     category: 'mom',
-    title,
-    description,
+    title: record.title,
+    description: record.summary,
   })}
 
-${renderDocumentToc(toc)}
+${renderDocumentToc(parsed.toc)}
     <div class="mom-body" data-copy-body>
-${content}
+${parsed.content}
     </div>
   </main>
 
@@ -379,121 +313,27 @@ ${renderDocumentTools()}
 `;
 }
 
-function readSourceFiles() {
-  if (!fs.existsSync(sourceDir)) {
-    throw new Error(`Source directory not found: ${sourceDir}`);
-  }
-
-  return fs.readdirSync(sourceDir)
-    .filter((file) => path.extname(file) === '.md' && file !== 'README.md' && !file.includes('프레임'))
-    .sort();
-}
-
-function createMomDocument(file) {
-  const sourcePath = path.join(sourceDir, file);
-  const markdown = fs.readFileSync(sourcePath, 'utf8');
-  const { metadata, body } = parseFrontMatter(markdown, sourcePath);
-  assertNoMarkdownSyntaxResidues(body, sourcePath);
-  const typeMeta = documentTypes[metadata.type];
-  const parsed = parseMarkdown(body, metadata.title);
-  const outputFileName = `${metadata.slug}.html`;
-  const outputPath = path.join(outputDir, outputFileName);
-  const topics = metadata.type === 'report' ? ['운영위원회', '결산'] : ['운영위원회', '회의록'];
-
-  return {
-    sourcePath,
-    outputPath,
-    outputFileName,
-    title: metadata.title,
-    date: metadata.date,
-    excerpt: metadata.excerpt,
-    type: metadata.type,
-    typeMeta,
-    slug: metadata.slug,
-    status: 'final',
-    topics,
-    sourceCount: 1,
-    provenance: '노동조합 운영위원회 공식 기록',
-    html: buildDetailHtml({
-      title: metadata.title,
-      description: metadata.excerpt,
-      content: parsed.content,
-      toc: parsed.toc,
-      date: metadata.date,
-      type: metadata.type,
-      outputPath,
-    }),
-  };
-}
-
-function assertUniqueMomDocuments(docs) {
-  const uniqueFields = [
-    ['slug', (doc) => doc.slug],
-    ['output path', (doc) => path.resolve(doc.outputPath).toLowerCase()],
-    ['public href', (doc) => `MoM/${doc.outputFileName}`.toLowerCase()],
-  ];
-
-  uniqueFields.forEach(([label, getValue]) => {
-    const seen = new Map();
-    docs.forEach((doc) => {
-      const value = getValue(doc);
-      const previous = seen.get(value);
-      if (previous) {
-        throw new Error(
-          `Duplicate ${label} "${value}" in ${relativeTo(rootDir, previous.sourcePath)} and ${relativeTo(rootDir, doc.sourcePath)}`,
-        );
-      }
-      seen.set(value, doc);
-    });
+function renderMomOutputs(graph = loadContentGraph({ projectRoot: rootDir })) {
+  const outputs = new Map();
+  const buildRoot = graph.projectRoot || rootDir;
+  graph.documents.filter((record) => record.category === 'mom').forEach((record) => {
+    const sourceData = graph.sourceDataById.get(record.id);
+    if (!sourceData || typeof sourceData.body !== 'string') {
+      throw new Error(`${record.id} has no Markdown source body`);
+    }
+    const outputPath = path.join(buildRoot, ...record.route.split('/'));
+    outputs.set(outputPath, renderMomDocument(record, sourceData, graph, outputPath));
   });
-}
-
-function writeMomDocument(doc) {
-  writeTextFile(doc.outputPath, doc.html);
-}
-
-function toManifestDocument(doc) {
-  return {
-    category: 'mom',
-    href: `MoM/${doc.outputFileName}`,
-    title: doc.title,
-    date: doc.date,
-    dateModified: doc.date,
-    excerpt: doc.excerpt,
-    action: doc.typeMeta.action,
-    type: doc.type,
-    slug: doc.slug,
-    sortKey: doc.date,
-    status: doc.status,
-    topics: doc.topics,
-    sourceCount: doc.sourceCount,
-    provenance: doc.provenance,
-    relatedDocuments: [],
-  };
-}
-
-function writeMomManifest(docs) {
-  writeTextFile(
-    path.join(generatedDir, 'mom.json'),
-    `${JSON.stringify(docs.map(toManifestDocument), null, 2)}\n`,
-  );
-}
-
-function logGeneratedFiles(docs) {
-  docs.forEach((doc) => {
-    console.log(`Generated ${relativeTo(rootDir, doc.outputPath)} from ${relativeTo(rootDir, doc.sourcePath)}`);
-  });
-  console.log(`Generated ${relativeTo(rootDir, path.join(generatedDir, 'mom.json'))}`);
+  return outputs;
 }
 
 function build() {
-  const docs = readSourceFiles().map(createMomDocument);
-  assertUniqueMomDocuments(docs);
-  docs.sort((a, b) => b.date.localeCompare(a.date) || a.slug.localeCompare(b.slug, 'ko'));
-  docs.forEach(writeMomDocument);
-
-  writeMomManifest(docs);
-  logGeneratedFiles(docs);
+  const graph = loadContentGraph({ projectRoot: rootDir });
+  const outputs = renderMomOutputs(graph);
+  writeOutputMap(outputs, { projectRoot: rootDir });
+  outputs.forEach((_content, outputPath) => {
+    console.log(`Generated ${relativeTo(graph.projectRoot || rootDir, outputPath)}`);
+  });
 }
 
 module.exports = {
@@ -501,6 +341,7 @@ module.exports = {
   markdownResidueFixtures,
   parseFrontMatter,
   parseMarkdown,
+  renderMomOutputs,
 };
 
 if (require.main === module) {

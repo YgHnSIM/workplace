@@ -1,0 +1,123 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://yghnsim.github.io/workplace/schema/document.schema.json",
+  "title": "DocumentRecord v2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "category",
+    "route",
+    "title",
+    "summary",
+    "dates",
+    "workflow",
+    "topicIds",
+    "evidence",
+    "relatedDocumentIds",
+    "displayOrder",
+    "presentation"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 3,
+      "pattern": "^[a-z][a-z0-9-]*:.+$"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["statement", "mom", "knowledge", "notice"]
+    },
+    "route": {
+      "type": "string",
+      "minLength": 5,
+      "pattern": "^[^/?#%\\\\]+(?:/[^/?#%\\\\]+)*\\.html$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "dates": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publishedOn", "modifiedOn", "reviewedOn"],
+      "properties": {
+        "publishedOn": { "type": "string", "format": "date" },
+        "modifiedOn": { "type": "string", "format": "date" },
+        "reviewedOn": { "type": "string", "format": "date" },
+        "eventOn": { "type": "string", "format": "date" }
+      }
+    },
+    "workflow": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "visibility"],
+      "properties": {
+        "status": { "type": "string", "enum": ["draft", "reviewed", "final"] },
+        "visibility": { "type": "string", "enum": ["public", "unlisted"] }
+      }
+    },
+    "topicIds": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "note", "noteVisibility", "sourceIds", "complete"],
+      "properties": {
+        "count": { "type": "integer", "minimum": 0 },
+        "note": { "type": "string", "minLength": 1 },
+        "noteVisibility": { "type": "string", "enum": ["public", "private"] },
+        "sourceIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "complete": { "type": "boolean" }
+      }
+    },
+    "relatedDocumentIds": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": { "type": "string", "minLength": 1 }
+    },
+    "displayOrder": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "presentation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["print"],
+      "properties": {
+        "print": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "titleLines": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            }
+          }
+        }
+      }
+    },
+    "type": {
+      "type": "string",
+      "enum": ["minutes", "report"]
+    },
+    "socialImage": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^[^/?#%\\\\]+(?:/[^/?#%\\\\]+)*\\.(?:jpg|jpeg|png|webp)$"
+    }
+  }
+}

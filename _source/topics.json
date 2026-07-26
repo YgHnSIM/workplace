@@ -1,0 +1,24 @@
+{
+  "topics": [
+    { "id": "health-rights", "label": "건강권" },
+    { "id": "review-summary", "label": "검토·결산" },
+    { "id": "employment-stability", "label": "고용안정" },
+    { "id": "bargaining-unit", "label": "교섭단위" },
+    { "id": "labor-intensity", "label": "노동강도" },
+    { "id": "union-history", "label": "노조 역사" },
+    { "id": "collective-bargaining", "label": "단체교섭" },
+    { "id": "sick-leave", "label": "병가" },
+    { "id": "performance-pay", "label": "성과급" },
+    { "id": "operations-committee", "label": "운영위원회" },
+    { "id": "lead-employer-status", "label": "원청 사용자성" },
+    { "id": "staffing", "label": "인력충원" },
+    { "id": "wages", "label": "임금" },
+    { "id": "job-allowance", "label": "직무수당" },
+    { "id": "discrimination", "label": "차별" },
+    { "id": "severance-pay", "label": "퇴직금" },
+    { "id": "retirement-pension", "label": "퇴직연금" },
+    { "id": "average-wage", "label": "평균임금" },
+    { "id": "meeting-minutes", "label": "회의록" },
+    { "id": "db-dc", "label": "DB·DC" }
+  ]
+}
