@@ -1081,10 +1081,6 @@ select:focus-visible {
   padding: 14px 0 !important;
 }
 
-.closing-block > p + p {
-  border-top: 1px solid #D9D9D9 !important;
-}
-
 .closing-highlight {
   color: #111111 !important;
   border-bottom: 0 !important;
@@ -1561,7 +1557,7 @@ select:focus-visible {
     --statement-print-closing-row-pad: 16px;
     --statement-print-demand-leading: 1.68;
     --statement-print-demand-padding: 30px 34px;
-    --statement-print-header-top: 24mm;
+    --statement-print-header-top: 12mm;
     --statement-print-logo-width: 380px;
     --statement-print-paragraph-gap: 34px;
     --statement-print-section-gap: 48px;
@@ -1581,7 +1577,7 @@ select:focus-visible {
     --statement-print-closing-row-pad: 16px;
     --statement-print-demand-padding: 30px 34px;
     --statement-print-demand-leading: 1.62;
-    --statement-print-header-top: 27mm;
+    --statement-print-header-top: 14mm;
     --statement-print-logo-width: 400px;
     --statement-print-paragraph-gap: 30px;
     --statement-print-section-gap: 46px;
@@ -1601,7 +1597,7 @@ select:focus-visible {
     --statement-print-closing-row-pad: 20px;
     --statement-print-demand-padding: 36px 40px;
     --statement-print-demand-leading: 1.6;
-    --statement-print-header-top: 30mm;
+    --statement-print-header-top: 16mm;
     --statement-print-logo-width: 440px;
     --statement-print-paragraph-gap: 28px;
     --statement-print-section-gap: 54px;
@@ -1613,6 +1609,7 @@ select:focus-visible {
   }
 
   .statement-header {
+    border-top: 1px solid #111111 !important;
     grid-template-columns: minmax(0, 1fr) var(--statement-brand-mark-size);
     margin-bottom: 38px !important;
     padding: var(--statement-print-header-top) 15mm 30px !important;
@@ -3022,7 +3019,7 @@ html[data-font-scale="1.5"] .document-facts dl {
     --statement-print-closing-row-pad: 10px;
     --statement-print-demand-leading: 1.45;
     --statement-print-demand-padding: 20px 24px;
-    --statement-print-header-top: 18mm;
+    --statement-print-header-top: 10mm;
     --statement-print-logo-width: 320px;
     --statement-print-paragraph-gap: 20px;
     --statement-print-section-gap: 26px;

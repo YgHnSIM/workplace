@@ -420,7 +420,6 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   const demandRule = css.match(/\.demands li\s*\{([^}]*)\}/);
   const closingRule = css.match(/\.closing-block\s*\{([^}]*)\}/);
   const closingParagraphRule = css.match(/\.closing-block > p\s*\{([^}]*)\}/);
-  const closingDividerRule = css.match(/\.closing-block > p \+ p\s*\{([^}]*)\}/);
   const signatureRule = css.match(/\.signature-block\s*\{([^}]*)\}/);
   const signatureDateRule = css.match(/\.signature-date\s*\{([^}]*)\}/);
   const signatureRowRule = css.match(/\.signature-org-row\s*\{([^}]*)\}/);
@@ -434,8 +433,7 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   assert.match(closingParagraphRule[1], /line-height:\s*1\.55\s*!important;/);
   assert.match(closingParagraphRule[1], /margin:\s*0\s*!important;/);
   assert.match(closingParagraphRule[1], /padding:\s*14px 0\s*!important;/);
-  assert.ok(closingDividerRule, 'statement closing row divider should exist');
-  assert.match(closingDividerRule[1], /border-top:\s*1px solid #D9D9D9\s*!important;/);
+  assert.equal(css.match(/\.closing-block > p \+ p\s*\{/), null, 'statement closing rows should not have a divider');
   assert.ok(signatureRule, 'statement signature rule should exist');
   assert.match(signatureRule[1], /text-align:\s*center\s*!important;/);
   assert.ok(signatureDateRule, 'statement signature date rule should exist');
@@ -485,9 +483,9 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   assert.match(css, /\.statement-title\s*\{[^}]*color:\s*#002FA7\s*!important;/s);
   assert.match(css, /\.statement-header > \.statement-title\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*grid-row:\s*2;/s);
   assert.match(css, /\.statement-header\s*\{[^}]*padding-top:\s*38px\s*!important;/s);
-  assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-header-top:\s*24mm;/s);
-  assert.match(css, /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--statement-print-header-top:\s*27mm;/s);
-  assert.match(css, /\.statement-container\[data-print-density="short"\]\s*\{[^}]*--statement-print-header-top:\s*30mm;/s);
+  assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-header-top:\s*12mm;/s);
+  assert.match(css, /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--statement-print-header-top:\s*14mm;/s);
+  assert.match(css, /\.statement-container\[data-print-density="short"\]\s*\{[^}]*--statement-print-header-top:\s*16mm;/s);
   assert.match(css, /@media \(max-width:\s*768px\)[\s\S]*\.statement-header\s*\{[^}]*--statement-brand-mark-size:\s*56px;[^}]*grid-template-columns:\s*minmax\(0, 1fr\) var\(--statement-brand-mark-size\);/s);
   assert.match(css, /@media \(max-width:\s*768px\)[\s\S]*\.statement-header\s*\{[^}]*padding-top:\s*30px\s*!important;/s);
   assert.match(css, /@media \(max-width:\s*768px\)[\s\S]*\.statement-header \.statement-title\s*\{[^}]*grid-column:\s*1 \/ -1;[^}]*grid-row:\s*2;/s);
@@ -516,6 +514,10 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   assert.match(
     css,
     /\.statement-header\s*\{[^}]*padding:\s*var\(--statement-print-header-top\) 15mm 30px\s*!important;/s,
+  );
+  assert.match(
+    css,
+    /@media print\s*\{[\s\S]*?\.statement-header\s*\{[^}]*border-top:\s*1px solid #111111\s*!important;/s,
   );
   assert.match(
     css,
@@ -550,6 +552,7 @@ test('statement print layout uses the A2 page width with controlled page breaks'
     /\.statement-body \.demands li\s*\{[^}]*font-weight:\s*700\s*!important;[^}]*line-height:\s*var\(--statement-print-demand-leading\)\s*!important;/s,
   );
   assert.match(css, /\.statement-body \.closing-block > p\s*\{[^}]*line-height:\s*var\(--statement-print-closing-leading\)\s*!important;/s);
+  assert.match(css, /@media print\s*\{[\s\S]*?\.statement-container\[data-print-density="long"\]\s*\{[^}]*--statement-print-header-top:\s*10mm;/s);
   assert.match(
     css,
     /\.statement-body \.signature-date\s*\{[^}]*margin-bottom:\s*var\(--statement-print-signature-gap\)\s*!important;/s,
