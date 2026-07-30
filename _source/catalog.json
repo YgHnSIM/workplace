@@ -67,6 +67,41 @@
       }
     },
     {
+      "id": "statement:연차휴가_금지조치_규탄_성명서",
+      "category": "statement",
+      "route": "statement/연차휴가_금지조치_규탄_성명서.html",
+      "title": "사용자에게 연차휴가를 금지할 권한은 없다",
+      "summary": "사측의 특정일 연차휴가 전면 금지 조치를 규탄하고, 노동자의 휴식권 보장과 책임 있는 인력운영·폭염기 보호대책 마련을 촉구하는 노동조합 성명서입니다.",
+      "dates": {
+        "publishedOn": "2026-07-31",
+        "modifiedOn": "2026-07-31",
+        "reviewedOn": "2026-07-31",
+        "eventOn": "2026-07-30"
+      },
+      "workflow": { "status": "final", "visibility": "public" },
+      "topicIds": ["health-rights", "staffing", "labor-intensity"],
+      "evidence": {
+        "count": 1,
+        "note": "노동조합 공식 성명서",
+        "noteVisibility": "public",
+        "sourceIds": [],
+        "complete": false
+      },
+      "relatedDocumentIds": [
+        "statement:성명서_202607",
+        "mom:202607"
+      ],
+      "displayOrder": 10,
+      "presentation": {
+        "print": {
+          "titleLines": [
+            "사용자에게 연차휴가를",
+            "금지할 권한은 없다"
+          ]
+        }
+      }
+    },
+    {
       "id": "knowledge:retirement-benefit-db-dc-guide",
       "category": "knowledge",
       "route": "knowledge/retirement-benefit-db-dc-guide.html",
