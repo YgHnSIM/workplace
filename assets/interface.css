@@ -1030,7 +1030,6 @@ select:focus-visible {
 }
 
 .demands,
-.closing-block,
 .quote-block {
   background: #F7F7F8 !important;
   border: 1px solid #111111 !important;
@@ -1072,7 +1071,8 @@ select:focus-visible {
 }
 
 .closing-block {
-  padding: 12px 28px !important;
+  margin-top: 32px !important;
+  padding: 0 !important;
 }
 
 .closing-block > p {
@@ -1094,7 +1094,6 @@ select:focus-visible {
 }
 
 .signature-block {
-  border-top: 1px solid #111111 !important;
   margin-top: 52px !important;
   padding-top: 28px !important;
   text-align: center !important;
@@ -1562,7 +1561,7 @@ select:focus-visible {
     --statement-print-paragraph-gap: 34px;
     --statement-print-section-gap: 48px;
     --statement-print-signature-gap: 36px;
-    --statement-print-title-size: 48px;
+    --statement-print-title-size: 54px;
     --statement-brand-column-gap: 24px;
     --statement-brand-mark-size: 72px;
     --statement-brand-row-gap: 24px;
@@ -1582,7 +1581,7 @@ select:focus-visible {
     --statement-print-paragraph-gap: 30px;
     --statement-print-section-gap: 46px;
     --statement-print-signature-gap: 40px;
-    --statement-print-title-size: 52px;
+    --statement-print-title-size: 58px;
     --statement-brand-column-gap: 26px;
     --statement-brand-mark-size: 78px;
     --statement-brand-row-gap: 26px;
@@ -1602,17 +1601,17 @@ select:focus-visible {
     --statement-print-paragraph-gap: 28px;
     --statement-print-section-gap: 54px;
     --statement-print-signature-gap: 48px;
-    --statement-print-title-size: 60px;
+    --statement-print-title-size: 66px;
     --statement-brand-column-gap: 28px;
     --statement-brand-mark-size: 84px;
     --statement-brand-row-gap: 28px;
   }
 
   .statement-header {
-    border-top: 1px solid #111111 !important;
+    border-top: 0 !important;
     grid-template-columns: minmax(0, 1fr) var(--statement-brand-mark-size);
     margin-bottom: 38px !important;
-    padding: var(--statement-print-header-top) 15mm 30px !important;
+    padding: var(--statement-print-header-top) 10mm 30px !important;
   }
 
   .statement-title {
@@ -1633,7 +1632,7 @@ select:focus-visible {
   .statement-body {
     margin: 0 !important;
     max-width: none !important;
-    padding: 0 15mm 20mm !important;
+    padding: 0 10mm 20mm !important;
     width: 100% !important;
   }
 
@@ -1661,8 +1660,7 @@ select:focus-visible {
     line-height: var(--statement-print-demand-leading) !important;
   }
 
-  .statement-body .demands,
-  .statement-body .closing-block {
+  .statement-body .demands {
     break-inside: avoid;
     font-size: var(--statement-print-box-size) !important;
   }
@@ -1673,7 +1671,9 @@ select:focus-visible {
 
   .statement-body .closing-block {
     break-after: avoid;
-    padding: var(--statement-print-closing-padding) !important;
+    break-inside: avoid;
+    font-size: var(--font-size-base) !important;
+    padding: 0 !important;
   }
 
   .statement-body .closing-block > p {
@@ -3006,12 +3006,22 @@ html[data-font-scale="1.5"] .document-facts dl {
     display: none !important;
   }
 
+  .statement-container.document-article {
+    border-top: 1px solid #111111 !important;
+    max-width: none !important;
+    width: 100% !important;
+  }
+
+  .statement-container .statement-header {
+    border-top: 0 !important;
+  }
+
   .statement-title-line {
     display: block;
   }
 
   .statement-container[data-print-density="long"] {
-    --font-scale: 1.26 !important;
+    --font-scale: 1.34 !important;
     --statement-print-body-leading: 1.55;
     --statement-print-box-size: 20px;
     --statement-print-closing-leading: 1.45;
@@ -3024,7 +3034,7 @@ html[data-font-scale="1.5"] .document-facts dl {
     --statement-print-paragraph-gap: 20px;
     --statement-print-section-gap: 26px;
     --statement-print-signature-gap: 24px;
-    --statement-print-title-size: 30px;
+    --statement-print-title-size: 58px;
   }
 
   .statement-container[data-print-density="long"] .statement-header {
@@ -3035,5 +3045,9 @@ html[data-font-scale="1.5"] .document-facts dl {
   .statement-container[data-print-density="long"] .statement-title {
     font-size: var(--statement-print-title-size) !important;
     line-height: 1.06 !important;
+  }
+
+  .statement-container[data-print-density="long"] .statement-title--long {
+    font-size: 40px !important;
   }
 }

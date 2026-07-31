@@ -157,8 +157,7 @@ ${renderPageHead({
     robots: record.workflow?.visibility === 'unlisted' ? 'noindex,follow' : undefined,
   })}
   <style>
-    @page { margin: 18mm 0; size: 420mm 594mm; }
-    @page :first { margin-top: 0; }
+    @page { margin: 10mm; size: 420mm 594mm; }
   </style>
 </head>
 

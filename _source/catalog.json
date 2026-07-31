@@ -76,7 +76,7 @@
         "publishedOn": "2026-07-31",
         "modifiedOn": "2026-07-31",
         "reviewedOn": "2026-07-31",
-        "eventOn": "2026-07-30"
+        "eventOn": "2026-07-31"
       },
       "workflow": { "status": "final", "visibility": "public" },
       "topicIds": ["health-rights", "staffing", "labor-intensity"],
@@ -95,8 +95,7 @@
       "presentation": {
         "print": {
           "titleLines": [
-            "사용자에게 연차휴가를",
-            "금지할 권한은 없다"
+            "사용자에게 연차휴가를 금지할 권한은 없다"
           ]
         }
       }

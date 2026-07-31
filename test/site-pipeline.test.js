@@ -428,13 +428,15 @@ test('statement demand list and signature keep their reading rhythm and alignmen
   assert.match(demandRule[1], /line-height:\s*1\.8\s*!important;/);
   assert.match(demandRule[1], /padding:\s*0 0 16px 4px;/);
   assert.ok(closingRule, 'statement closing block rule should exist');
-  assert.match(closingRule[1], /padding:\s*12px 28px\s*!important;/);
+  assert.match(closingRule[1], /margin-top:\s*32px\s*!important;/);
+  assert.match(closingRule[1], /padding:\s*0\s*!important;/);
   assert.ok(closingParagraphRule, 'statement closing row rule should exist');
   assert.match(closingParagraphRule[1], /line-height:\s*1\.55\s*!important;/);
   assert.match(closingParagraphRule[1], /margin:\s*0\s*!important;/);
   assert.match(closingParagraphRule[1], /padding:\s*14px 0\s*!important;/);
   assert.equal(css.match(/\.closing-block > p \+ p\s*\{/), null, 'statement closing rows should not have a divider');
   assert.ok(signatureRule, 'statement signature rule should exist');
+  assert.doesNotMatch(signatureRule[1], /border-top:/, 'statement signature should not have a divider');
   assert.match(signatureRule[1], /text-align:\s*center\s*!important;/);
   assert.ok(signatureDateRule, 'statement signature date rule should exist');
   assert.match(signatureDateRule[1], /font-size:\s*calc\(20px \* var\(--font-scale\)\)\s*!important;/);
@@ -450,6 +452,11 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   const statementDocuments = catalog.documents.filter((document) => document.category === 'statement');
 
   assert.ok(statementDocuments.length > 0, 'at least one statement should be registered');
+  const annualLeaveStatement = statementDocuments.find(
+    (document) => document.id === 'statement:연차휴가_금지조치_규탄_성명서',
+  );
+  assert.ok(annualLeaveStatement, 'annual leave statement should be registered');
+  assert.deepEqual(annualLeaveStatement.presentation.print.titleLines, [annualLeaveStatement.title]);
   statementDocuments.forEach((document) => {
     const statementHtml = fs.readFileSync(path.join(projectRoot, ...document.route.split('/')), 'utf8');
     assert.doesNotMatch(statementHtml, /class="header-top-row"/);
@@ -460,8 +467,8 @@ test('statement print layout uses the A2 page width with controlled page breaks'
     assert.match(statementHtml, /<h1 class="statement-title[^\"]*">/);
     assert.match(statementHtml, /class="statement-title-line"/);
     assert.doesNotMatch(statementHtml.match(/<h1[^>]*statement-title[^>]*>[\s\S]*?<\/h1>/)?.[0] || '', /<br\s*\/?>/i);
-    assert.match(statementHtml, /@page\s*\{\s*margin:\s*18mm 0;\s*size:\s*420mm 594mm;\s*\}/);
-    assert.match(statementHtml, /@page :first\s*\{\s*margin-top:\s*0;\s*\}/);
+    assert.match(statementHtml, /@page\s*\{\s*margin:\s*10mm;\s*size:\s*420mm 594mm;\s*\}/);
+    assert.doesNotMatch(statementHtml, /@page :first/);
     assert.doesNotMatch(statementHtml, /data-document-toc="false"/);
     assert.match(statementHtml, /data-print-density="(?:short|standard|long)"/);
     assert.match(statementHtml, /class="signature-date"[\s\S]*<time datetime="\d{4}-\d{2}-\d{2}">/);
@@ -497,7 +504,7 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-body-leading:\s*1\.76;[^}]*--statement-print-demand-leading:\s*1\.68;[^}]*--statement-print-paragraph-gap:\s*34px;[^}]*--statement-print-section-gap:\s*48px;/s);
   assert.match(
     css,
-    /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--font-scale:\s*1\.62\s*!important;[^}]*--statement-print-title-size:\s*52px;/s,
+    /\.statement-container\[data-print-density="standard"\]\s*\{[^}]*--font-scale:\s*1\.62\s*!important;[^}]*--statement-print-title-size:\s*58px;/s,
   );
   assert.match(
     css,
@@ -505,19 +512,26 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   );
   assert.match(
     css,
-    /\.statement-container\[data-print-density="short"\]\s*\{[^}]*--font-scale:\s*1\.88\s*!important;[^}]*--statement-print-title-size:\s*60px;/s,
+    /\.statement-container\[data-print-density="short"\]\s*\{[^}]*--font-scale:\s*1\.88\s*!important;[^}]*--statement-print-title-size:\s*66px;/s,
+  );
+  assert.match(css, /\.statement-container\s*\{[^}]*--statement-print-title-size:\s*54px;/s);
+  assert.match(css, /\.statement-container\[data-print-density="long"\]\s*\{[^}]*--font-scale:\s*1\.34\s*!important;[^}]*--statement-print-title-size:\s*58px;/s);
+  assert.match(css, /\.statement-container\[data-print-density="long"\] \.statement-title--long\s*\{[^}]*font-size:\s*40px\s*!important;/s);
+  assert.match(
+    css,
+    /\.statement-body\s*\{[^}]*max-width:\s*none\s*!important;[^}]*padding:\s*0 10mm 20mm\s*!important;[^}]*width:\s*100%\s*!important;/s,
   );
   assert.match(
     css,
-    /\.statement-body\s*\{[^}]*max-width:\s*none\s*!important;[^}]*padding:\s*0 15mm 20mm\s*!important;[^}]*width:\s*100%\s*!important;/s,
+    /\.statement-header\s*\{[^}]*padding:\s*var\(--statement-print-header-top\) 10mm 30px\s*!important;/s,
   );
   assert.match(
     css,
-    /\.statement-header\s*\{[^}]*padding:\s*var\(--statement-print-header-top\) 15mm 30px\s*!important;/s,
+    /@media print\s*\{[\s\S]*?\.statement-header\s*\{[^}]*border-top:\s*0\s*!important;/s,
   );
   assert.match(
     css,
-    /@media print\s*\{[\s\S]*?\.statement-header\s*\{[^}]*border-top:\s*1px solid #111111\s*!important;/s,
+    /@media print\s*\{[\s\S]*?\.statement-container\.document-article\s*\{[^}]*border-top:\s*1px solid #111111\s*!important;[^}]*max-width:\s*none\s*!important;[^}]*width:\s*100%\s*!important;/s,
   );
   assert.match(
     css,
@@ -541,11 +555,11 @@ test('statement print layout uses the A2 page width with controlled page breaks'
   );
   assert.match(
     css,
-    /\.statement-body \.demands,[^}]*\.statement-body \.closing-block\s*\{[^}]*break-inside:\s*avoid;[^}]*font-size:\s*var\(--statement-print-box-size\)\s*!important;/s,
+    /\.statement-body \.demands\s*\{[^}]*break-inside:\s*avoid;[^}]*font-size:\s*var\(--statement-print-box-size\)\s*!important;/s,
   );
   assert.match(
     css,
-    /\.statement-body \.closing-block\s*\{[^}]*break-after:\s*avoid;[^}]*padding:\s*var\(--statement-print-closing-padding\)\s*!important;/s,
+    /\.statement-body \.closing-block\s*\{[^}]*break-after:\s*avoid;[^}]*break-inside:\s*avoid;[^}]*font-size:\s*var\(--font-size-base\)\s*!important;[^}]*padding:\s*0\s*!important;/s,
   );
   assert.match(
     css,
@@ -589,8 +603,8 @@ test('statement builder reuses the template and selects the one-page print densi
   assert.match(rendered.html, /data-document-category="성명서"/);
   assert.doesNotMatch(rendered.html, /data-document-toc="false"/);
   assert.match(rendered.html, /data-print-density="short"/);
-  assert.match(rendered.html, /@page\s*\{\s*margin:\s*18mm 0;\s*size:\s*420mm 594mm;\s*\}/);
-  assert.match(rendered.html, /@page :first\s*\{\s*margin-top:\s*0;\s*\}/);
+  assert.match(rendered.html, /@page\s*\{\s*margin:\s*10mm;\s*size:\s*420mm 594mm;\s*\}/);
+  assert.doesNotMatch(rendered.html, /@page :first/);
   assert.match(rendered.html, /class="statement-brand-mark"[^>]*>[\s\S]*?<img[^>]*width="300" height="84"[^>]*loading="eager"[^>]*alt="">/);
   const brandMark = rendered.html.match(/<span class="statement-brand-mark"[^>]*>([\s\S]*?)<\/span>/);
   assert.ok(brandMark, 'statement header should contain the square brand mark');
