@@ -41,8 +41,10 @@ test.after(() => {
 test('content graph exposes one v2 record set and the public listing policy', () => {
   const graph = loadContentGraph({ projectRoot });
   assert.equal(graph.documents.length, 15);
-  assert.equal(graph.listedDocuments.length, 13);
+  assert.equal(graph.listedDocuments.length, 12);
   assert.equal(graph.documentsById.get('statement:성명서_202607').route, 'statement/성명서_202607.html');
+  assert.equal(graph.documentsById.get('statement:성명서_202607').workflow.visibility, 'unlisted');
+  assert.equal(graph.documentsById.get('statement:연차휴가_금지조치_규탄_성명서').workflow.visibility, 'public');
   assert.equal(graph.documentsById.get('knowledge:retirement-benefit-db-dc-guide').workflow.visibility, 'unlisted');
   assert.equal(graph.documentsById.get('knowledge:sick-leave-double-reduction').workflow.visibility, 'unlisted');
   graph.documents.forEach((document) => {
@@ -53,7 +55,7 @@ test('content graph exposes one v2 record set and the public listing policy', ()
     (groups[document.category] ||= []).push(document);
     return groups;
   }, {});
-  assert.equal(categoryCounts.statement.length, 2);
+  assert.equal(categoryCounts.statement.length, 1);
   assert.equal(categoryCounts.mom.length, 7);
   assert.equal(categoryCounts.knowledge.length, 2);
   assert.equal(categoryCounts.notice.length, 2);

@@ -42,7 +42,7 @@
         "reviewedOn": "2026-07-14",
         "eventOn": "2026-07-06"
       },
-      "workflow": { "status": "final", "visibility": "public" },
+      "workflow": { "status": "final", "visibility": "unlisted" },
       "topicIds": ["labor-intensity", "job-allowance", "staffing"],
       "evidence": {
         "count": 1,
