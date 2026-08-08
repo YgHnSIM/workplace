@@ -156,6 +156,8 @@ function configureMarkdownRenderer() {
     const hrefIndex = token.attrIndex('href');
     if (hrefIndex >= 0) token.attrs[hrefIndex][1] = sanitizeUrl(token.attrs[hrefIndex][1]);
     token.attrJoin('class', 'content-link');
+    token.attrSet('target', '_blank');
+    token.attrSet('rel', 'noopener noreferrer');
     return defaultLinkOpen(tokens, index, options, env, self);
   };
 
