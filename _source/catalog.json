@@ -101,6 +101,42 @@
       }
     },
     {
+      "id": "statement:성명서_20260921",
+      "category": "statement",
+      "route": "statement/성명서_20260921.html",
+      "title": "단시간·비정규 노동자 차별을 합의한 사측과 교섭대표노조를 규탄한다 — 중앙노동위원회 재심 판정 승소를 알리며 —",
+      "summary": "중앙노동위원회의 단시간근로자 유급병가 차별시정 재심 승소를 알리고, 차별적 노사합의 규탄과 가족수당 차별 시정 및 재심 판정의 즉각 수용을 촉구하는 노동조합 성명서입니다.",
+      "dates": {
+        "publishedOn": "2026-09-21",
+        "modifiedOn": "2026-09-21",
+        "reviewedOn": "2026-09-21",
+        "eventOn": "2026-09-21"
+      },
+      "workflow": { "status": "final", "visibility": "public" },
+      "topicIds": ["discrimination", "sick-leave", "collective-bargaining"],
+      "evidence": {
+        "count": 1,
+        "note": "노동조합 공식 성명서",
+        "noteVisibility": "public",
+        "sourceIds": [],
+        "complete": false
+      },
+      "relatedDocumentIds": [
+        "knowledge:sick-leave-double-reduction",
+        "statement:연차휴가_금지조치_규탄_성명서",
+        "mom:202607"
+      ],
+      "displayOrder": 10,
+      "presentation": {
+        "print": {
+          "titleLines": [
+            "단시간·비정규 노동자 차별을 합의한 사측과 교섭대표노조를 규탄한다",
+            "— 중앙노동위원회 재심 판정 승소를 알리며 —"
+          ]
+        }
+      }
+    },
+    {
       "id": "knowledge:retirement-benefit-db-dc-guide",
       "category": "knowledge",
       "route": "knowledge/retirement-benefit-db-dc-guide.html",
