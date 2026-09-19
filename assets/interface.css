@@ -700,7 +700,9 @@ select:focus-visible {
 }
 
 .statement-title-line--subtitle {
-  display: inline-block;
+  display: table !important;
+  width: fit-content !important;
+  max-width: 100%;
   font-size: clamp(14px, 1.8vw, 19px) !important;
   font-weight: 800 !important;
   color: #92400E !important;
@@ -708,10 +710,9 @@ select:focus-visible {
   border: 1.5px solid #B45309 !important;
   border-radius: 6px;
   padding: 4px 14px !important;
-  margin-top: 14px !important;
+  margin-top: 16px !important;
   letter-spacing: -0.01em;
   line-height: 1.35;
-  vertical-align: middle;
 }
 
 .statement-header > .statement-title {
