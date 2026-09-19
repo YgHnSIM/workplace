@@ -695,6 +695,25 @@ select:focus-visible {
   word-break: keep-all;
 }
 
+.statement-title-line {
+  display: block;
+}
+
+.statement-title-line--subtitle {
+  display: inline-block;
+  font-size: clamp(14px, 1.8vw, 19px) !important;
+  font-weight: 800 !important;
+  color: #92400E !important;
+  background: #FEF3C7 !important;
+  border: 1.5px solid #B45309 !important;
+  border-radius: 6px;
+  padding: 4px 14px !important;
+  margin-top: 14px !important;
+  letter-spacing: -0.01em;
+  line-height: 1.35;
+  vertical-align: middle;
+}
+
 .statement-header > .statement-title {
   grid-column: 1 / -1;
   grid-row: 2;
@@ -968,6 +987,10 @@ select:focus-visible {
   padding: 16px 0 0 !important;
 }
 
+.statement-body .section-title {
+  color: #002FA7 !important;
+}
+
 .section-title::before {
   content: "";
   position: absolute;
@@ -1071,8 +1094,11 @@ select:focus-visible {
 }
 
 .closing-block {
+  border-top: 2.5px solid #002FA7 !important;
+  border-bottom: 2.5px solid #002FA7 !important;
   margin-top: 32px !important;
   padding: 0 !important;
+  text-align: center !important;
 }
 
 .closing-block > p {
@@ -1082,15 +1108,17 @@ select:focus-visible {
 }
 
 .closing-highlight {
-  color: #111111 !important;
+  color: #C8102E !important;
   border-bottom: 0 !important;
-  font-weight: 700 !important;
+  font-weight: 800 !important;
+  font-size: calc(20px * var(--font-scale)) !important;
+  text-align: center !important;
 }
 
 .closing-text {
   color: #111111 !important;
   font-weight: 700 !important;
-  text-align: left !important;
+  text-align: center !important;
 }
 
 .signature-block {

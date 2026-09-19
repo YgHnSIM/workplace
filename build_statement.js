@@ -101,7 +101,13 @@ function validateStatementDocument(rawDocument) {
 
 function renderStatementTitle(document) {
   const lines = document.printTitleLines || [document.title];
-  return lines.map((line) => `<span class="statement-title-line">${escapeHtml(line)}</span>`).join(' ');
+  return lines.map((line) => {
+    const isSubtitle = /^[\u2014\u2013-]/u.test(String(line || '').trim());
+    const className = isSubtitle
+      ? 'statement-title-line statement-title-line--subtitle'
+      : 'statement-title-line';
+    return `<span class="${className}">${escapeHtml(line)}</span>`;
+  }).join(' ');
 }
 
 function renderStatementHtml(rawDocument, bodyFragment, options = {}) {
