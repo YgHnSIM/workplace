@@ -102,7 +102,12 @@ function validateStatementDocument(rawDocument) {
 function renderStatementTitle(document) {
   const lines = document.printTitleLines || [document.title];
   return lines.map((line) => {
-    const isSubtitle = /^[\u2014\u2013-]/u.test(String(line || '').trim());
+    const trimmed = String(line || '').trim();
+    const isSpecialSubtitle = (document.id === 'statement:대법원_연차휴가_승소_성명서'
+      || document.href?.includes('대법원_연차휴가_승소_성명서')
+      || document.route?.includes('대법원_연차휴가_승소_성명서'))
+      && trimmed === '대법원이 인정한 우리의 정당한 연차';
+    const isSubtitle = /^[\u2014\u2013-]/u.test(trimmed) || isSpecialSubtitle;
     const className = isSubtitle
       ? 'statement-title-line statement-title-line--subtitle'
       : 'statement-title-line';
