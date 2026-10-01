@@ -138,6 +138,43 @@
       }
     },
     {
+      "id": "statement:대법원_연차휴가_승소_성명서",
+      "category": "statement",
+      "route": "statement/대법원_연차휴가_승소_성명서.html",
+      "title": "물류노조의 외침이 옳았습니다! 대법원이 인정한 우리의 정당한 연차 — 이제 임금교섭에서 단협으로 쐐기를 박읍시다 —",
+      "summary": "대법원의 회계연도 기준 연차휴가 전액 보장 및 퇴직 시 일방적 삭감 위법 확정 판결을 알리고, 2026 임금교섭에서 퇴직 연차 100% 보장과 일방 공제 차단을 단체협약으로 명문화할 것을 촉구하는 노동조합 성명서입니다.",
+      "dates": {
+        "publishedOn": "2026-10-01",
+        "modifiedOn": "2026-10-01",
+        "reviewedOn": "2026-10-01",
+        "eventOn": "2026-10-01"
+      },
+      "workflow": { "status": "final", "visibility": "public" },
+      "topicIds": ["wages", "collective-bargaining", "health-rights"],
+      "evidence": {
+        "count": 1,
+        "note": "노동조합 공식 성명서",
+        "noteVisibility": "public",
+        "sourceIds": [],
+        "complete": false
+      },
+      "relatedDocumentIds": [
+        "statement:연차휴가_금지조치_규탄_성명서",
+        "statement:성명서_20260921",
+        "mom:202608"
+      ],
+      "displayOrder": 10,
+      "presentation": {
+        "print": {
+          "titleLines": [
+            "물류노조의 외침이 옳았습니다!",
+            "대법원이 인정한 우리의 정당한 연차",
+            "— 이제 임금교섭에서 단협으로 쐐기를 박읍시다 —"
+          ]
+        }
+      }
+    },
+    {
       "id": "knowledge:retirement-benefit-db-dc-guide",
       "category": "knowledge",
       "route": "knowledge/retirement-benefit-db-dc-guide.html",
