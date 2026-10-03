@@ -67,9 +67,11 @@ function createServer(port) {
     console.log(`🚀 로컬 웹 서버가 실행 중입니다!`);
     console.log(`========================================`);
     console.log(`- 메인 페이지:       http://localhost:${port}/`);
+    console.log(`- 지식 목록:         http://localhost:${port}/knowledge/`);
+    console.log(`- 이번 지식 문서:     http://localhost:${port}/knowledge/part-time-sick-leave-nlrc-analysis.html`);
     console.log(`- 성명서 목록:       http://localhost:${port}/statement/`);
-    console.log(`- 이번 성명서(9/21): http://localhost:${port}/statement/%EC%84%B1%EB%AA%85%EC%84%9C_20260921.html`);
-    console.log(`- 신규 성명서:       http://localhost:${port}/statement/%EB%8C%80%EB%B2%95%EC%9B%90_%EC%97%B0%EC%B0%A8%ED%9C%B4%EA%B0%80_%EC%8A%B9%EC%86%8C_%EC%84%B1%EB%AA%85%EC%84%9C.html`);
+    console.log(`- 성명서(9/21):      http://localhost:${port}/statement/%EC%84%B1%EB%AA%85%EC%84%9C_20260921.html`);
+    console.log(`- 대법원 승소 성명서: http://localhost:${port}/statement/%EB%8C%80%EB%B2%95%EC%9B%90_%EC%97%B0%EC%B0%A8%ED%9C%B4%EA%B0%80_%EC%8A%B9%EC%86%8C_%EC%84%B1%EB%AA%85%EC%84%9C.html`);
     console.log(`========================================\n`);
   });
 }
