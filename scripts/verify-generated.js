@@ -4,6 +4,7 @@ const generatedPaths = [
   'index.html',
   'MoM',
   'statement',
+  'newsletter',
   'knowledge',
   'notice',
   'robots.txt',

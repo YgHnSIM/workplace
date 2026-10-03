@@ -26,7 +26,7 @@
     },
     "category": {
       "type": "string",
-      "enum": ["statement", "mom", "knowledge", "notice"]
+      "enum": ["statement", "mom", "knowledge", "notice", "newsletter"]
     },
     "route": {
       "type": "string",

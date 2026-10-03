@@ -212,6 +212,7 @@
         case 'font-up': changeTextSize('up'); break;
         case 'font-reset': changeTextSize('reset'); break;
         case 'copy-document': copyDocumentText(); break;
+        case 'print': window.print(); break;
         case 'share': shareDocument(); break;
         case 'copy-link': copyText(window.location.href, '링크를 클립보드에 복사했습니다.', '링크를 복사하지 못했습니다. 주소창의 링크를 직접 복사해주세요.'); break;
         case 'top':
@@ -219,6 +220,13 @@
           announce('문서 처음으로 이동했습니다.');
           break;
         default: break;
+      }
+    });
+
+    document.addEventListener('click', (event) => {
+      const printButton = event.target.closest('[data-action="print"]');
+      if (printButton) {
+        window.print();
       }
     });
   }

@@ -3,6 +3,7 @@ const { loadContentGraph } = require('../lib/content-model');
 const { mergeOutputMaps, writeOutputMap } = require('../lib/build-utils');
 const { renderMomOutputs } = require('../build_mom');
 const { renderStatementOutputs } = require('../build_statement');
+const { renderNewsletterOutputs } = require('../build_newsletter');
 const { renderSiteOutputs } = require('../build_site');
 
 const projectRoot = path.resolve(__dirname, '..');
@@ -13,6 +14,7 @@ function buildAll(options = {}) {
   const outputs = mergeOutputMaps(
     renderMomOutputs(graph),
     renderStatementOutputs(graph),
+    renderNewsletterOutputs(graph),
     renderSiteOutputs(graph),
   );
   writeOutputMap(outputs, { projectRoot: root });

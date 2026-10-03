@@ -603,6 +603,53 @@ function validateStatementOutputs(sourceRoot, siteRoot, manualDocs, errors) {
   });
 }
 
+function validateNewsletterOutputs(sourceRoot, siteRoot, manualDocs, errors) {
+  const newsletterDocs = manualDocs.filter((doc) => doc.category === 'newsletter');
+  const expectedHrefs = new Set(newsletterDocs.map((doc) => doc.normalizedHref));
+  const expectedKeys = new Set([...expectedHrefs].map((href) => href.toLocaleLowerCase('en')));
+  const publicNewsletterDir = path.join(siteRoot, 'newsletter');
+
+  if (fs.existsSync(publicNewsletterDir)) {
+    walkSiteFiles(publicNewsletterDir, errors, siteRoot)
+      .filter((filePath) => (
+        path.extname(filePath).toLowerCase() === '.html'
+        && path.basename(filePath).toLowerCase() !== 'index.html'
+      ))
+      .forEach((filePath) => {
+        const href = toPosixPath(path.relative(siteRoot, filePath));
+        if (!expectedKeys.has(href.toLocaleLowerCase('en'))) {
+          errors.push(`${href} is stale or orphaned (not present in _source/catalog.json)`);
+        }
+      });
+  }
+
+  const sourceNewsletterDir = path.join(sourceRoot, '_source', 'newsletter');
+  const sourceHrefs = new Set();
+  if (fs.existsSync(sourceNewsletterDir)) {
+    walkSiteFiles(sourceNewsletterDir, errors, sourceRoot)
+      .filter((filePath) => path.extname(filePath).toLowerCase() === '.html')
+      .forEach((filePath) => {
+        const relativeSource = toPosixPath(path.relative(sourceNewsletterDir, filePath));
+        const href = `newsletter/${relativeSource}`;
+        const key = href.toLocaleLowerCase('en');
+        if (sourceHrefs.has(key)) {
+          errors.push(`Duplicate newsletter source output: ${href}`);
+        }
+        sourceHrefs.add(key);
+        if (!expectedKeys.has(key)) {
+          errors.push(`_source/newsletter/${relativeSource} has no matching newsletter catalog entry`);
+        }
+      });
+  }
+
+  expectedHrefs.forEach((href) => {
+    if (!sourceHrefs.has(href.toLocaleLowerCase('en'))) {
+      const sourceName = path.posix.basename(href);
+      errors.push(`Newsletter catalog entry ${href} is missing _source/newsletter/${sourceName}`);
+    }
+  });
+}
+
 function publicPathForReference(ref, record, context) {
   const result = resolveReference(ref, {
     ...context,
@@ -823,7 +870,7 @@ function validateContentIndexes(content, context, errors) {
   const listedDocs = content.listedDocs || content.allDocs;
   validateIndexCards('index.html', listedDocs, context, errors);
   validateIndexCards('MoM/index.html', listedDocs.filter((doc) => doc.category === 'mom'), context, errors);
-  ['statement', 'knowledge', 'notice'].forEach((category) => {
+  ['statement', 'newsletter', 'knowledge', 'notice'].forEach((category) => {
     validateIndexCards(
       `${category}/index.html`,
       listedDocs.filter((doc) => doc.category === category),
@@ -840,7 +887,7 @@ function validateContentIndexes(content, context, errors) {
       context,
       errors,
     );
-    ['statement', 'knowledge', 'notice'].forEach((category) => {
+    ['statement', 'newsletter', 'knowledge', 'notice'].forEach((category) => {
       validateCollectionMetadata(
         `${category}/index.html`,
         listedDocs.filter((doc) => doc.category === category),
@@ -902,6 +949,7 @@ function validateSite(options = {}) {
   const content = readContentDocuments(sourceRoot, siteRoot, errors);
   validateMomOutputs(sourceRoot, siteRoot, content.momDocs, errors);
   validateStatementOutputs(sourceRoot, siteRoot, content.manualDocs, errors);
+  validateNewsletterOutputs(sourceRoot, siteRoot, content.manualDocs, errors);
   validateContentIndexes(content, context, errors);
   if (content.graph && content.allDocs.length > 0) validateSitemap(content.listedDocs || content.allDocs, siteRoot, errors);
 

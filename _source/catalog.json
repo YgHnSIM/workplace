@@ -174,6 +174,35 @@
       }
     },
     {
+      "id": "newsletter:202610_대법원_연차휴가_현장소식지",
+      "category": "newsletter",
+      "route": "newsletter/202610_대법원_연차휴가_현장소식지.html",
+      "title": "2년 전 물류노조의 외침이 정확히 맞았습니다! 동종 사건 대법원 확정 판결로 입증된 진실 이제 임금교섭에서 단협으로 쐐기를 박읍시다!",
+      "summary": "동종 사건 대법원 확정 판결(2026다202306)로 입증된 회계연도 기준 연차휴가 전액 보장 법리와 2026 임금교섭 3대 핵심 요구안을 담은 물류노조 현장 소식지입니다.",
+      "dates": {
+        "publishedOn": "2026-10-01",
+        "modifiedOn": "2026-10-01",
+        "reviewedOn": "2026-10-01",
+        "eventOn": "2026-06-25"
+      },
+      "workflow": { "status": "final", "visibility": "public" },
+      "topicIds": ["wages", "collective-bargaining", "health-rights"],
+      "evidence": {
+        "count": 1,
+        "note": "물류노조 공식 현장 소식지 (A3 포스터)",
+        "noteVisibility": "public",
+        "sourceIds": [],
+        "complete": false
+      },
+      "relatedDocumentIds": [
+        "statement:대법원_연차휴가_승소_성명서",
+        "statement:성명서_20260921",
+        "mom:202608"
+      ],
+      "displayOrder": 1,
+      "presentation": { "print": {} }
+    },
+    {
       "id": "knowledge:retirement-benefit-db-dc-guide",
       "category": "knowledge",
       "route": "knowledge/retirement-benefit-db-dc-guide.html",

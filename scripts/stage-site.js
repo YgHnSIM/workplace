@@ -5,6 +5,7 @@ const PUBLIC_DIRECTORIES = Object.freeze([
   'assets',
   'MoM',
   'statement',
+  'newsletter',
   'knowledge',
   'notice',
 ]);

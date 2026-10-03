@@ -64,10 +64,10 @@ function createFixture() {
   write(path.join(root, '.nojekyll'));
   write(path.join(root, 'robots.txt'), 'User-agent: *\nAllow: /\n');
   write(path.join(root, 'sitemap.xml'), '<?xml version="1.0"?><urlset></urlset>\n');
-  ['assets', 'MoM', 'statement', 'knowledge', 'notice'].forEach((directory) => {
+  ['assets', 'MoM', 'statement', 'newsletter', 'knowledge', 'notice'].forEach((directory) => {
     fs.mkdirSync(path.join(root, directory), { recursive: true });
   });
-  ['MoM', 'statement', 'knowledge', 'notice'].forEach((directory) => {
+  ['MoM', 'statement', 'newsletter', 'knowledge', 'notice'].forEach((directory) => {
     write(path.join(root, directory, 'index.html'), html());
   });
   write(
@@ -114,7 +114,7 @@ test('clean staging removes stale files and copies only the public allowlist', (
   assert.equal(fs.existsSync(path.join(root, '_site', 'private.txt')), false);
   assert.equal(fs.existsSync(path.join(root, '_site', 'private-notes.md')), false);
   assert.deepEqual(result.rootFiles, [
-    '.nojekyll', 'MoM', 'assets', 'index.html', 'knowledge', 'notice',
+    '.nojekyll', 'MoM', 'assets', 'index.html', 'knowledge', 'newsletter', 'notice',
     'robots.txt', 'sitemap.xml', 'statement',
   ]);
 });
@@ -347,10 +347,10 @@ test('archive cards, search controls, and content governance metadata stay seman
   assert.doesNotMatch(index, /All rights reserved/);
   assert.match(index, /<!-- site-masthead:start -->/);
   assert.match(index, /<details class="archive-older-documents"/);
-  ['statement/', 'MoM/', 'knowledge/', 'notice/'].forEach((href) => {
+  ['statement/', 'newsletter/', 'MoM/', 'knowledge/', 'notice/'].forEach((href) => {
     assert.match(index, new RegExp(`<a href="${href}">`));
   });
-  ['statement', 'MoM', 'knowledge', 'notice'].forEach((directory) => {
+  ['statement', 'newsletter', 'MoM', 'knowledge', 'notice'].forEach((directory) => {
     const categoryIndex = fs.readFileSync(path.join(projectRoot, directory, 'index.html'), 'utf8');
     assert.match(categoryIndex, /data-archive-category=/);
     assert.match(categoryIndex, /class="archive-category-nav"/);
@@ -378,7 +378,7 @@ test('shared document chrome and explicit mobile table layouts remain free of le
   const momDocuments = fs.readdirSync(path.join(projectRoot, '_source', 'MoM'))
     .filter((file) => file.endsWith('.md'));
   const documents = [
-    ...catalog.documents.map((document) => ({ ...document, route: document.route })),
+    ...catalog.documents.filter((document) => document.category !== 'newsletter').map((document) => ({ ...document, route: document.route })),
     ...momDocuments.map((file) => ({ route: `MoM/${file.slice(0, 6)}.html` })),
   ];
 
