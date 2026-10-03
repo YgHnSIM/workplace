@@ -250,11 +250,41 @@
         "complete": false
       },
       "relatedDocumentIds": [
+        "knowledge:part-time-sick-leave-nlrc-analysis",
         "statement:성명서_202607",
         "notice:logistics-union-9-years",
         "mom:202607"
       ],
       "displayOrder": 10,
+      "presentation": { "print": {} }
+    },
+    {
+      "id": "knowledge:part-time-sick-leave-nlrc-analysis",
+      "category": "knowledge",
+      "route": "knowledge/part-time-sick-leave-nlrc-analysis.html",
+      "title": "단시간근로자 유급병가 차별과 중노위 재심 인용: 이중삭감 논리 해설",
+      "summary": "우체국물류지원단 단시간근로자의 유급병가를 30일로 단축한 노사협정에 대해 중앙노동위원회가 차별을 인정한 사건을 바탕으로, 이중삭감의 모순과 공정대표의무, 사전적 안전망 법리를 해설합니다.",
+      "dates": {
+        "publishedOn": "2026-10-03",
+        "modifiedOn": "2026-10-03",
+        "reviewedOn": "2026-10-03"
+      },
+      "workflow": { "status": "reviewed", "visibility": "public" },
+      "topicIds": ["sick-leave", "discrimination", "health-rights", "collective-bargaining"],
+      "evidence": {
+        "count": 5,
+        "note": "인천지노위 판정서, 당사자 서면, 중노위 재심 인용 결과 및 영상 자막 대조",
+        "noteVisibility": "public",
+        "sourceIds": [],
+        "complete": false
+      },
+      "relatedDocumentIds": [
+        "knowledge:sick-leave-double-reduction",
+        "statement:성명서_202607",
+        "mom:202607",
+        "notice:logistics-union-9-years"
+      ],
+      "displayOrder": 8,
       "presentation": { "print": {} }
     },
     {
