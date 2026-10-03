@@ -2801,14 +2801,24 @@ html[data-font-scale="1.5"] .document-facts dl {
   }
 
   .archive-category-nav {
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    overflow: visible;
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .archive-category-nav::-webkit-scrollbar {
+    display: none;
   }
 
   .archive-category-nav a {
-    font-size: 12px;
-    letter-spacing: -0.03em;
-    padding-inline: 1px;
+    flex: 0 0 auto;
+    font-size: 14px;
+    letter-spacing: normal;
+    min-height: 44px;
+    padding: 10px 16px;
     white-space: nowrap;
   }
 

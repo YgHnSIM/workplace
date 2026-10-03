@@ -4,6 +4,7 @@
   const legacyCategoryParams = ['category', 'filter'];
   const categoryRoutes = {
     statement: 'statement/',
+    newsletter: 'newsletter/',
     mom: 'MoM/',
     knowledge: 'knowledge/',
     notice: 'notice/',
@@ -132,5 +133,10 @@
     });
     window.addEventListener('popstate', () => applyState(stateFromLocation(topicSelect)));
     applyState(currentState);
+
+    const activeCategory = document.querySelector('.archive-category-nav a[aria-current="page"]');
+    if (activeCategory && typeof activeCategory.scrollIntoView === 'function') {
+      activeCategory.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    }
   });
 }());
