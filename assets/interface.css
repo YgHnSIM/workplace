@@ -2205,7 +2205,7 @@ select:focus-visible {
   border-bottom: 1px solid #111111;
   border-top: 1px solid #111111;
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   margin: 0;
 }
 
@@ -2801,13 +2801,14 @@ html[data-font-scale="1.5"] .document-facts dl {
   }
 
   .archive-category-nav {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(6, minmax(0, 1fr));
     overflow: visible;
   }
 
   .archive-category-nav a {
-    font-size: 13px;
-    padding-inline: 2px;
+    font-size: 12px;
+    letter-spacing: -0.03em;
+    padding-inline: 1px;
     white-space: nowrap;
   }
 
