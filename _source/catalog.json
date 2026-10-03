@@ -122,7 +122,7 @@
         "complete": false
       },
       "relatedDocumentIds": [
-        "knowledge:sick-leave-double-reduction",
+        "knowledge:part-time-sick-leave-nlrc-analysis",
         "statement:연차휴가_금지조치_규탄_성명서",
         "mom:202607"
       ],
@@ -230,35 +230,6 @@
       "presentation": { "print": {} }
     },
     {
-      "id": "knowledge:sick-leave-double-reduction",
-      "category": "knowledge",
-      "route": "knowledge/sick-leave-double-reduction.html",
-      "title": "병가 일수까지 반토막 낸 이중삭감의 모순",
-      "summary": "병가 일수까지 반토막 낸 이중삭감 문제를 다룬 YouTube 영상 자료입니다.",
-      "dates": {
-        "publishedOn": "2026-07-07",
-        "modifiedOn": "2026-07-14",
-        "reviewedOn": "2026-07-14"
-      },
-      "workflow": { "status": "draft", "visibility": "unlisted" },
-      "topicIds": ["sick-leave", "discrimination", "health-rights"],
-      "evidence": {
-        "count": 1,
-        "note": "영상 1편의 공개 설명과 논점 흐름을 바탕으로 작성",
-        "noteVisibility": "public",
-        "sourceIds": [],
-        "complete": false
-      },
-      "relatedDocumentIds": [
-        "knowledge:part-time-sick-leave-nlrc-analysis",
-        "statement:성명서_202607",
-        "notice:logistics-union-9-years",
-        "mom:202607"
-      ],
-      "displayOrder": 10,
-      "presentation": { "print": {} }
-    },
-    {
       "id": "knowledge:part-time-sick-leave-nlrc-analysis",
       "category": "knowledge",
       "route": "knowledge/part-time-sick-leave-nlrc-analysis.html",
@@ -279,7 +250,7 @@
         "complete": false
       },
       "relatedDocumentIds": [
-        "knowledge:sick-leave-double-reduction",
+        "statement:성명서_20260921",
         "statement:성명서_202607",
         "mom:202607",
         "notice:logistics-union-9-years"
