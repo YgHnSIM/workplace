@@ -67,10 +67,13 @@ function createServer(port) {
     console.log(`🚀 로컬 웹 서버가 실행 중입니다!`);
     console.log(`========================================`);
     console.log(`- 메인 페이지:       http://localhost:${port}/`);
+    console.log(`- 회의록 목록:       http://localhost:${port}/MoM/`);
+    console.log(`- 10월 회의록:       http://localhost:${port}/MoM/202610.html`);
     console.log(`- 지식 목록:         http://localhost:${port}/knowledge/`);
-    console.log(`- 이번 지식 문서:     http://localhost:${port}/knowledge/part-time-sick-leave-nlrc-analysis.html`);
+    console.log(`- 단시간 병가 지식:   http://localhost:${port}/knowledge/part-time-sick-leave-nlrc-analysis.html`);
     console.log(`- 성명서 목록:       http://localhost:${port}/statement/`);
-    console.log(`- 성명서(9/21):      http://localhost:${port}/statement/%EC%84%B1%EB%AA%85%EC%84%9C_20260921.html`);
+    console.log(`- 소식지 목록:       http://localhost:${port}/newsletter/`);
+    console.log(`- 대법원 승소 소식지: http://localhost:${port}/newsletter/202610_%EB%8C%80%EB%B2%95%EC%9B%90_%EC%97%B0%EC%B0%A8%ED%9C%B4%EA%B0%80_%ED%98%84%EC%9E%A5%EC%86%8C%EC%8B%9D%EC%A7%80.html`);
     console.log(`- 대법원 승소 성명서: http://localhost:${port}/statement/%EB%8C%80%EB%B2%95%EC%9B%90_%EC%97%B0%EC%B0%A8%ED%9C%B4%EA%B0%80_%EC%8A%B9%EC%86%8C_%EC%84%B1%EB%AA%85%EC%84%9C.html`);
     console.log(`========================================\n`);
   });

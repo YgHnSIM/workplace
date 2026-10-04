@@ -40,8 +40,8 @@ test.after(() => {
 
 test('content graph exposes one v2 record set and the public listing policy', () => {
   const graph = loadContentGraph({ projectRoot });
-  assert.equal(graph.documents.length, 19);
-  assert.equal(graph.listedDocuments.length, 17);
+  assert.equal(graph.documents.length, 20);
+  assert.equal(graph.listedDocuments.length, 18);
   assert.equal(graph.documentsById.get('statement:성명서_202607').route, 'statement/성명서_202607.html');
   assert.equal(graph.documentsById.get('statement:성명서_202607').workflow.visibility, 'unlisted');
   assert.equal(graph.documentsById.get('statement:연차휴가_금지조치_규탄_성명서').workflow.visibility, 'public');
@@ -50,6 +50,7 @@ test('content graph exposes one v2 record set and the public listing policy', ()
   assert.equal(graph.documentsById.get('newsletter:202610_대법원_연차휴가_현장소식지').workflow.visibility, 'public');
   assert.equal(graph.documentsById.get('knowledge:retirement-benefit-db-dc-guide').workflow.visibility, 'unlisted');
   assert.equal(graph.documentsById.get('knowledge:part-time-sick-leave-nlrc-analysis').workflow.visibility, 'public');
+  assert.equal(graph.documentsById.get('mom:202610').workflow.visibility, 'public');
   graph.documents.forEach((document) => {
     ['href', 'date', 'excerpt', 'topics', 'sourceCount', 'provenance', 'relatedDocuments', 'groupOrder', 'order', 'sortKey']
       .forEach((legacyField) => assert.equal(Object.hasOwn(document, legacyField), false, `${legacyField} should not be in v2`));
@@ -60,7 +61,7 @@ test('content graph exposes one v2 record set and the public listing policy', ()
   }, {});
   assert.equal(categoryCounts.statement.length, 3);
   assert.equal(categoryCounts.newsletter.length, 1);
-  assert.equal(categoryCounts.mom.length, 8);
+  assert.equal(categoryCounts.mom.length, 9);
   assert.equal(categoryCounts.knowledge.length, 3);
   assert.equal(categoryCounts.notice.length, 2);
 });
@@ -85,11 +86,12 @@ test('all renderers return a single-root output map for a fixture project', () =
   const root = fixtureRoot();
   fs.cpSync(path.join(projectRoot, 'assets'), path.join(root, 'assets'), { recursive: true });
   const result = buildAll({ projectRoot: root });
-  assert.equal(result.outputs.size, 27);
+  assert.equal(result.outputs.size, 28);
   assert.ok(result.outputs.has(path.join(root, 'index.html')));
   assert.ok(result.outputs.has(path.join(root, 'newsletter', 'index.html')));
   assert.ok(result.outputs.has(path.join(root, 'newsletter', '202610_대법원_연차휴가_현장소식지.html')));
   assert.ok(result.outputs.has(path.join(root, 'MoM', '202607.html')));
+  assert.ok(result.outputs.has(path.join(root, 'MoM', '202610.html')));
   assert.ok(result.outputs.has(path.join(root, 'knowledge', 'performance-bonus-average-wage-analysis.html')));
 });
 
