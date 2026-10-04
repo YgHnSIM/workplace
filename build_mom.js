@@ -287,6 +287,7 @@ ${renderPageHead({
     openGraphType: 'article',
     keywords: topicLabels,
     topicLabels,
+    robots: record.workflow?.visibility === 'unlisted' ? 'noindex,follow' : undefined,
   })}
 </head>
 
