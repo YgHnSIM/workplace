@@ -41,7 +41,7 @@ test.after(() => {
 test('content graph exposes one v2 record set and the public listing policy', () => {
   const graph = loadContentGraph({ projectRoot });
   assert.equal(graph.documents.length, 20);
-  assert.equal(graph.listedDocuments.length, 17);
+  assert.equal(graph.listedDocuments.length, 18);
   assert.equal(graph.documentsById.get('statement:성명서_202607').route, 'statement/성명서_202607.html');
   assert.equal(graph.documentsById.get('statement:성명서_202607').workflow.visibility, 'unlisted');
   assert.equal(graph.documentsById.get('statement:연차휴가_금지조치_규탄_성명서').workflow.visibility, 'public');
@@ -50,7 +50,7 @@ test('content graph exposes one v2 record set and the public listing policy', ()
   assert.equal(graph.documentsById.get('newsletter:202610_대법원_연차휴가_현장소식지').workflow.visibility, 'public');
   assert.equal(graph.documentsById.get('knowledge:retirement-benefit-db-dc-guide').workflow.visibility, 'unlisted');
   assert.equal(graph.documentsById.get('knowledge:part-time-sick-leave-nlrc-analysis').workflow.visibility, 'public');
-  assert.equal(graph.documentsById.get('mom:202610').workflow.visibility, 'unlisted');
+  assert.equal(graph.documentsById.get('mom:202610').workflow.visibility, 'public');
   graph.documents.forEach((document) => {
     ['href', 'date', 'excerpt', 'topics', 'sourceCount', 'provenance', 'relatedDocuments', 'groupOrder', 'order', 'sortKey']
       .forEach((legacyField) => assert.equal(Object.hasOwn(document, legacyField), false, `${legacyField} should not be in v2`));
@@ -61,7 +61,7 @@ test('content graph exposes one v2 record set and the public listing policy', ()
   }, {});
   assert.equal(categoryCounts.statement.length, 3);
   assert.equal(categoryCounts.newsletter.length, 1);
-  assert.equal(categoryCounts.mom.length, 8);
+  assert.equal(categoryCounts.mom.length, 9);
   assert.equal(categoryCounts.knowledge.length, 3);
   assert.equal(categoryCounts.notice.length, 2);
 });
