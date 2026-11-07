@@ -68,6 +68,7 @@ function createServer(port) {
     console.log(`========================================`);
     console.log(`- 메인 페이지:       http://localhost:${port}/`);
     console.log(`- 회의록 목록:       http://localhost:${port}/MoM/`);
+    console.log(`- 11월 회의록:       http://localhost:${port}/MoM/202611.html`);
     console.log(`- 10월 회의록:       http://localhost:${port}/MoM/202610.html`);
     console.log(`- 지식 목록:         http://localhost:${port}/knowledge/`);
     console.log(`- 단시간 병가 지식:   http://localhost:${port}/knowledge/part-time-sick-leave-nlrc-analysis.html`);
